@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="forum-container">
+    <h1>Bem-vindo ao Fórum! Representante</h1>
+    <p>Aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
+    <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+</div>
+{% endblock %}
