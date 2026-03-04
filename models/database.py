@@ -25,13 +25,13 @@ def init_db(db_name: str = DB_PATH):
         
         conn.execute("""
         CREATE TABLE IF NOT EXISTS comentario (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            texto TEXT NOT NULL,
-            usuario_id INTEGER NOT NULL,
-            data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            tag TEXT NOT NULL,
-            FOREIGN KEY (usuario_id) REFERENCES usuario(id)
-        )
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        texto TEXT NOT NULL,
+        usuario_id INTEGER NOT NULL,
+        data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        tag TEXT NOT NULL,
+        destino TEXT NOT NULL,  -- ADICIONADO: 'aluno' ou 'professor'
+        FOREIGN KEY (usuario_id) REFERENCES usuario(id))
         """)
 
         conn.commit()

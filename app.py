@@ -94,7 +94,7 @@ def logout():
 
 
 # =========================
-# ROTAS DE COMENTÁRIO
+# ROTA DE COMENTÁRIO AJUSTADA
 # =========================
 
 @app.route("/comentario", methods=["POST"])
@@ -102,40 +102,42 @@ def logout():
 def adicionar_comentario():
     texto = request.form.get("texto")
     tag = request.form.get("tag")
-    usuario_id = session["usuario_id"]
+    destino = request.form.get("origem") # 'aluno' ou 'professor' vindo do HTML
+    usuario_id = session.get("usuario_id")
 
-    if texto and tag:
-        criar_comentario(texto, usuario_id, tag)
+    if texto and tag and destino:
+        # AGORA ENVIAMOS O DESTINO PARA O BANCO
+        criar_comentario(texto, usuario_id, tag, destino)
 
+    # O REDIRECIONAMENTO AGORA É BASEADO NA ORIGEM
+    if destino == "professor":
+        return redirect(url_for("forum_professor"))
     return redirect(url_for("forum_aluno"))
+
+# =========================
+# ÁREAS RESTRITAS (FILTROS AJUSTADOS)
+# =========================
 
 @app.route("/forumAluno")
 @login_required
 @cargo_required("aluno")
 def forum_aluno():
-    comentarios = listar_comentarios()
+    todos = listar_comentarios()
+    # FILTRO: Só mostra o que foi destinado aos alunos
+    comentarios_filtrados = [c for c in todos if c['destino'] == 'aluno']
 
-    return render_template(
-        "forumAluno.html",
-        nome=session.get("nome"),
-        comentarios=comentarios
-    )
-
-
-# =========================
-# ÁREAS RESTRITAS
-# =========================
-
-
+    return render_template("forumAluno.html", nome=session.get("nome"), comentarios=comentarios_filtrados)
 
 @app.route("/forumProfessor")
 @login_required
 @cargo_required("professor")
 def forum_professor():
-    return render_template(
-        "forumProfessor.html",
-        nome=session.get("nome")
-    )
+    todos = listar_comentarios()
+    # FILTRO: Só mostra o que foi destinado aos professores
+    comentarios_filtrados = [c for c in todos if c['destino'] == 'professor']
+
+    return render_template("forumProfessor.html", nome=session.get("nome"), comentarios=comentarios_filtrados)
+
 
 
 @app.route("/servicoAdmin")

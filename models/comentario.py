@@ -17,22 +17,18 @@ def get_db_connection():
 # =========================
 # CRIAR COMENTÁRIO
 # =========================
-def criar_comentario(texto, usuario_id, tag):
+def criar_comentario(texto, usuario_id, tag, destino): # Adicionado destino
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
             """
-            INSERT INTO comentario (texto, usuario_id, tag)
-            VALUES (?, ?, ?)
+            INSERT INTO comentario (texto, usuario_id, tag, destino)
+            VALUES (?, ?, ?, ?)
             """,
-            (texto, usuario_id, tag)
+            (texto, usuario_id, tag, destino)
         )
         conn.commit()
 
-
-# =========================
-# LISTAR TODOS OS COMENTÁRIOS
-# =========================
 def listar_comentarios():
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -41,8 +37,10 @@ def listar_comentarios():
                 comentario.id,
                 comentario.texto,
                 comentario.tag,
+                comentario.destino,  -- Adicionado
                 comentario.data_criacao,
-                usuario.nome AS autor
+                usuario.nome AS autor,
+                usuario.cargo AS cargo_autor
             FROM comentario
             JOIN usuario ON comentario.usuario_id = usuario.id
             ORDER BY comentario.data_criacao DESC

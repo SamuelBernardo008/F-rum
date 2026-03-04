@@ -1,8 +1,67 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="forum-container">
-    <h1>Bem-vindo ao Fórum! Professor</h1>
-    <p>Aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
+    <h1>Bem-vindo ao Fórum do Professor</h1>
+    <p>Olá, {{ nome }}! Espaço destinado a docentes.</p>
     <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+    {% if session.get('cargo') == 'admin' %}
+    <div style="margin-bottom: 20px;">
+        <a href="{{ url_for('servico_admin') }}" class="btn-voltar-admin">
+            ← Voltar para Painel Admin
+        </a>
+    </div>
+{% endif %}
 </div>
+
+<button type="button" onclick="abrirPopup()">Comentar no Fórum</button>
+
+<form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
+    <input type="hidden" name="origem" value="professor">
+    
+    <div id="popup" hidden>
+        <h3>Digite seu comentário:</h3>
+
+        <input type="text" name="texto" placeholder="Seu comentário" required>
+        
+        <select name="tag" id="tagComentario" required>
+            <option value="">Tag</option>
+            <option value="Estrutura">Estrutura</option>
+            <option value="Convivencia">Convivência</option>
+            <option value="Pedagógico">Pedagógico</option>
+            <option value="Elogio">Elogio</option>
+            <option value="Coordenação">Coordenação</option>
+            <option value="Equipe Escolar">Equipe Escolar</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Enviar</button>
+        <button type="button" onclick="fecharPopup()">Cancelar</button>
+    </div>
+</form>
+
+<div id="comentarios">
+    <h2>Mural do Fórum</h2>
+
+    {% for c in comentarios %}
+        <div class="comentario-card">
+            <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong><br>
+            <em>#{{ c.tag }}</em><br>
+            <p>{{ c.texto }}</p>
+            <small>{{ c.data_criacao }}</small>
+            <hr>
+        </div>
+    {% else %}
+        <p>Nenhum comentário nesta secção.</p>
+    {% endfor %}
+</div>
+
+<script>
+function abrirPopup() {
+    document.getElementById("popup").hidden = false;
+}
+function fecharPopup() {
+    document.getElementById("popup").hidden = true;
+}
+</script>
 {% endblock %}
