@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
-
 from models.database import init_db
 from models.usuario import buscar_usuario_por_email, verificar_senha
 from models.comentario import criar_comentario, listar_comentarios
@@ -110,21 +109,23 @@ def adicionar_comentario():
 
     return redirect(url_for("forum_aluno"))
 
-
-# =========================
-# ÁREAS RESTRITAS
-# =========================
-
 @app.route("/forumAluno")
 @login_required
 @cargo_required("aluno")
 def forum_aluno():
     comentarios = listar_comentarios()
+
     return render_template(
         "forumAluno.html",
         nome=session.get("nome"),
         comentarios=comentarios
     )
+
+
+# =========================
+# ÁREAS RESTRITAS
+# =========================
+
 
 
 @app.route("/forumProfessor")
