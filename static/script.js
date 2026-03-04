@@ -14,3 +14,4 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
         document.getElementById("erro").innerText = "Login inválido";
     }
 });
+

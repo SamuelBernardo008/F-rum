@@ -3,6 +3,47 @@
 <div class="forum-container">
     <h1>Bem-vindo ao Fórum! Representante</h1>
     <p>Aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
-    <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+    <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a> <br>
 </div>
+
+<button type="button" onclick="abrirPopup()">Abrir pop-up</button>
+
+<form id="formPopup">
+    <div id="popup" hidden>
+        <h3>Digite seu coméntario:</h3>
+
+        <input type="text" name="comentario" placeholder="Seu comentário" required>
+        <select name="tagComentario" id="tagComentario" required>
+                <option value="">Tag</option>
+                <option value="Estrutura">Estrutura</option>
+                <option value="Convivencia">Convivência</option>
+                <option value="Pedagógico">Pedagógico</option>
+                <option value="Elogio">Elogio</option>
+                <option value="Coordenação">Coordenação</option>
+                <option value="Equipe Escolar">Equipe Escolar</option>
+            </select>
+
+        <br><br>
+
+        <button type="submit">Enviar</button>
+        <button type="button" onclick="fecharPopup()">Cancelar</button>
+    </div>
+</form>
+
+<script>
+function abrirPopup() {
+    document.getElementById("popup").hidden = false;
+}
+
+function fecharPopup() {
+    document.getElementById("popup").hidden = true;
+}
+
+document.getElementById("formPopup").addEventListener("submit", function (e) {
+    e.preventDefault(); 
+
+    fecharPopup();
+});
+</script>
+
 {% endblock %}
