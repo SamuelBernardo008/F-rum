@@ -3,7 +3,7 @@
 <div class="forum-container">
     <h1>Bem-vindo ao Fórum do Professor</h1>
     <p>Olá, {{ nome }}! Espaço destinado a docentes.</p>
-    <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a> <br><br>
+    <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a> <a href="{{ url_for('home') }}">Voltar a home</a><br><br>
     {% if session.get('cargo') == 'admin' %}
     <div style="margin-bottom: 20px;">
         <a href="{{ url_for('servico_admin') }}" class="btn-voltar-admin">

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="faq-container">
+    <h1>Perguntas Frequentes (FAQ)</h1>
+    <p>Tire suas dúvidas rápidas sobre o funcionamento do fórum.</p>
+    <a href="{{ url_for('home') }}">← Voltar a home</a>
+
+    <hr>
+
+    <div class="faq-item">
+        <details>
+            <summary><strong>Como funciona a tag #Thauany?</strong></summary>
+            <p>Comentários com essa tag são privados. Apenas você e a administradora Thauany podem visualizar o conteúdo.</p>
+        </details>
+    </div>
+
+    <div class="faq-item">
+        <details>
+            <summary><strong>Posso editar meu comentário depois de enviado?</strong></summary>
+            <p>Sim! Basta clicar no botão "editar" ao lado do seu nome no mural. O formulário abrirá com seu texto original.</p>
+        </details>
+    </div>
+
+    <div class="faq-item">
+        <details>
+            <summary><strong>Quem pode apagar meus comentários?</strong></summary>
+            <p>Você pode apagar suas próprias postagens. Os administradores também têm permissão para moderar e excluir conteúdos se necessário.</p>
+        </details>
+    </div>
+</div>
+{% endblock %}

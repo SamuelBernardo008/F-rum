@@ -236,6 +236,9 @@ def servico_admin():
     
     return render_template("admin.html", comentarios=mensagens_privadas)
 
+@app.route("/faq")
+def faq():
+    return render_template("faq.html")
 
 # =========================
 # START
