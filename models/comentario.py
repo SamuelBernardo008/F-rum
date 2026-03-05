@@ -37,8 +37,9 @@ def listar_comentarios():
                 comentario.id,
                 comentario.texto,
                 comentario.tag,
-                comentario.destino,  -- Adicionado
+                comentario.destino,
                 comentario.data_criacao,
+                comentario.usuario_id,  -- ADICIONE ESTA LINHA AQUI
                 usuario.nome AS autor,
                 usuario.cargo AS cargo_autor
             FROM comentario
@@ -85,3 +86,37 @@ def listar_comentarios_por_usuario(usuario_id):
         """, (usuario_id,))
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
+    
+# =========================
+# BUSCAR COMENTÁRIO POR ID
+# =========================
+def buscar_comentario_por_id(id):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        # Buscamos o usuario_id também para validar a posse no app.py
+        cursor.execute("SELECT * FROM comentario WHERE id = ?", (id,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+# =========================
+# ATUALIZAR COMENTÁRIO
+# =========================
+def atualizar_comentario(id_comentario, novo_texto, nova_tag):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        # O SQL precisa atualizar as duas colunas
+        cursor.execute("""
+            UPDATE comentario 
+            SET texto = ?, tag = ? 
+            WHERE id = ?
+        """, (novo_texto, nova_tag, id_comentario))
+        conn.commit()
+
+# =========================
+# EXCLUIR COMENTÁRIO
+# =========================
+def excluir_comentario(id):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM comentario WHERE id = ?", (id,))
+        conn.commit()

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
 from models.database import init_db
 from models.usuario import buscar_usuario_por_email, verificar_senha
-from models.comentario import criar_comentario, listar_comentarios
+from models.comentario import criar_comentario, listar_comentarios, excluir_comentario, buscar_comentario_por_id, atualizar_comentario
 
 app = Flask(__name__)
 app.secret_key = "123"
@@ -100,33 +100,55 @@ def logout():
 @app.route("/comentario", methods=["POST"])
 @login_required
 def adicionar_comentario():
+    # 1. Pegamos todos os dados do formulário
+    id_comentario = request.form.get("id_comentario")
     texto = request.form.get("texto")
     tag = request.form.get("tag")
-    destino = request.form.get("origem") # 'aluno' ou 'professor' vindo do HTML
+    destino = request.form.get("origem")
     usuario_id = session.get("usuario_id")
 
-    if texto and tag and destino:
-        # AGORA ENVIAMOS O DESTINO PARA O BANCO
-        criar_comentario(texto, usuario_id, tag, destino)
+    if id_comentario:  # Se existe um ID, é uma EDIÇÃO
+        from models.comentario import buscar_comentario_por_id, atualizar_comentario
+        
+        # Verificação de segurança (opcional, mas recomendada)
+        comentario = buscar_comentario_por_id(id_comentario)
+        if comentario and comentario['usuario_id'] == usuario_id:
+            # IMPORTANTE: Passe o texto E a tag para a função
+            atualizar_comentario(id_comentario, texto, tag) 
+            
+    else:  # Se NÃO existe ID, é um comentário NOVO
+        from models.comentario import criar_comentario
+        if texto and tag and destino:
+            criar_comentario(texto, usuario_id, tag, destino)
 
-    # O REDIRECIONAMENTO AGORA É BASEADO NA ORIGEM
-    if destino == "professor":
-        return redirect(url_for("forum_professor"))
-    return redirect(url_for("forum_aluno"))
+    return redirect(url_for(f"forum_{destino}"))
 
 # =========================
 # ÁREAS RESTRITAS (FILTROS AJUSTADOS)
 # =========================
 
 @app.route("/forumAluno")
+@app.route("/forumAluno/<int:id_editar>") # Note a rota secundária para edição
 @login_required
 @cargo_required("aluno")
-def forum_aluno():
+def forum_aluno(id_editar=None):
     todos = listar_comentarios()
-    # FILTRO: Só mostra o que foi destinado aos alunos
     comentarios_filtrados = [c for c in todos if c['destino'] == 'aluno']
+    
+    # Buscamos o comentário se o ID vier na URL
+    comentario_edit = None
+    if id_editar:
+        comentario_edit = buscar_comentario_por_id(id_editar)
+        # Segurança: se não for o dono, não deixa editar
+        if not comentario_edit or comentario_edit['usuario_id'] != session.get('usuario_id'):
+            return redirect(url_for('forum_aluno'))
 
-    return render_template("forumAluno.html", nome=session.get("nome"), comentarios=comentarios_filtrados)
+    return render_template(
+        "forumAluno.html", 
+        nome=session.get("nome"), 
+        comentarios=comentarios_filtrados,
+        comentario_selecionado=comentario_edit # O HTML usa esse nome aqui!
+    )
 
 @app.route("/forumProfessor")
 @login_required
@@ -138,7 +160,41 @@ def forum_professor():
 
     return render_template("forumProfessor.html", nome=session.get("nome"), comentarios=comentarios_filtrados)
 
+@app.route("/comentario/editar/<int:id>", methods=["POST"])
+@login_required
+def editar_comentario(id):
+    # Você precisará criar essa função buscar_comentario_por_id no seu models/comentario.py
+    comentario = buscar_comentario_por_id(id) 
+    
+    if not comentario:
+        return redirect(url_for("home"))
 
+    # Regra: Só edita se for o dono
+    if comentario['usuario_id'] == session.get("usuario_id"):
+        novo_texto = request.form.get("texto")
+        # Chamar função de update no banco
+        atualizar_comentario(id, novo_texto)
+    
+    # Redireciona de volta para onde o usuário estava
+    return redirect(request.referrer or url_for("home"))
+
+
+@app.route("/comentario/deletar/<int:id>")
+@login_required
+def deletar_comentario(id):
+    comentario = buscar_comentario_por_id(id)
+    
+    if not comentario:
+        return redirect(url_for("home"))
+
+    usuario_id = session.get("usuario_id")
+    usuario_cargo = session.get("cargo")
+
+    # Regra: É o dono OU é admin?
+    if comentario['usuario_id'] == usuario_id or usuario_cargo == "admin":
+        excluir_comentario(id)
+    
+    return redirect(request.referrer or url_for("home"))
 
 @app.route("/servicoAdmin")
 @login_required

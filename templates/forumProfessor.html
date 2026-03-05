@@ -10,7 +10,7 @@
             ← Voltar para Painel Admin
         </a>
     </div>
-{% endif %}
+    {% endif %}
 </div>
 
 <button type="button" onclick="abrirPopup()">Comentar no Fórum</button>
@@ -18,13 +18,20 @@
 <form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
     <input type="hidden" name="origem" value="professor">
     
-    <div id="popup" hidden>
-        <h3>Digite seu comentário:</h3>
+    <input type="hidden" name="id_comentario" value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
+    
+    <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
+        <h3>{{ 'Editando seu comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
 
-        <input type="text" name="texto" placeholder="Seu comentário" required>
+        <input type="text" name="texto" placeholder="Seu comentário" required
+               value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
         
         <select name="tag" id="tagComentario" required>
-            <option value="">Tag</option>
+            {% if comentario_selecionado %}
+                <option value="{{ comentario_selecionado.tag }}" selected>{{ comentario_selecionado.tag }}</option>
+            {% else %}
+                <option value="">Tag</option>
+            {% endif %}
             <option value="Estrutura">Estrutura</option>
             <option value="Convivencia">Convivência</option>
             <option value="Pedagógico">Pedagógico</option>
@@ -36,7 +43,12 @@
         <br><br>
 
         <button type="submit">Enviar</button>
-        <button type="button" onclick="fecharPopup()">Cancelar</button>
+        
+        {% if comentario_selecionado %}
+            <a href="{{ url_for('forum_professor') }}"><button type="button">Cancelar</button></a>
+        {% else %}
+            <button type="button" onclick="fecharPopup()">Cancelar</button>
+        {% endif %}
     </div>
 </form>
 
@@ -45,7 +57,22 @@
 
     {% for c in comentarios %}
         <div class="comentario-card">
-            <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong><br>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
+                
+                <div class="acoes">
+                    {# EDITAR: Só o dono #}
+                    {% if session['usuario_id'] == c.usuario_id %}
+                        <a href="{{ url_for('forum_professor', id_editar=c.id) }}">editar</a>
+                    {% endif %}
+
+                    {# APAGAR: Dono ou Admin #}
+                    {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
+                        <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red; margin-left: 10px;">delete</a>
+                    {% endif %}
+                </div>
+            </div>
+
             <em>#{{ c.tag }}</em><br>
             <p>{{ c.texto }}</p>
             <small>{{ c.data_criacao }}</small>
