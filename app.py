@@ -127,31 +127,48 @@ def adicionar_comentario():
 # ÁREAS RESTRITAS (FILTROS AJUSTADOS)
 # =========================
 
+from flask import request
+
 @app.route("/forumAluno")
 @app.route("/forum_aluno/<int:id_editar>")
 @login_required
 def forum_aluno(id_editar=None):
-    todos = listar_comentarios() # Puxa tudo do banco
+    todos = listar_comentarios()
     usuario_id = session.get('usuario_id')
-    nome_usuario = session.get('nome').lower() # Para checar se é a thauany
+    nome_usuario = session.get('nome', '').lower()
     
-    # FILTRO DE PRIVACIDADE
+    # PEGA OS FILTROS DA URL
+    tag_filtro = request.args.get('tag')
+    termo_busca = request.args.get('busca', '').lower() # Termo digitado na busca
+    
     comentarios_visiveis = []
+    
     for c in todos:
         if c['destino'] == 'aluno':
-            # Se a tag NÃO for Thauany, qualquer um vê
+            # 1. REGRA DE PRIVACIDADE THAUANY
+            pode_ver = False
             if c['tag'] != 'Thauany':
-                comentarios_visiveis.append(c)
-            # Se a tag FOR Thauany, só o dono ou a Thauany vêem
-            else:
-                if c['usuario_id'] == usuario_id or nome_usuario == 'thauany':
+                pode_ver = True
+            elif c['usuario_id'] == usuario_id or nome_usuario == 'thauany':
+                pode_ver = True
+            
+            if pode_ver:
+                # 2. FILTRO POR TAG
+                passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
+                
+                # 3. FILTRO POR BUSCA (procura no texto do comentário)
+                passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
+                
+                if passa_na_tag and passa_na_busca:
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
 
     return render_template("forumAluno.html", 
                            comentarios=comentarios_visiveis, 
-                           comentario_selecionado=comentario_edit)
+                           comentario_selecionado=comentario_edit,
+                           tag_ativa=tag_filtro,
+                           busca_ativa=termo_busca)
     
     
 
@@ -160,30 +177,47 @@ def forum_aluno(id_editar=None):
 @login_required
 @cargo_required("professor")
 def forum_professor(id_editar=None):
-    todos = listar_comentarios()  # Puxa tudo do banco
+    todos = listar_comentarios()
     usuario_id = session.get('usuario_id')
-    nome_usuario = session.get('nome', '').lower()  # Para checar se é a thauany
+    nome_usuario = session.get('nome', '').lower()
     
-    # FILTRO DE PRIVACIDADE (Igual ao do Aluno)
+    # --- CAPTURA OS FILTROS DA URL ---
+    tag_filtro = request.args.get('tag')
+    termo_busca = request.args.get('busca', '').lower() 
+    
     comentarios_visiveis = []
+    
     for c in todos:
         # 1. Filtra pelo destino correto
         if c['destino'] == 'professor':
-            # 2. Se a tag NÃO for Thauany, qualquer professor vê
+            
+            # 2. REGRA DE PRIVACIDADE THAUANY
+            pode_ver = False
             if c['tag'] != 'Thauany':
-                comentarios_visiveis.append(c)
-            # 3. Se a tag FOR Thauany, só o dono ou a Thauany vêem
-            else:
-                if c['usuario_id'] == usuario_id or nome_usuario == 'thauany':
+                pode_ver = True
+            elif c['usuario_id'] == usuario_id or nome_usuario == 'thauany':
+                pode_ver = True
+            
+            # 3. APLICAÇÃO DOS FILTROS (TAG E BUSCA)
+            if pode_ver:
+                # Checa se bate com a tag escolhida (ou se não tem tag nenhuma selecionada)
+                passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
+                
+                # Checa se o termo pesquisado está no texto (ou se o campo está vazio)
+                passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
+                
+                if passa_na_tag and passa_na_busca:
                     comentarios_visiveis.append(c)
 
-    # Lógica para carregar os dados no popup caso esteja editando
+    # Lógica para edição
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
 
     return render_template("forumProfessor.html", 
                            nome=session.get("nome"),
                            comentarios=comentarios_visiveis, 
-                           comentario_selecionado=comentario_edit)
+                           comentario_selecionado=comentario_edit,
+                           tag_ativa=tag_filtro,  # Enviando para o HTML saber qual tag destacar
+                           busca_ativa=termo_busca) # Enviando para manter o texto na barra de busca
     
     
 

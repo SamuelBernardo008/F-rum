@@ -1,88 +1,118 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="forum-container">
+
     <h1>Bem-vindo ao Fórum! Representante</h1>
     <p>Aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
-    <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a> <a href="{{ url_for('home') }}">Voltar a home</a><br><br>
     
-    {% if session.get('cargo') == 'admin' %}
-    <div style="margin-bottom: 20px;">
-        <a href="{{ url_for('servico_admin') }}" class="btn-voltar-admin">
-            ← Voltar para Painel Admin
-        </a>
-    </div>
-    {% endif %}
-</div>
+    <nav>
+        <a href="{{ url_for('home') }}">Voltar a home</a> | 
+        <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+    </nav>
 
-<button type="button" onclick="abrirPopup()">Comentar no Fórum</button>
+    <hr>
 
-<form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
-    <input type="hidden" name="origem" value="aluno">
-    
-    <input type="hidden" name="id_comentario" value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
-    
-    <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
-        <h3>{{ 'Editando comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
-
-        <input type="text" name="texto" placeholder="Seu comentário" required
-               value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
-        
-        <select name="tag" id="tagComentario" required>
-            {% if comentario_selecionado %}
-                <option value="{{ comentario_selecionado.tag }}" selected>{{ comentario_selecionado.tag }}</option>
-            {% else %}
-                <option value="">Tag</option>
-            {% endif %}
-            <option value="Estrutura">Estrutura</option>
-            <option value="Convivencia">Convivência</option>
-            <option value="Pedagógico">Pedagógico</option>
-            <option value="Elogio">Elogio</option>
-            <option value="Coordenação">Coordenação</option>
-            <option value="Equipe Escolar">Equipe Escolar</option>
-            <option value="Thauany">Thauany</option>
-        </select>
-
-        <br><br>
-
-        <button type="submit">Enviar</button>
-        
-        {% if comentario_selecionado %}
-            <a href="{{ url_for('forum_aluno') }}"><button type="button">Cancelar</button></a>
-        {% else %}
-            <button type="button" onclick="fecharPopup()">Cancelar</button>
-        {% endif %}
-    </div>
-</form>
-
-<div id="comentarios">
-    <h2>Mural do Fórum</h2>
-
-    {% for c in comentarios %}
-        <div class="comentario-card">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
-                
-                <div class="acoes">
-                    {# EDITAR: Só o dono #}
-                    {% if session['usuario_id'] == c.usuario_id %}
-                        <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
-                    {% endif %}
-
-                    {# APAGAR: Dono ou Admin #}
-                    {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
-                        <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red; margin-left: 10px;">delete</a>
-                    {% endif %}
-                </div>
-            </div>
+    <section>
+        <form action="{{ url_for('forum_aluno') }}" method="GET">
+            <input type="text" name="busca" placeholder="Pesquisar no fórum..." value="{{ busca_ativa }}">
+            <button type="submit">Buscar</button>
             
-            <em>#{{ c.tag }}</em><br>
-            <p>{{ c.texto }}</p> 
-            <small>{{ c.data_criacao }}</small>
-            <hr>
+            {% if busca_ativa or tag_ativa %}
+                <button href="{{ url_for('forum_aluno') }}" type="submit">Limpar Filtros</button>
+            {% endif %}
+
+            <strong>Filtrar por Tag:</strong>
+        <a href="{{ url_for('forum_aluno', busca=busca_ativa) }}">#Todos</a>
+        
+        {% set tags = ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'Thauany'] %}
+        {% for t in tags %}
+            {% if t != 'Thauany' or session.get('nome').lower() == 'thauany' or session.get('cargo') == 'admin' %}
+                 | <a href="{{ url_for('forum_aluno', tag=t, busca=busca_ativa) }}">#{{ t }}</a>
+            {% endif %}
+        {% endfor %}
+        </form>
+
+        <br>
+
+        <button type="button" onclick="abrirPopup()">+ Comentar no Fórum</button>
+    </section>
+
+    <br>
+
+    
+
+    {% if session.get('cargo') == 'admin' %}
+    <div>
+        <a href="{{ url_for('servico_admin') }}">← Voltar para Painel Admin</a>
+    </div>
+    <br>
+    {% endif %}
+
+    <form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
+        <input type="hidden" name="origem" value="aluno">
+        <input type="hidden" name="id_comentario" value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
+        
+        <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
+            <h3>{{ 'Editando comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
+
+            <input type="text" name="texto" placeholder="Seu comentário" required
+                   value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
+            
+            <select name="tag" id="tagComentario" required>
+                {% if comentario_selecionado %}
+                    <option value="{{ comentario_selecionado.tag }}" selected>{{ comentario_selecionado.tag }}</option>
+                {% else %}
+                    <option value="">Tag</option>
+                {% endif %}
+                <option value="Estrutura">Estrutura</option>
+                <option value="Convivencia">Convivência</option>
+                <option value="Pedagógico">Pedagógico</option>
+                <option value="Elogio">Elogio</option>
+                <option value="Coordenação">Coordenação</option>
+                <option value="Equipe Escolar">Equipe Escolar</option>
+                <option value="Thauany">Thauany</option>
+            </select>
+
+            <br><br>
+            <button type="submit">Enviar</button>
+            
+            {% if comentario_selecionado %}
+                <a href="{{ url_for('forum_aluno') }}"><button type="button">Cancelar</button></a>
+            {% else %}
+                <button type="button" onclick="fecharPopup()">Cancelar</button>
+            {% endif %}
         </div>
-    {% else %}
-        <p>Nenhum comentário nesta secção.</p>
-    {% endfor %}
+    </form>
+
+    <div id="comentarios">
+        <h2>Mural do Fórum</h2>
+
+        {% for c in comentarios %}
+            <article class="comentario-card">
+                <div>
+                    <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
+                    
+                    <span class="acoes" style="float: right;">
+                        {% if session['usuario_id'] == c.usuario_id %}
+                            <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
+                        {% endif %}
+
+                        {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
+                            <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red;">delete</a>
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <p><i>#{{ c.tag }}</i></p>
+                <p>{{ c.texto }}</p> 
+                <small>{{ c.data_criacao }}</small>
+                <hr>
+            </article>
+        {% else %}
+            <p>Nenhum comentário encontrado para esses filtros.</p>
+        {% endfor %}
+    </div>
+
 </div>
 
 <script>
