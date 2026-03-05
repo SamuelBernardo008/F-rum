@@ -128,27 +128,30 @@ def adicionar_comentario():
 # =========================
 
 @app.route("/forumAluno")
-@app.route("/forumAluno/<int:id_editar>") # Note a rota secundária para edição
+@app.route("/forum_aluno/<int:id_editar>")
 @login_required
-@cargo_required("aluno")
 def forum_aluno(id_editar=None):
-    todos = listar_comentarios()
-    comentarios_filtrados = [c for c in todos if c['destino'] == 'aluno']
+    todos = listar_comentarios() # Puxa tudo do banco
+    usuario_id = session.get('usuario_id')
+    nome_usuario = session.get('nome').lower() # Para checar se é a thauany
     
-    # Buscamos o comentário se o ID vier na URL
-    comentario_edit = None
-    if id_editar:
-        comentario_edit = buscar_comentario_por_id(id_editar)
-        # Segurança: se não for o dono, não deixa editar
-        if not comentario_edit or comentario_edit['usuario_id'] != session.get('usuario_id'):
-            return redirect(url_for('forum_aluno'))
+    # FILTRO DE PRIVACIDADE
+    comentarios_visiveis = []
+    for c in todos:
+        if c['destino'] == 'aluno':
+            # Se a tag NÃO for Thauany, qualquer um vê
+            if c['tag'] != 'Thauany':
+                comentarios_visiveis.append(c)
+            # Se a tag FOR Thauany, só o dono ou a Thauany vêem
+            else:
+                if c['usuario_id'] == usuario_id or nome_usuario == 'thauany':
+                    comentarios_visiveis.append(c)
 
-    return render_template(
-        "forumAluno.html", 
-        nome=session.get("nome"), 
-        comentarios=comentarios_filtrados,
-        comentario_selecionado=comentario_edit # O HTML usa esse nome aqui!
-    )
+    comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
+
+    return render_template("forumAluno.html", 
+                           comentarios=comentarios_visiveis, 
+                           comentario_selecionado=comentario_edit)
 
 @app.route("/forumProfessor")
 @login_required
@@ -196,14 +199,18 @@ def deletar_comentario(id):
     
     return redirect(request.referrer or url_for("home"))
 
-@app.route("/servicoAdmin")
+@app.route("/servico_admin")
 @login_required
 @cargo_required("admin")
 def servico_admin():
-    return render_template(
-        "admin.html",
-        nome=session.get("nome")
-    )
+    from models.comentario import listar_comentarios
+    # Busca todos os comentários do banco
+    todos = listar_comentarios()
+    
+    # FILTRO: Só entram na lista os comentários com a tag 'Thauany'
+    mensagens_privadas = [c for c in todos if c['tag'] == 'Thauany']
+    
+    return render_template("admin.html", comentarios=mensagens_privadas)
 
 
 # =========================

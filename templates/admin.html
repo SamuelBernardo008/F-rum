@@ -1,8 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>ESPAÇO DO ADMIN:</h1>
-<p>Aqui você pode gerenciar o fórum, moderar discussões e configurar as permissões dos usuários. Escolha qual área do fórum deseja acessar?</p>
+<h1>Mensagens para Thauany</h1>
+<p>Exibindo apenas comentários com a tag #Thauany.</p>
 
-<a href="{{ url_for('forum_aluno') }}" id="entrar">Entrar Aluno</a> <a href="{{ url_for('forum_professor') }}" id="entrar">Entrar Professor</a>
+<a href="{{ url_for('forum_aluno') }}">Ir para Fórum Aluno</a> | 
+<a href="{{ url_for('forum_professor') }}">Ir para Fórum Professor</a> |
+<a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+
+<hr>
+
+{% for c in comentarios %}
+    <div>
+        <strong>De: {{ c.autor }}</strong> <br>
+        <strong>Local original:</strong> {{ c.destino }} <br>
+        
+        <p>{{ c.texto }}</p>
+        <small>Enviado em: {{ c.data_criacao }}</small>
+        
+        <br>
+        <a href="{{ url_for('deletar_comentario', id=c.id) }}" onclick="return confirm('Apagar?')">Apagar Mensagem</a>
+        <hr>
+    </div>
+{% else %}
+    <p>Nenhuma mensagem marcada como #Thauany no momento.</p>
+{% endfor %}
+
 {% endblock %}
