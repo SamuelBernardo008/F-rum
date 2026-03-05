@@ -152,16 +152,40 @@ def forum_aluno(id_editar=None):
     return render_template("forumAluno.html", 
                            comentarios=comentarios_visiveis, 
                            comentario_selecionado=comentario_edit)
+    
+    
 
 @app.route("/forumProfessor")
+@app.route("/forumProfessor/<int:id_editar>")
 @login_required
 @cargo_required("professor")
-def forum_professor():
-    todos = listar_comentarios()
-    # FILTRO: Só mostra o que foi destinado aos professores
-    comentarios_filtrados = [c for c in todos if c['destino'] == 'professor']
+def forum_professor(id_editar=None):
+    todos = listar_comentarios()  # Puxa tudo do banco
+    usuario_id = session.get('usuario_id')
+    nome_usuario = session.get('nome', '').lower()  # Para checar se é a thauany
+    
+    # FILTRO DE PRIVACIDADE (Igual ao do Aluno)
+    comentarios_visiveis = []
+    for c in todos:
+        # 1. Filtra pelo destino correto
+        if c['destino'] == 'professor':
+            # 2. Se a tag NÃO for Thauany, qualquer professor vê
+            if c['tag'] != 'Thauany':
+                comentarios_visiveis.append(c)
+            # 3. Se a tag FOR Thauany, só o dono ou a Thauany vêem
+            else:
+                if c['usuario_id'] == usuario_id or nome_usuario == 'thauany':
+                    comentarios_visiveis.append(c)
 
-    return render_template("forumProfessor.html", nome=session.get("nome"), comentarios=comentarios_filtrados)
+    # Lógica para carregar os dados no popup caso esteja editando
+    comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
+
+    return render_template("forumProfessor.html", 
+                           nome=session.get("nome"),
+                           comentarios=comentarios_visiveis, 
+                           comentario_selecionado=comentario_edit)
+    
+    
 
 @app.route("/comentario/editar/<int:id>", methods=["POST"])
 @login_required
