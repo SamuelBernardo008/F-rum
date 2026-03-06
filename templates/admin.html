@@ -1,29 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>Mensagens para Thauany</h1>
-<p>Exibindo apenas comentários com a tag #Thauany.</p>
+<div class="admin-container">
+    <h1>Painel da Coordenação</h1>
+    <p>Exibindo mensagens enviadas com a tag <strong>#Apenas Coordenação</strong>.</p>
 
-<a href="{{ url_for('forum_aluno') }}">Ir para Fórum Aluno</a> | 
-<a href="{{ url_for('forum_professor') }}">Ir para Fórum Professor</a> |
-<a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+    <nav>
+        <a href="{{ url_for('forum_aluno') }}">Ir para Fórum Aluno</a> | 
+        <a href="{{ url_for('forum_professor') }}">Ir para Fórum Professor</a> |
+        <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+    </nav>
 
-<hr>
+    <hr>
 
-{% for c in comentarios %}
-    <div>
-        <strong>De: {{ c.autor }}</strong> <br>
-        <strong>Local original:</strong> {{ c.destino }} <br>
-        
-        <p>{{ c.texto }}</p>
-        <small>Enviado em: {{ c.data_criacao }}</small>
-        
-        <br>
-        <a href="{{ url_for('deletar_comentario', id=c.id) }}" onclick="return confirm('Apagar?')">Apagar Mensagem</a>
-        <hr>
-    </div>
-{% else %}
-    <p>Nenhuma mensagem marcada como #Thauany no momento.</p>
-{% endfor %}
+    <section id="mensagens-coordenacao">
+        {% for c in comentarios %}
+            <article class="comentario-card">
+                <div>
+                    <strong>De: {{ c.autor }}</strong> <br>
+                    <strong>Local original:</strong> 
+                    {# Formata o destino para ficar com a primeira letra maiúscula #}
+                    {{ c.destino|capitalize }} 
+                </div>
+                
+                <p>{{ c.texto }}</p>
+                <small>Enviado em: {{ c.data_criacao }}</small>
+                
+                <br><br>
+                <a href="{{ url_for('deletar_comentario', id=c.id) }}" 
+                   onclick="return confirm('Tem certeza que deseja apagar esta mensagem privada?')" 
+                   style="color: red;">
+                   Apagar Mensagem
+                </a>
+                <hr>
+            </article>
+        {% else %}
+            <p>Nenhuma mensagem direcionada à coordenação no momento.</p>
+        {% endfor %}
+    </section>
+</div>
 
 {% endblock %}

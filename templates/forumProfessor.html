@@ -4,10 +4,10 @@
 
     <header>
         <h1>Bem-vindo ao Fórum do Professor</h1>
-        <p>Olá, {{ nome }}! Espaço destinado a docentes.</p>
-        
+        <p>{{ session.get('nome') }}, aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
+
         <nav>
-            <a href="{{ url_for('home') }}">Voltar a home</a> | 
+            <a href="{{ url_for('home') }}">Voltar a home</a> |
             <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
         </nav>
     </header>
@@ -18,24 +18,25 @@
         <form action="{{ url_for('forum_professor') }}" method="GET">
             <input type="text" name="busca" placeholder="Pesquisar no fórum..." value="{{ busca_ativa }}">
             <button type="submit">Buscar</button>
-            
+
             {% if busca_ativa or tag_ativa %}
-            <button href="{{ url_for('forum_professor') }}" type="submit">Limpar Filtros</button>
+                <a href="{{ url_for('forum_professor') }}"><button type="button">Limpar Filtros</button></a>
             {% endif %}
 
+            <br><br>
             <strong>Filtrar por Tag:</strong>
-        <a href="{{ url_for('forum_professor', busca=busca_ativa) }}">#Todos</a>
-        
-        {% set tags = ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'Thauany'] %}
-        {% for t in tags %}
-            {% if t != 'Thauany' or session.get('nome').lower() == 'thauany' or session.get('cargo') == 'admin' %}
-                 | <a href="{{ url_for('forum_professor', tag=t, busca=busca_ativa) }}">#{{ t }}</a>
+            <a href="{{ url_for('forum_professor', busca=busca_ativa) }}">#Todos</a>
+
+            {% set tags = ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar'] %}
+            {% for t in tags %}
+                | <a href="{{ url_for('forum_professor', tag=t, busca=busca_ativa) }}">#{{ t }}</a>
+            {% endfor %}
+
+            {# Mostra o filtro de mensagens privadas apenas para Admins #}
+            {% if session.get('cargo') == 'admin' %}
+                | <a href="{{ url_for('forum_professor', tag='admin', busca=busca_ativa) }}">#Apenas Coordenação</a>
             {% endif %}
-        {% endfor %}
-        </form>
-
-        <br>
-
+        </form> <br>
         <button type="button" onclick="abrirPopup()">+ Comentar no Fórum</button>
     </section>
 
@@ -50,36 +51,40 @@
 
     <form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
         <input type="hidden" name="origem" value="professor">
-        <input type="hidden" name="id_comentario" value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
-        
+        <input type="hidden" name="id_comentario"
+            value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
+
         <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
             <h3>{{ 'Editando seu comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
 
             <input type="text" name="texto" placeholder="Seu comentário" required
-                   value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
-            
+                value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
+
             <select name="tag" id="tagComentario" required>
                 {% if comentario_selecionado %}
-                    <option value="{{ comentario_selecionado.tag }}" selected>{{ comentario_selecionado.tag }}</option>
+                <option value="{{ comentario_selecionado.tag }}" selected>
+                    {{ 'Apenas Coordenação' if comentario_selecionado.tag == 'admin' else comentario_selecionado.tag }}
+                </option>
                 {% else %}
-                    <option value="">Tag</option>
+                <option value="">Tag</option>
                 {% endif %}
+
                 <option value="Estrutura">Estrutura</option>
                 <option value="Convivencia">Convivência</option>
                 <option value="Pedagógico">Pedagógico</option>
                 <option value="Elogio">Elogio</option>
                 <option value="Coordenação">Coordenação</option>
                 <option value="Equipe Escolar">Equipe Escolar</option>
-                <option value="Thauany">Thauany</option>
+                <option value="admin">Apenas Coordenação</option>
             </select>
 
             <br><br>
             <button type="submit">Enviar</button>
-            
+
             {% if comentario_selecionado %}
-                <a href="{{ url_for('forum_professor') }}"><button type="button">Cancelar</button></a>
+            <a href="{{ url_for('forum_professor') }}"><button type="button">Cancelar</button></a>
             {% else %}
-                <button type="button" onclick="fecharPopup()">Cancelar</button>
+            <button type="button" onclick="fecharPopup()">Cancelar</button>
             {% endif %}
         </div>
     </form>
@@ -88,39 +93,48 @@
         <h2>Mural do Fórum</h2>
 
         {% for c in comentarios %}
-            <article class="comentario-card">
-                <div>
-                    <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
-                    
-                    <span style="float: right;">
-                        {% if session['usuario_id'] == c.usuario_id %}
-                            <a href="{{ url_for('forum_professor', id_editar=c.id) }}">editar</a>
-                        {% endif %}
-
-                        {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
-                            <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red; margin-left: 10px;">delete</a>
-                        {% endif %}
-                    </span>
-                </div>
+        <article class="comentario-card">
+            <div>
+                <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
                 
-                <p><i>#{{ c.tag }}</i></p>
-                <p>{{ c.texto }}</p>
-                <small>{{ c.data_criacao }}</small>
-                <hr>
-            </article>
+                <span style="float: right;">
+                    {% if session['usuario_id'] == c.usuario_id %}
+                        <a href="{{ url_for('forum_professor', id_editar=c.id) }}">editar</a>
+                    {% endif %}
+
+                    {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
+                        <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red; margin-left: 10px;">delete</a>
+                    {% endif %}
+                </span>
+            </div>
+            
+            <p>
+                <i>
+                    {% if c.tag == 'admin' %}
+                        #Apenas Coordenação (Privado)
+                    {% else %}
+                        #{{ c.tag }}
+                    {% endif %}
+                </i>
+            </p>
+
+            <p>{{ c.texto }}</p>
+            <small>{{ c.data_criacao }}</small>
+            <hr>
+        </article>
         {% else %}
-            <p>Nenhum comentário encontrado para esses filtros.</p>
+        <p>Nenhum comentário encontrado para esses filtros.</p>
         {% endfor %}
     </div>
 
 </div>
 
 <script>
-function abrirPopup() {
-    document.getElementById("popup").hidden = false;
-}
-function fecharPopup() {
-    document.getElementById("popup").hidden = true;
-}
+    function abrirPopup() {
+        document.getElementById("popup").hidden = false;
+    }
+    function fecharPopup() {
+        document.getElementById("popup").hidden = true;
+    }
 </script>
 {% endblock %}
