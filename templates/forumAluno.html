@@ -52,9 +52,11 @@
         <input type="hidden" name="origem" value="aluno">
         <input type="hidden" name="id_comentario"
             value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
+        
+        <input type="hidden" name="pai_id" id="input_pai_id" value="">
 
         <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
-            <h3>{{ 'Editando comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
+            <h3 id="titulo-popup">{{ 'Editando comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
 
             <input type="text" name="texto" placeholder="Seu comentário" required
                 value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
@@ -94,14 +96,20 @@
         {% for c in comentarios %}
         <article class="comentario-card" style="margin-bottom: 20px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.jpg')) }}" 
+                <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" 
                      alt="Foto" 
                      style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;">
                 
                 <div style="flex: 1;">
                     <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
                     
+                    {% if c.autor_respondido %}
+                        <small style="color: #888;"> respondendo a <b>{{ c.autor_respondido }}</b></small>
+                    {% endif %}
+
                     <span class="acoes" style="float: right;">
+                        <a href="javascript:void(0)" onclick="prepararResposta('{{ c.id }}', '{{ c.autor }}')" style="margin-right: 10px;">responder</a>
+
                         {% if session['usuario_id'] == c.usuario_id %}
                         <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
                         {% endif %}
@@ -135,10 +143,23 @@
 
 <script>
     function abrirPopup() {
+        // Limpa o pai_id para novos comentários
+        document.getElementById("input_pai_id").value = "";
+        document.getElementById("titulo-popup").innerText = "Digite seu comentário:";
         document.getElementById("popup").hidden = false;
     }
+
     function fecharPopup() {
         document.getElementById("popup").hidden = true;
+    }
+
+    // NOVA FUNÇÃO PARA GERENCIAR RESPOSTAS
+    function prepararResposta(idPai, nomeAutor) {
+        document.getElementById("popup").hidden = false;
+        document.getElementById("input_pai_id").value = idPai;
+        document.getElementById("titulo-popup").innerText = "Respondendo a " + nomeAutor + ":";
+        // Foca no input de texto automaticamente
+        document.querySelector('input[name="texto"]').focus();
     }
 </script>
 {% endblock %}

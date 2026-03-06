@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="perfil-container">
-    
+
     <div class="sidebar-perfil">
-        
+
         <div class="foto-container">
-            <img src="{{ url_for('static', filename='uploads/' + (foto or 'default.jpg')) }}" alt="Foto de Perfil">
+            <img src="{{ url_for('static', filename='uploads/' + (foto if foto else 'default.png')) }}"
+                alt="Foto de Perfil">
         </div>
-        
+
         <h2>{{ nome }}</h2>
         <p><strong>Cargo:</strong> {{ cargo | capitalize }}</p>
-        
+
         <hr>
-        
+
         <p>Total de postagens: <strong>{{ comentarios|length }}</strong></p>
-        
+
         <form action="{{ url_for('upload_foto') }}" method="POST" enctype="multipart/form-data">
             <label for="file-upload" class="botao-upload">
                 Alterar Foto
@@ -23,43 +24,43 @@
         </form>
 
         <div class="voltar-link">
-            <a href="{{ url_for('home') }}">← Voltar para Início</a>
+            <a href="{{ url_retorno }}">← Voltar para o Fórum</a>
         </div>
     </div>
 
     <div class="historico-atividades">
         <h3>Minhas Atividades</h3>
         <hr>
-        
+
         {% for c in comentarios %}
-            <div class="comentario-card">
-                <div class="comentario-header">
-                    <small>
-                        {{ c.data_criacao }} | 
-                        <span>#{{ 'Apenas Coordenação' if c.tag == 'admin' else c.tag }}</span>
-                    </small>
-                    <a href="{{ url_for('forum_' + c.destino, id_editar=c.id) }}">Editar</a>
-                </div>
-                
-                <p>{{ c.texto }}</p>
-                
-                <div class="comentario-footer">
-                    <small>Enviado para: Fórum {{ c.destino | capitalize }}</small>
-                </div>
+        <div class="comentario-card">
+            <div class="comentario-header">
+                <small>
+                    {{ c.data_criacao }} |
+                    <span>#{{ 'Apenas Coordenação' if c.tag == 'admin' else c.tag }}</span>
+                </small>
+                <a href="{{ url_for('forum_' + c.destino, id_editar=c.id) }}">Editar</a>
             </div>
+
+            <p>{{ c.texto }}</p>
+
+            <div class="comentario-footer">
+                <small>Enviado para: Fórum {{ c.destino | capitalize }}</small>
+            </div>
+        </div>
         {% else %}
-            <div class="aviso-vazio">
-                <p>Você ainda não realizou nenhuma postagem.</p>
-                <a href="{{ url_for('home') }}">Começar agora</a>
-            </div>
+        <div class="aviso-vazio">
+            <p>Você ainda não realizou nenhuma postagem.</p>
+            <a href="{{ url_for('home') }}">Começar agora</a>
+        </div>
         {% endfor %}
     </div>
 </div>
 
 <script>
     // Mantive apenas o script essencial para o upload automático
-    document.getElementById('file-upload').onchange = function() {
-        if(this.value) {
+    document.getElementById('file-upload').onchange = function () {
+        if (this.value) {
             this.form.submit();
         }
     };

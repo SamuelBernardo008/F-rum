@@ -20,7 +20,7 @@ def init_db(db_name: str = DB_PATH):
             email TEXT UNIQUE NOT NULL,
             senha TEXT NOT NULL,
             cargo TEXT NOT NULL,
-            foto TEXT DEFAULT 'default.jpg'  -- ADICIONADO: Nome do arquivo da foto
+            foto TEXT DEFAULT 'default.png'  -- Mudamos para .png aqui
         )
         """)
         
@@ -32,8 +32,9 @@ def init_db(db_name: str = DB_PATH):
             data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             tag TEXT NOT NULL,
             destino TEXT NOT NULL,
-            FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+            pai_id INTEGER, -- NOVA COLUNA: ID do comentário sendo respondido
+            FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+            FOREIGN KEY (pai_id) REFERENCES comentario(id) ON DELETE CASCADE
         )
         """)
-
         conn.commit()

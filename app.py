@@ -1,7 +1,7 @@
 import os
+from PIL import Image  # CORRIGIDO: Uso do Pillow para processamento de imagem
 from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
-from werkzeug.utils import secure_filename
 from models.database import init_db
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
 from models.comentario import (
@@ -18,7 +18,6 @@ app.secret_key = "123"
 
 # Configurações de Upload
 UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Cria a pasta de uploads caso não exista
@@ -79,8 +78,8 @@ def login():
             session["usuario_id"] = usuario["id"]
             session["nome"] = usuario["nome"]
             session["cargo"] = usuario["cargo"]
-            # Carrega a foto do banco para a sessão (usa default se estiver vazio)
-            session["foto"] = usuario["foto"] if usuario.get("foto") else "default.jpg"
+            # Padronizado para .png
+            session["foto"] = usuario["foto"] if usuario.get("foto") else "default.png"
             
             if usuario["cargo"] == "admin":
                 return redirect(url_for("servico_admin"))
@@ -105,7 +104,12 @@ def adicionar_comentario():
     texto = request.form.get("texto")
     tag = request.form.get("tag")
     destino = request.form.get("origem")
+    pai_id = request.form.get("pai_id") # Captura o ID do comentário respondido
     usuario_id = session.get("usuario_id")
+
+    # Tratamento do pai_id para o banco
+    if not pai_id or not pai_id.strip():
+        pai_id = None
 
     if texto and tag and destino:
         if id_comentario and id_comentario.strip():
@@ -113,7 +117,8 @@ def adicionar_comentario():
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
                 atualizar_comentario(id_comentario, texto, tag)
         else:
-            criar_comentario(texto, usuario_id, tag, destino)
+            # Enviando o pai_id para a função de criação
+            criar_comentario(texto, usuario_id, tag, destino, pai_id)
     
     return redirect(url_for(f"forum_{destino}"))
 
@@ -195,14 +200,17 @@ def forum_professor(id_editar=None):
 @app.route("/perfil")
 @login_required
 def perfil():
+    origem = request.referrer or url_for('home')
     usuario_id = session.get("usuario_id")
     meus_comentarios = listar_comentarios_por_usuario(usuario_id)
+    
     return render_template("perfil.html", 
                            nome=session.get("nome"), 
                            cargo=session.get("cargo"),
-                           foto=session.get("foto", "default.jpg"),
-                           comentarios=meus_comentarios)
-
+                           foto=session.get("foto") or "default.png",
+                           comentarios=meus_comentarios,
+                           url_retorno=origem)
+    
 @app.route("/upload_foto", methods=["POST"])
 @login_required
 def upload_foto():
@@ -212,14 +220,13 @@ def upload_foto():
     arquivo = request.files['foto']
     
     if arquivo and arquivo.filename != '':
-        # Nome seguro: user_1_nome-da-foto.jpg
-        extensao = arquivo.filename.rsplit('.', 1)[1].lower()
-        novo_nome = f"user_{session['usuario_id']}.{extensao}"
-        
+        novo_nome = f"user_{session['usuario_id']}.png"
         caminho = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
-        arquivo.save(caminho)
         
-        # Atualiza no banco e na sessão
+        # Converte a imagem para PNG usando Pillow
+        img = Image.open(arquivo)
+        img.save(caminho, "PNG")
+        
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
         session['foto'] = novo_nome
 

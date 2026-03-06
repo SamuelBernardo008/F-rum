@@ -11,4 +11,8 @@ data/
 
 inserir.py
 
-uplouds/
+
+static/uploads/*
+
+!static/uploads/default.png
+!static/uploads/.gitignore
