@@ -38,7 +38,7 @@
                 | <a href="{{ url_for('forum_professor', tag='admin', busca=busca_ativa) }}">#Apenas Coordenação</a>
             {% endif %}
         </form> <br>
-        <button type="button" onclick="abrirPopup()">+ Comentar no Fórum</button>
+        <button type="button" onclick="abrirPopup()">+ Novo Tópico no Fórum</button>
     </section>
 
     <br>
@@ -91,19 +91,23 @@
     </form>
 
     <div id="comentarios">
-        <h2>Mural do Fórum</h2>
+        <h2>Mural do Fórum (Docentes)</h2>
 
         {% for c in comentarios %}
-        <article class="comentario-card" style="margin-bottom: 20px;">
+        <article class="comentario-card" style="margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-                <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.jpg')) }}" 
+                <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" 
                      alt="Foto" 
                      style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;">
                 
                 <div style="flex: 1;">
                     <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
                     
-                    <span style="float: right;">
+                    <span class="acoes" style="float: right;">
+                        <a href="{{ url_for('ver_thread', id_pai=c.id) }}" style="color: #007bff; font-weight: bold; margin-right: 15px;">
+                            💬 Respostas ({{ c.total_respostas if c.total_respostas else 0 }})
+                        </a>
+
                         {% if session['usuario_id'] == c.usuario_id %}
                             <a href="{{ url_for('forum_professor', id_editar=c.id) }}">editar</a>
                         {% endif %}
@@ -117,7 +121,7 @@
             
             <div style="margin-left: 50px;">
                 <p>
-                    <i>
+                    <i style="color: #666;">
                         {% if c.tag == 'admin' %}
                             #Apenas Coordenação (Privado)
                         {% else %}
@@ -126,7 +130,7 @@
                     </i>
                 </p>
 
-                <p>{{ c.texto }}</p>
+                <p style="font-size: 1.1em;">{{ c.texto }}</p>
                 <small style="color: #888;">{{ c.data_criacao }}</small>
             </div>
             <hr style="margin-top: 15px;">

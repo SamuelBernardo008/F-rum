@@ -1,5 +1,5 @@
 import os
-from PIL import Image  # CORRIGIDO: Uso do Pillow para processamento de imagem
+from PIL import Image  
 from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
 from models.database import init_db
@@ -16,18 +16,14 @@ from models.comentario import (
 app = Flask(__name__)
 app.secret_key = "123"
 
-# Configurações de Upload
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Cria a pasta de uploads caso não exista
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Inicializa o banco de dados
 init_db()
 
 # =========================
-# DECORATORS (SEGURANÇA)
+# DECORATORS
 # =========================
 
 def login_required(f):
@@ -46,17 +42,17 @@ def cargo_required(cargo_permitido):
             if usuario_cargo == "admin":
                 return f(*args, **kwargs)
             if usuario_cargo != cargo_permitido:
-                if usuario_cargo == "aluno":
-                    return redirect(url_for("forum_aluno"))
-                elif usuario_cargo == "professor":
-                    return redirect(url_for("forum_professor"))
-                return redirect(url_for("login"))
+                # Tenta redirecionar para o fórum do cargo dele, se falhar vai pro login
+                try:
+                    return redirect(url_for(f"forum_{usuario_cargo}"))
+                except:
+                    return redirect(url_for("login"))
             return f(*args, **kwargs)
         return decorated_function
     return decorator
 
 # =========================
-# ROTAS DE AUTENTICAÇÃO
+# AUTENTICAÇÃO
 # =========================
 
 @app.route("/")
@@ -67,7 +63,8 @@ def home():
 def login():
     if "usuario_id" in session:
         cargo = session.get("cargo")
-        return redirect(url_for("servico_admin" if cargo == "admin" else f"forum_{cargo}"))
+        endpoint = "servico_admin" if cargo == "admin" else f"forum_{cargo}"
+        return redirect(url_for(endpoint))
 
     if request.method == "POST":
         email = request.form.get("email")
@@ -78,7 +75,6 @@ def login():
             session["usuario_id"] = usuario["id"]
             session["nome"] = usuario["nome"]
             session["cargo"] = usuario["cargo"]
-            # Padronizado para .png
             session["foto"] = usuario["foto"] if usuario.get("foto") else "default.png"
             
             if usuario["cargo"] == "admin":
@@ -94,7 +90,7 @@ def logout():
     return redirect(url_for("login"))
 
 # =========================
-# GESTÃO DE COMENTÁRIOS
+# GESTÃO DE COMENTÁRIOS E THREADS
 # =========================
 
 @app.route("/comentario", methods=["POST"])
@@ -104,11 +100,11 @@ def adicionar_comentario():
     texto = request.form.get("texto")
     tag = request.form.get("tag")
     destino = request.form.get("origem")
-    pai_id = request.form.get("pai_id") # Captura o ID do comentário respondido
+    pai_id = request.form.get("pai_id") 
     usuario_id = session.get("usuario_id")
 
-    # Tratamento do pai_id para o banco
-    if not pai_id or not pai_id.strip():
+    # Limpeza do pai_id para o Banco de Dados
+    if not pai_id or not str(pai_id).strip():
         pai_id = None
 
     if texto and tag and destino:
@@ -117,10 +113,25 @@ def adicionar_comentario():
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
                 atualizar_comentario(id_comentario, texto, tag)
         else:
-            # Enviando o pai_id para a função de criação
             criar_comentario(texto, usuario_id, tag, destino, pai_id)
     
+    # Se for uma resposta, volta para a thread. Se for post novo, volta pro fórum.
+    if pai_id:
+        return redirect(url_for('ver_thread', id_pai=pai_id))
     return redirect(url_for(f"forum_{destino}"))
+
+@app.route("/thread/<int:id_pai>")
+@login_required
+def ver_thread(id_pai):
+    pai = buscar_comentario_por_id(id_pai)
+    if not pai:
+        return redirect(url_for('home'))
+    
+    todos = listar_comentarios()
+    # Respostas são comentários que possuem esse pai_id
+    respostas = [c for c in todos if str(c.get('pai_id')) == str(id_pai)]
+    
+    return render_template("thread.html", pai=pai, respostas=respostas)
 
 @app.route("/comentario/deletar/<int:id>")
 @login_required
@@ -132,12 +143,13 @@ def deletar_comentario(id):
     return redirect(request.referrer or url_for("home"))
 
 # =========================
-# FÓRUNS E FILTROS
+# FÓRUNS
 # =========================
 
-@app.route("/forumAluno")
+@app.route("/forum_aluno")
 @app.route("/forum_aluno/<int:id_editar>")
 @login_required
+@cargo_required("aluno")
 def forum_aluno(id_editar=None):
     todos = listar_comentarios()
     usuario_id = session.get('usuario_id')
@@ -148,12 +160,15 @@ def forum_aluno(id_editar=None):
     
     comentarios_visiveis = []
     for c in todos:
-        if c['destino'] == 'aluno':
+        # Apenas posts principais (sem pai) destinados a alunos
+        if c['destino'] == 'aluno' and c.get('pai_id') is None:
             pode_ver = (c['tag'] != 'admin') or (usuario_cargo == 'admin' or c['usuario_id'] == usuario_id)
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
                 if passa_na_tag and passa_na_busca:
+                    # Cálculo dinâmico do total de respostas
+                    c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
@@ -163,8 +178,8 @@ def forum_aluno(id_editar=None):
                            tag_ativa=tag_filtro,
                            busca_ativa=termo_busca)
 
-@app.route("/forumProfessor")
-@app.route("/forumProfessor/<int:id_editar>")
+@app.route("/forum_professor")
+@app.route("/forum_professor/<int:id_editar>")
 @login_required
 @cargo_required("professor")
 def forum_professor(id_editar=None):
@@ -173,28 +188,29 @@ def forum_professor(id_editar=None):
     usuario_cargo = session.get('cargo')
     
     tag_filtro = request.args.get('tag')
-    termo_busca = request.args.get('busca', '').lower() 
+    termo_busca = request.args.get('busca', '').lower()
     
     comentarios_visiveis = []
     for c in todos:
-        if c['destino'] == 'professor':
+        # Apenas posts principais destinados a professores
+        if c['destino'] == 'professor' and c.get('pai_id') is None:
             pode_ver = (c['tag'] != 'admin') or (usuario_cargo == 'admin' or c['usuario_id'] == usuario_id)
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
                 if passa_na_tag and passa_na_busca:
+                    c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
     return render_template("forumProfessor.html", 
-                           nome=session.get("nome"),
                            comentarios=comentarios_visiveis, 
                            comentario_selecionado=comentario_edit,
                            tag_ativa=tag_filtro,
                            busca_ativa=termo_busca)
 
 # =========================
-# PERFIL E UPLOAD
+# PERFIL E ADMIN
 # =========================
 
 @app.route("/perfil")
@@ -218,23 +234,15 @@ def upload_foto():
         return redirect(url_for('perfil'))
     
     arquivo = request.files['foto']
-    
     if arquivo and arquivo.filename != '':
         novo_nome = f"user_{session['usuario_id']}.png"
         caminho = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
-        
-        # Converte a imagem para PNG usando Pillow
         img = Image.open(arquivo)
         img.save(caminho, "PNG")
-        
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
         session['foto'] = novo_nome
 
     return redirect(url_for('perfil'))
-
-# =========================
-# PAINEL ADMIN E FAQ
-# =========================
 
 @app.route("/servico_admin")
 @login_required

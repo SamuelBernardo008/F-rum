@@ -36,7 +36,7 @@
                 | <a href="{{ url_for('forum_aluno', tag='admin', busca=busca_ativa) }}">#Apenas Coordenação</a>
             {% endif %}
         </form> <br>
-        <button type="button" onclick="abrirPopup()">+ Comentar no Fórum</button>
+        <button type="button" onclick="abrirPopup()">+ Novo Post no Fórum</button>
     </section>
 
     <br>
@@ -52,13 +52,11 @@
         <input type="hidden" name="origem" value="aluno">
         <input type="hidden" name="id_comentario"
             value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
-        
-        <input type="hidden" name="pai_id" id="input_pai_id" value="">
 
         <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
-            <h3 id="titulo-popup">{{ 'Editando comentário:' if comentario_selecionado else 'Digite seu comentário:' }}</h3>
+            <h3>{{ 'Editando comentário:' if comentario_selecionado else 'O que você está pensando?' }}</h3>
 
-            <input type="text" name="texto" placeholder="Seu comentário" required
+            <input type="text" name="texto" placeholder="Escreva aqui seu tópico principal..." required
                 value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
 
             <select name="tag" id="tagComentario" required>
@@ -80,7 +78,7 @@
             </select>
 
             <br><br>
-            <button type="submit">Enviar</button>
+            <button type="submit">Postar</button>
 
             {% if comentario_selecionado %}
             <a href="{{ url_for('forum_aluno') }}"><button type="button">Cancelar</button></a>
@@ -94,7 +92,7 @@
         <h2>Mural do Fórum</h2>
 
         {% for c in comentarios %}
-        <article class="comentario-card" style="margin-bottom: 20px;">
+        <article class="comentario-card" style="margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
                 <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" 
                      alt="Foto" 
@@ -103,12 +101,10 @@
                 <div style="flex: 1;">
                     <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
                     
-                    {% if c.autor_respondido %}
-                        <small style="color: #888;"> respondendo a <b>{{ c.autor_respondido }}</b></small>
-                    {% endif %}
-
                     <span class="acoes" style="float: right;">
-                        <a href="javascript:void(0)" onclick="prepararResposta('{{ c.id }}', '{{ c.autor }}')" style="margin-right: 10px;">responder</a>
+                        <a href="{{ url_for('ver_thread', id_pai=c.id) }}" style="color: #007bff; font-weight: bold; margin-right: 15px;">
+                            Respostas ({{ c.total_respostas if c.total_respostas else 0 }})
+                        </a>
 
                         {% if session['usuario_id'] == c.usuario_id %}
                         <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
@@ -122,20 +118,14 @@
             </div>
 
             <p style="margin-left: 50px;">
-                <i>
-                    {% if c.tag == 'admin' %}
-                    #Apenas Coordenação (Privado)
-                    {% else %}
-                    #{{ c.tag }}
-                    {% endif %}
-                </i>
+                <i style="color: #666;">#{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}</i>
             </p>
-            <p style="margin-left: 50px;">{{ c.texto }}</p>
+            <p style="margin-left: 50px; font-size: 1.1em;">{{ c.texto }}</p>
             <small style="margin-left: 50px; color: #888;">{{ c.data_criacao }}</small>
             <hr>
         </article>
         {% else %}
-        <p>Nenhum comentário encontrado para esses filtros.</p>
+        <p>Nenhum tópico encontrado para esses filtros.</p>
         {% endfor %}
     </div>
 
@@ -143,23 +133,11 @@
 
 <script>
     function abrirPopup() {
-        // Limpa o pai_id para novos comentários
-        document.getElementById("input_pai_id").value = "";
-        document.getElementById("titulo-popup").innerText = "Digite seu comentário:";
         document.getElementById("popup").hidden = false;
     }
 
     function fecharPopup() {
         document.getElementById("popup").hidden = true;
-    }
-
-    // NOVA FUNÇÃO PARA GERENCIAR RESPOSTAS
-    function prepararResposta(idPai, nomeAutor) {
-        document.getElementById("popup").hidden = false;
-        document.getElementById("input_pai_id").value = idPai;
-        document.getElementById("titulo-popup").innerText = "Respondendo a " + nomeAutor + ":";
-        // Foca no input de texto automaticamente
-        document.querySelector('input[name="texto"]').focus();
     }
 </script>
 {% endblock %}

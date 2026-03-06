@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="forum-container">
+    
+    <nav style="margin-bottom: 20px;">
+        <a href="{{ url_for('forum_aluno') }}">← Voltar para o Fórum</a>
+    </nav>
+
+    <section class="post-principal" style="background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <img src="{{ url_for('static', filename='uploads/' + (pai.foto or 'default.png')) }}" 
+                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+            <div>
+                <strong>{{ pai.autor }}</strong> <br>
+                <small style="color: #888;">#{{ pai.tag }} | {{ pai.data_criacao }}</small>
+            </div>
+        </div>
+        <p style="font-size: 1.2em; margin-left: 60px;">{{ pai.texto }}</p>
+    </section>
+
+    <hr style="margin: 30px 0;">
+
+    <section class="formulario-resposta" style="margin-left: 60px; margin-bottom: 40px;">
+        <h3>Deixe sua resposta:</h3>
+        <form action="{{ url_for('adicionar_comentario') }}" method="POST">
+            <input type="hidden" name="origem" value="{{ pai.destino }}">
+            <input type="hidden" name="pai_id" value="{{ pai.id }}">
+            <input type="hidden" name="tag" value="{{ pai.tag }}"> <textarea name="texto" placeholder="O que você acha disso?" required 
+                      style="width: 90%; height: 60px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+            <br>
+            <button type="submit" style="margin-top: 10px; padding: 10px 20px; cursor: pointer;">Responder</button>
+        </form>
+    </section>
+
+    <section class="respostas" style="margin-left: 60px;">
+        <h2>Respostas ({{ respostas|length }})</h2>
+        
+        {% for r in respostas %}
+        <article class="comentario-card" style="margin-bottom: 15px; padding: 15px; border-left: 3px solid #007bff; background: #fff;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="{{ url_for('static', filename='uploads/' + (r.foto or 'default.png')) }}" 
+                     style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                <strong>{{ r.autor }}</strong>
+                <small style="color: #888; margin-left: auto;">{{ r.data_criacao }}</small>
+            </div>
+            <p style="margin-top: 10px; margin-left: 40px;">{{ r.texto }}</p>
+            
+            <div style="text-align: right;">
+                {% if session['usuario_id'] == r.usuario_id or session['cargo'] == 'admin' %}
+                    <a href="{{ url_for('deletar_comentario', id=r.id) }}" style="color: red; font-size: 0.8em;">excluir</a>
+                {% endif %}
+            </div>
+        </article>
+        {% else %}
+            <p style="color: #888;">Ainda não há respostas. Seja o primeiro a comentar!</p>
+        {% endfor %}
+    </section>
+
+</div>
+{% endblock %}
