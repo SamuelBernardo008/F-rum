@@ -7,7 +7,6 @@ DB_PATH = os.getenv("DATABASE", "./data/forum.sqlite3")
 
 
 def init_db(db_name: str = DB_PATH):
-
     data_dir = os.path.join(os.getcwd(), "data")
 
     if not os.path.exists(data_dir):
@@ -20,21 +19,21 @@ def init_db(db_name: str = DB_PATH):
             nome TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             senha TEXT NOT NULL,
-            cargo TEXT NOT NULL)
+            cargo TEXT NOT NULL,
+            foto TEXT DEFAULT 'default.jpg'  -- ADICIONADO: Nome do arquivo da foto
+        )
         """)
         
         conn.execute("""
         CREATE TABLE IF NOT EXISTS comentario (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        texto TEXT NOT NULL,
-        usuario_id INTEGER NOT NULL,
-        data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        tag TEXT NOT NULL,
-        destino TEXT NOT NULL,  -- ADICIONADO: 'aluno' ou 'professor'
-        FOREIGN KEY (usuario_id) REFERENCES usuario(id))
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            texto TEXT NOT NULL,
+            usuario_id INTEGER NOT NULL,
+            data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            tag TEXT NOT NULL,
+            destino TEXT NOT NULL,
+            FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+        )
         """)
 
         conn.commit()
-    
-    
-

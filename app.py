@@ -1,19 +1,30 @@
+import os
 from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
+from werkzeug.utils import secure_filename
 from models.database import init_db
-from models.usuario import buscar_usuario_por_email, verificar_senha
+from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
 from models.comentario import (
     criar_comentario, 
     listar_comentarios, 
     excluir_comentario, 
     buscar_comentario_por_id, 
-    atualizar_comentario
+    atualizar_comentario,
+    listar_comentarios_por_usuario
 )
 
 app = Flask(__name__)
 app.secret_key = "123"
 
-# Inicializa o banco de dados (certifique-se que o schema tem a coluna 'destino')
+# Configurações de Upload
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Cria a pasta de uploads caso não exista
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Inicializa o banco de dados
 init_db()
 
 # =========================
@@ -33,7 +44,6 @@ def cargo_required(cargo_permitido):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             usuario_cargo = session.get("cargo")
-            # ADMIN tem acesso total a qualquer área
             if usuario_cargo == "admin":
                 return f(*args, **kwargs)
             if usuario_cargo != cargo_permitido:
@@ -69,6 +79,8 @@ def login():
             session["usuario_id"] = usuario["id"]
             session["nome"] = usuario["nome"]
             session["cargo"] = usuario["cargo"]
+            # Carrega a foto do banco para a sessão (usa default se estiver vazio)
+            session["foto"] = usuario["foto"] if usuario.get("foto") else "default.jpg"
             
             if usuario["cargo"] == "admin":
                 return redirect(url_for("servico_admin"))
@@ -83,7 +95,7 @@ def logout():
     return redirect(url_for("login"))
 
 # =========================
-# GESTÃO DE COMENTÁRIOS (UNIFICADA)
+# GESTÃO DE COMENTÁRIOS
 # =========================
 
 @app.route("/comentario", methods=["POST"])
@@ -92,21 +104,15 @@ def adicionar_comentario():
     id_comentario = request.form.get("id_comentario")
     texto = request.form.get("texto")
     tag = request.form.get("tag")
-    destino = request.form.get("origem") # 'aluno' ou 'professor'
+    destino = request.form.get("origem")
     usuario_id = session.get("usuario_id")
-
-    # Debug para te ajudar a ver se os dados estão chegando
-    print(f"--- POST COMENTÁRIO ---")
-    print(f"ID: {id_comentario} | Texto: {texto} | Tag: {tag} | Destino: {destino}")
 
     if texto and tag and destino:
         if id_comentario and id_comentario.strip():
-            # Lógica de Edição
             comentario = buscar_comentario_por_id(id_comentario)
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
                 atualizar_comentario(id_comentario, texto, tag)
         else:
-            # Lógica de Criação
             criar_comentario(texto, usuario_id, tag, destino)
     
     return redirect(url_for(f"forum_{destino}"))
@@ -116,7 +122,6 @@ def adicionar_comentario():
 def deletar_comentario(id):
     comentario = buscar_comentario_por_id(id)
     if comentario:
-        # Só deleta se for o dono ou se for admin
         if comentario['usuario_id'] == session.get("usuario_id") or session.get("cargo") == "admin":
             excluir_comentario(id)
     return redirect(request.referrer or url_for("home"))
@@ -139,9 +144,7 @@ def forum_aluno(id_editar=None):
     comentarios_visiveis = []
     for c in todos:
         if c['destino'] == 'aluno':
-            # REGRA DE PRIVACIDADE: Se for 'admin', só o autor ou admins veem
             pode_ver = (c['tag'] != 'admin') or (usuario_cargo == 'admin' or c['usuario_id'] == usuario_id)
-            
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
@@ -171,7 +174,6 @@ def forum_professor(id_editar=None):
     for c in todos:
         if c['destino'] == 'professor':
             pode_ver = (c['tag'] != 'admin') or (usuario_cargo == 'admin' or c['usuario_id'] == usuario_id)
-            
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
@@ -187,7 +189,44 @@ def forum_professor(id_editar=None):
                            busca_ativa=termo_busca)
 
 # =========================
-# PAINEL ADMIN
+# PERFIL E UPLOAD
+# =========================
+
+@app.route("/perfil")
+@login_required
+def perfil():
+    usuario_id = session.get("usuario_id")
+    meus_comentarios = listar_comentarios_por_usuario(usuario_id)
+    return render_template("perfil.html", 
+                           nome=session.get("nome"), 
+                           cargo=session.get("cargo"),
+                           foto=session.get("foto", "default.jpg"),
+                           comentarios=meus_comentarios)
+
+@app.route("/upload_foto", methods=["POST"])
+@login_required
+def upload_foto():
+    if 'foto' not in request.files:
+        return redirect(url_for('perfil'))
+    
+    arquivo = request.files['foto']
+    
+    if arquivo and arquivo.filename != '':
+        # Nome seguro: user_1_nome-da-foto.jpg
+        extensao = arquivo.filename.rsplit('.', 1)[1].lower()
+        novo_nome = f"user_{session['usuario_id']}.{extensao}"
+        
+        caminho = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
+        arquivo.save(caminho)
+        
+        # Atualiza no banco e na sessão
+        atualizar_foto_usuario(session['usuario_id'], novo_nome)
+        session['foto'] = novo_nome
+
+    return redirect(url_for('perfil'))
+
+# =========================
+# PAINEL ADMIN E FAQ
 # =========================
 
 @app.route("/servico_admin")
@@ -195,7 +234,6 @@ def forum_professor(id_editar=None):
 @cargo_required("admin")
 def servico_admin():
     todos = listar_comentarios()
-    # No painel admin, mostramos apenas as mensagens marcadas para coordenação
     mensagens_privadas = [c for c in todos if c['tag'] == 'admin']
     return render_template("admin.html", comentarios=mensagens_privadas)
 

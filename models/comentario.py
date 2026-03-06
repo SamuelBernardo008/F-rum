@@ -17,7 +17,7 @@ def get_db_connection():
 # =========================
 # CRIAR COMENTÁRIO
 # =========================
-def criar_comentario(texto, usuario_id, tag, destino): # Adicionado destino
+def criar_comentario(texto, usuario_id, tag, destino): 
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute(
@@ -39,9 +39,10 @@ def listar_comentarios():
                 comentario.tag,
                 comentario.destino,
                 comentario.data_criacao,
-                comentario.usuario_id,  -- ADICIONE ESTA LINHA AQUI
+                comentario.usuario_id,
                 usuario.nome AS autor,
-                usuario.cargo AS cargo_autor
+                usuario.cargo AS cargo_autor,
+                usuario.foto AS foto  -- ADICIONADO: Puxa a foto do autor
             FROM comentario
             JOIN usuario ON comentario.usuario_id = usuario.id
             ORDER BY comentario.data_criacao DESC
@@ -62,7 +63,8 @@ def listar_comentarios_por_tag(tag):
                 comentario.texto,
                 comentario.tag,
                 comentario.data_criacao,
-                usuario.nome AS autor
+                usuario.nome AS autor,
+                usuario.foto AS foto  -- ADICIONADO: Puxa a foto do autor
             FROM comentario
             JOIN usuario ON comentario.usuario_id = usuario.id
             WHERE comentario.tag = ?
@@ -79,8 +81,11 @@ def listar_comentarios_por_usuario(usuario_id):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT *
-            FROM comentario
+            SELECT 
+                comentario.*, 
+                usuario.foto 
+            FROM comentario 
+            JOIN usuario ON comentario.usuario_id = usuario.id
             WHERE usuario_id = ?
             ORDER BY data_criacao DESC
         """, (usuario_id,))
@@ -93,7 +98,6 @@ def listar_comentarios_por_usuario(usuario_id):
 def buscar_comentario_por_id(id):
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        # Buscamos o usuario_id também para validar a posse no app.py
         cursor.execute("SELECT * FROM comentario WHERE id = ?", (id,))
         row = cursor.fetchone()
         return dict(row) if row else None
@@ -104,7 +108,6 @@ def buscar_comentario_por_id(id):
 def atualizar_comentario(id_comentario, novo_texto, nova_tag):
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        # O SQL precisa atualizar as duas colunas
         cursor.execute("""
             UPDATE comentario 
             SET texto = ?, tag = ? 

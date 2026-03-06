@@ -2,6 +2,8 @@
 {% block content %}
 <div class="forum-container">
 
+    <a href="{{ url_for('perfil') }}">Meu Perfil</a>
+
     <h1>Bem-vindo ao Fórum! Representante</h1>
     <p>{{ session.get('nome') }}, aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
 
@@ -90,22 +92,28 @@
         <h2>Mural do Fórum</h2>
 
         {% for c in comentarios %}
-        <article class="comentario-card">
-            <div>
-                <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
+        <article class="comentario-card" style="margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+                <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.jpg')) }}" 
+                     alt="Foto" 
+                     style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;">
+                
+                <div style="flex: 1;">
+                    <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
+                    
+                    <span class="acoes" style="float: right;">
+                        {% if session['usuario_id'] == c.usuario_id %}
+                        <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
+                        {% endif %}
 
-                <span class="acoes" style="float: right;">
-                    {% if session['usuario_id'] == c.usuario_id %}
-                    <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
-                    {% endif %}
-
-                    {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
-                    <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red; margin-left: 10px;">delete</a>
-                    {% endif %}
-                </span>
+                        {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
+                        <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: red; margin-left: 10px;">delete</a>
+                        {% endif %}
+                    </span>
+                </div>
             </div>
 
-            <p>
+            <p style="margin-left: 50px;">
                 <i>
                     {% if c.tag == 'admin' %}
                     #Apenas Coordenação (Privado)
@@ -114,8 +122,8 @@
                     {% endif %}
                 </i>
             </p>
-            <p>{{ c.texto }}</p>
-            <small>{{ c.data_criacao }}</small>
+            <p style="margin-left: 50px;">{{ c.texto }}</p>
+            <small style="margin-left: 50px; color: #888;">{{ c.data_criacao }}</small>
             <hr>
         </article>
         {% else %}
