@@ -126,6 +126,16 @@
             </p>
             <p style="margin-left: 50px; font-size: 1.1em;">{{ c.texto }}</p>
             
+            <div style="margin-left: 50px; margin-bottom: 10px;">
+                <a href="{{ url_for('curtir', id_comentario=c.id) }}" style="text-decoration: none;">
+                    {% if c.usuario_ja_curtiu %}
+                        <button type="button" style="cursor:pointer;">⭐ Apoiado ({{ c.total_curtidas }})</button>
+                    {% else %}
+                        <button type="button" style="cursor:pointer;">☆ Apoiar ({{ c.total_curtidas }})</button>
+                    {% endif %}
+                </a>
+            </div>
+            
             <div style="margin-left: 50px;">
                 <small style="color: #888;">Postado em: {{ c.data_criacao }}</small>
 

@@ -134,8 +134,18 @@
                     </i>
                 </p>
 
-                <p style="font-size: 1.1em;">{{ c.texto }}</p>
-                <small style="color: #888;">Postado em: {{ c.data_criacao }}</small>
+                <p style="font-size: 1.1em; margin-bottom: 10px;">{{ c.texto }}</p>
+
+                <a href="{{ url_for('curtir', id_comentario=c.id) }}" style="text-decoration: none;">
+                    {% if c.usuario_ja_curtiu %}
+                        <button type="button" style="cursor:pointer;">⭐ Apoiado ({{ c.total_curtidas }})</button>
+                    {% else %}
+                        <button type="button" style="cursor:pointer;">☆ Apoiar ({{ c.total_curtidas }})</button>
+                    {% endif %}
+                </a>
+                <p>
+                    <small style="color: #888;">Postado em: {{ c.data_criacao }}</small>
+                </p>
 
                 {% if session['cargo'] == 'admin' %}
                 <div style="margin-top: 15px; padding: 8px; background-color: #f9f9f9; border-radius: 5px; font-size: 0.8em;">

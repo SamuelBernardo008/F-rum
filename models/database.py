@@ -54,6 +54,18 @@ def init_db(db_name: str = DB_PATH):
         )
         """)
         
+        # Tabela de Curtidas (Apoios)
+        conn.execute("""
+        CREATE TABLE IF NOT EXISTS curtida (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            comentario_id INTEGER NOT NULL,
+            FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+            FOREIGN KEY (comentario_id) REFERENCES comentario(id) ON DELETE CASCADE,
+            UNIQUE(usuario_id, comentario_id) -- Impede curtir duas vezes o mesmo post
+        )
+        """)
+        
         conn.commit()
     
     # Roda migrações para bancos que já foram criados anteriormente

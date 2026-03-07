@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
 from models.database import init_db, conectar # Adicionei conectar aqui
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
+from models.curtida import alternar_curtida, contar_curtidas, usuario_curtiu
 from models.comentario import (
     criar_comentario, 
     listar_comentarios, 
@@ -188,6 +189,17 @@ def deletar_comentario(id):
             excluir_comentario(id)
     return redirect(request.referrer or url_for("home"))
 
+@app.route("/curtir/<int:id_comentario>")
+@login_required
+def curtir(id_comentario):
+    usuario_id = session.get("usuario_id")
+    
+    # Chama a função do model que adiciona ou remove a curtida
+    alternar_curtida(usuario_id, id_comentario)
+    
+    # request.referrer faz o usuário continuar na mesma página (Fórum ou Thread)
+    return redirect(request.referrer or url_for("home"))
+
 # =========================
 # FÓRUNS
 # =========================
@@ -211,9 +223,16 @@ def forum_aluno(id_editar=None):
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
+                
                 if passa_na_tag and passa_na_busca:
                     c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
+                    
+                    # --- ESTAS LINHAS SÃO AS QUE BUSCAM OS DADOS NO BANCO ---
+                    c['total_curtidas'] = contar_curtidas(c['id'])
+                    c['usuario_ja_curtiu'] = usuario_curtiu(usuario_id, c['id'])
+                    # -------------------------------------------------------
+                    
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
@@ -242,9 +261,16 @@ def forum_professor(id_editar=None):
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
+                
                 if passa_na_tag and passa_na_busca:
                     c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
+                    
+                    # === ADICIONE ESTAS LINHAS PARA AS CURTIDAS ===
+                    c['total_curtidas'] = contar_curtidas(c['id'])
+                    c['usuario_ja_curtiu'] = usuario_curtiu(usuario_id, c['id'])
+                    # =============================================
+                    
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
@@ -253,7 +279,6 @@ def forum_professor(id_editar=None):
                             comentario_selecionado=comentario_edit,
                             tag_ativa=tag_filtro,
                             busca_ativa=termo_busca)
-
 # =========================
 # PERFIL E ADMIN
 # =========================
