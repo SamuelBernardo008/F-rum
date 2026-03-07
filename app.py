@@ -2,7 +2,7 @@ import os
 from PIL import Image  
 from flask import Flask, render_template, request, redirect, session, url_for
 from functools import wraps
-from models.database import init_db
+from models.database import init_db, conectar # Adicionei conectar aqui
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
 from models.comentario import (
     criar_comentario, 
@@ -11,8 +11,10 @@ from models.comentario import (
     buscar_comentario_por_id, 
     atualizar_comentario,
     listar_comentarios_por_usuario,
-    atualizar_status_comentario  # <--- Adicione esta no seu models
+    atualizar_status_comentario 
 )
+# IMPORTANDO AS NOVAS FUNÇÕES DE NOTIFICAÇÃO
+from models.notificacao import criar_notificacao, listar_notificacoes_usuario, marcar_todas_como_lidas
 
 app = Flask(__name__)
 app.secret_key = "123"
@@ -22,6 +24,19 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 init_db()
+
+# =========================
+# CONTEXT PROCESSOR (O "SININHO")
+# =========================
+@app.context_processor
+def inject_notifications():
+    """Faz as notificações aparecerem em qualquer página automaticamente"""
+    if "usuario_id" in session:
+        usuario_id = session["usuario_id"]
+        # Pega apenas as não lidas para o contador
+        notificacoes = listar_notificacoes_usuario(usuario_id, apenas_nao_lidas=True)
+        return dict(notificacoes_usuario=notificacoes, total_notificacoes=len(notificacoes))
+    return dict(notificacoes_usuario=[], total_notificacoes=0)
 
 # =========================
 # DECORATORS
@@ -50,6 +65,16 @@ def cargo_required(cargo_permitido):
             return f(*args, **kwargs)
         return decorated_function
     return decorator
+
+# =========================
+# ROTAS DE NOTIFICAÇÃO
+# =========================
+
+@app.route("/notificacoes/limpar")
+@login_required
+def limpar_notificacoes():
+    marcar_todas_como_lidas(session["usuario_id"])
+    return redirect(request.referrer or url_for("home"))
 
 # =========================
 # AUTENTICAÇÃO E HOME
@@ -112,8 +137,14 @@ def adicionar_comentario():
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
                 atualizar_comentario(id_comentario, texto, tag)
         else:
-            # Novo comentário sempre nasce com status 'aberto'
-            criar_comentario(texto, usuario_id, tag, destino, pai_id)
+            novo_id = criar_comentario(texto, usuario_id, tag, destino, pai_id)
+            
+            # GATILHO DE NOTIFICAÇÃO: Se for uma resposta
+            if pai_id:
+                post_pai = buscar_comentario_por_id(pai_id)
+                if post_pai and post_pai['usuario_id'] != usuario_id:
+                    msg = f"{session['nome']} respondeu ao seu tópico: '{texto[:20]}...'"
+                    criar_notificacao(post_pai['usuario_id'], msg, link=url_for('ver_thread', id_pai=pai_id))
     
     if pai_id:
         return redirect(url_for('ver_thread', id_pai=pai_id))
@@ -126,6 +157,14 @@ def mudar_status(id, novo_status):
     permitidos = ['aberto', 'andamento', 'resolvido', 'inviavel', 'discussao']
     if novo_status in permitidos:
         atualizar_status_comentario(id, novo_status)
+        
+        # GATILHO DE NOTIFICAÇÃO: Status alterado
+        post = buscar_comentario_por_id(id)
+        if post:
+            msg = f"O status do seu post foi alterado para: {novo_status.upper()}"
+            destino_link = f"forum_{post['destino']}"
+            criar_notificacao(post['usuario_id'], msg, link=url_for(destino_link))
+            
     return redirect(request.referrer or url_for("home"))
 
 @app.route("/thread/<int:id_pai>")
@@ -173,17 +212,16 @@ def forum_aluno(id_editar=None):
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
                 if passa_na_tag and passa_na_busca:
-                    # Se o banco não tiver a coluna status ainda, define 'aberto'
                     c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
     return render_template("forumAluno.html", 
-                           comentarios=comentarios_visiveis, 
-                           comentario_selecionado=comentario_edit,
-                           tag_ativa=tag_filtro,
-                           busca_ativa=termo_busca)
+                            comentarios=comentarios_visiveis, 
+                            comentario_selecionado=comentario_edit,
+                            tag_ativa=tag_filtro,
+                            busca_ativa=termo_busca)
 
 @app.route("/forum_professor")
 @app.route("/forum_professor/<int:id_editar>")
@@ -211,10 +249,10 @@ def forum_professor(id_editar=None):
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
     return render_template("forumProfessor.html", 
-                           comentarios=comentarios_visiveis, 
-                           comentario_selecionado=comentario_edit,
-                           tag_ativa=tag_filtro,
-                           busca_ativa=termo_busca)
+                            comentarios=comentarios_visiveis, 
+                            comentario_selecionado=comentario_edit,
+                            tag_ativa=tag_filtro,
+                            busca_ativa=termo_busca)
 
 # =========================
 # PERFIL E ADMIN
@@ -228,11 +266,11 @@ def perfil():
     meus_comentarios = listar_comentarios_por_usuario(usuario_id)
     
     return render_template("perfil.html", 
-                           nome=session.get("nome"), 
-                           cargo=session.get("cargo"),
-                           foto=session.get("foto") or "default.png",
-                           comentarios=meus_comentarios,
-                           url_retorno=origem)
+                            nome=session.get("nome"), 
+                            cargo=session.get("cargo"),
+                            foto=session.get("foto") or "default.png",
+                            comentarios=meus_comentarios,
+                            url_retorno=origem)
     
 @app.route("/upload_foto", methods=["POST"])
 @login_required
