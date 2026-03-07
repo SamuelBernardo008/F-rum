@@ -101,6 +101,10 @@
                 <div style="flex: 1;">
                     <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
                     
+                    <span style="margin-left: 10px; font-weight: bold; font-size: 0.75em; color: #444; border: 1px solid #ccc; padding: 2px 5px; border-radius: 4px;">
+                        {{ c.status|upper if c.status else 'ABERTO' }}
+                    </span>
+
                     <span class="acoes" style="float: right;">
                         <a href="{{ url_for('ver_thread', id_pai=c.id) }}" style="color: #007bff; font-weight: bold; margin-right: 15px;">
                             Respostas ({{ c.total_respostas if c.total_respostas else 0 }})
@@ -121,7 +125,22 @@
                 <i style="color: #666;">#{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}</i>
             </p>
             <p style="margin-left: 50px; font-size: 1.1em;">{{ c.texto }}</p>
-            <small style="margin-left: 50px; color: #888;">{{ c.data_criacao }}</small>
+            
+            <div style="margin-left: 50px;">
+                <small style="color: #888;">Postado em: {{ c.data_criacao }}</small>
+
+                {% if session['cargo'] == 'admin' %}
+                <div style="margin-top: 15px; padding: 8px; background-color: #f9f9f9; border-radius: 5px; font-size: 0.8em;">
+                    <strong style="display: block; margin-bottom: 5px; color: #555;">⚙️ Gestão da Coordenação:</strong>
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}">Aberto</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}">Em Andamento</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}">Resolvido</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}">Inviável</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='discussao') }}">Discutir</a>
+                </div>
+                {% endif %}
+            </div>
+            
             <hr>
         </article>
         {% else %}

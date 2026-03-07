@@ -13,22 +13,25 @@ def get_db_connection():
     conn.row_factory = Row  # permite acessar por nome
     return conn
 
-
 # =========================
 # CRIAR COMENTÁRIO
 # =========================
 def criar_comentario(texto, usuario_id, tag, destino, pai_id=None): 
     with get_db_connection() as conn:
         cursor = conn.cursor()
+        # Adicionado o campo 'status' com valor padrão 'aberto'
         cursor.execute(
             """
-            INSERT INTO comentario (texto, usuario_id, tag, destino, pai_id)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO comentario (texto, usuario_id, tag, destino, pai_id, status)
+            VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (texto, usuario_id, tag, destino, pai_id)
+            (texto, usuario_id, tag, destino, pai_id, 'aberto')
         )
         conn.commit()
 
+# =========================
+# LISTAR COMENTÁRIOS
+# =========================
 def listar_comentarios():
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -38,13 +41,14 @@ def listar_comentarios():
                 c.texto,
                 c.tag,
                 c.destino,
+                c.status,  -- PUXA O STATUS DO BANCO
                 c.data_criacao,
                 c.usuario_id,
                 c.pai_id,
                 u.nome AS autor,
                 u.cargo AS cargo_autor,
                 u.foto AS foto,
-                u_pai.nome AS autor_respondido  -- Nome de quem está sendo respondido
+                u_pai.nome AS autor_respondido
             FROM comentario c
             JOIN usuario u ON c.usuario_id = u.id
             LEFT JOIN comentario c_pai ON c.pai_id = c_pai.id
@@ -54,32 +58,31 @@ def listar_comentarios():
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
 
-
 # =========================
-# LISTAR COMENTÁRIOS POR TAG
+# ATUALIZAR STATUS (EXCLUSIVO ADMIN)
 # =========================
-def listar_comentarios_por_tag(tag):
+def atualizar_status_comentario(id_comentario, novo_status):
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT 
-                comentario.id,
-                comentario.texto,
-                comentario.tag,
-                comentario.data_criacao,
-                usuario.nome AS autor,
-                usuario.foto AS foto  -- ADICIONADO: Puxa a foto do autor
-            FROM comentario
-            JOIN usuario ON comentario.usuario_id = usuario.id
-            WHERE comentario.tag = ?
-            ORDER BY comentario.data_criacao DESC
-        """, (tag,))
-        rows = cursor.fetchall()
-        return [dict(row) for row in rows]
-
+            UPDATE comentario 
+            SET status = ? 
+            WHERE id = ?
+        """, (novo_status, id_comentario))
+        conn.commit()
 
 # =========================
-# LISTAR COMENTÁRIOS DE UM USUÁRIO
+# BUSCAR COMENTÁRIO POR ID
+# =========================
+def buscar_comentario_por_id(id):
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM comentario WHERE id = ?", (id,))
+        row = cursor.fetchone()
+        return dict(row) if row else None
+
+# =========================
+# LISTAR COMENTÁRIOS DE UM USUÁRIO (PERFIL)
 # =========================
 def listar_comentarios_por_usuario(usuario_id):
     with get_db_connection() as conn:
@@ -95,19 +98,9 @@ def listar_comentarios_por_usuario(usuario_id):
         """, (usuario_id,))
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
-    
-# =========================
-# BUSCAR COMENTÁRIO POR ID
-# =========================
-def buscar_comentario_por_id(id):
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM comentario WHERE id = ?", (id,))
-        row = cursor.fetchone()
-        return dict(row) if row else None
 
 # =========================
-# ATUALIZAR COMENTÁRIO
+# ATUALIZAR COMENTÁRIO (EDITAR)
 # =========================
 def atualizar_comentario(id_comentario, novo_texto, nova_tag):
     with get_db_connection() as conn:

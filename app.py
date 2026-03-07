@@ -10,7 +10,8 @@ from models.comentario import (
     excluir_comentario, 
     buscar_comentario_por_id, 
     atualizar_comentario,
-    listar_comentarios_por_usuario
+    listar_comentarios_por_usuario,
+    atualizar_status_comentario  # <--- Adicione esta no seu models
 )
 
 app = Flask(__name__)
@@ -42,7 +43,6 @@ def cargo_required(cargo_permitido):
             if usuario_cargo == "admin":
                 return f(*args, **kwargs)
             if usuario_cargo != cargo_permitido:
-                # Tenta redirecionar para o fórum do cargo dele, se falhar vai pro login
                 try:
                     return redirect(url_for(f"forum_{usuario_cargo}"))
                 except:
@@ -52,7 +52,7 @@ def cargo_required(cargo_permitido):
     return decorator
 
 # =========================
-# AUTENTICAÇÃO
+# AUTENTICAÇÃO E HOME
 # =========================
 
 @app.route("/")
@@ -90,7 +90,7 @@ def logout():
     return redirect(url_for("login"))
 
 # =========================
-# GESTÃO DE COMENTÁRIOS E THREADS
+# GESTÃO DE COMENTÁRIOS E STATUS
 # =========================
 
 @app.route("/comentario", methods=["POST"])
@@ -103,7 +103,6 @@ def adicionar_comentario():
     pai_id = request.form.get("pai_id") 
     usuario_id = session.get("usuario_id")
 
-    # Limpeza do pai_id para o Banco de Dados
     if not pai_id or not str(pai_id).strip():
         pai_id = None
 
@@ -113,12 +112,21 @@ def adicionar_comentario():
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
                 atualizar_comentario(id_comentario, texto, tag)
         else:
+            # Novo comentário sempre nasce com status 'aberto'
             criar_comentario(texto, usuario_id, tag, destino, pai_id)
     
-    # Se for uma resposta, volta para a thread. Se for post novo, volta pro fórum.
     if pai_id:
         return redirect(url_for('ver_thread', id_pai=pai_id))
     return redirect(url_for(f"forum_{destino}"))
+
+@app.route("/comentario/status/<int:id>/<novo_status>")
+@login_required
+@cargo_required("admin")
+def mudar_status(id, novo_status):
+    permitidos = ['aberto', 'andamento', 'resolvido', 'inviavel', 'discussao']
+    if novo_status in permitidos:
+        atualizar_status_comentario(id, novo_status)
+    return redirect(request.referrer or url_for("home"))
 
 @app.route("/thread/<int:id_pai>")
 @login_required
@@ -128,7 +136,6 @@ def ver_thread(id_pai):
         return redirect(url_for('home'))
     
     todos = listar_comentarios()
-    # Respostas são comentários que possuem esse pai_id
     respostas = [c for c in todos if str(c.get('pai_id')) == str(id_pai)]
     
     return render_template("thread.html", pai=pai, respostas=respostas)
@@ -160,14 +167,14 @@ def forum_aluno(id_editar=None):
     
     comentarios_visiveis = []
     for c in todos:
-        # Apenas posts principais (sem pai) destinados a alunos
         if c['destino'] == 'aluno' and c.get('pai_id') is None:
             pode_ver = (c['tag'] != 'admin') or (usuario_cargo == 'admin' or c['usuario_id'] == usuario_id)
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
                 if passa_na_tag and passa_na_busca:
-                    # Cálculo dinâmico do total de respostas
+                    # Se o banco não tiver a coluna status ainda, define 'aberto'
+                    c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
                     comentarios_visiveis.append(c)
 
@@ -192,13 +199,13 @@ def forum_professor(id_editar=None):
     
     comentarios_visiveis = []
     for c in todos:
-        # Apenas posts principais destinados a professores
         if c['destino'] == 'professor' and c.get('pai_id') is None:
             pode_ver = (c['tag'] != 'admin') or (usuario_cargo == 'admin' or c['usuario_id'] == usuario_id)
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
                 if passa_na_tag and passa_na_busca:
+                    c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
                     comentarios_visiveis.append(c)
 
