@@ -211,11 +211,22 @@ def enviar_feedback():
 @cargo_required("admin")
 def alterar_status_feedback(id):
     conn = conectar()
-    atual = conn.execute("SELECT status FROM feedback WHERE id = ?", (id,)).fetchone()
-    if atual:
-        novo_status = 'resolvido' if atual['status'] == 'aberto' else 'aberto'
+    feedback = conn.execute("SELECT usuario_id, status, tipo FROM feedback WHERE id = ?", (id,)).fetchone()
+    
+    if feedback:
+        novo_status = 'resolvido' if feedback['status'] == 'aberto' else 'aberto'
         conn.execute("UPDATE feedback SET status = ? WHERE id = ?", (novo_status, id))
         conn.commit()
+        
+        if novo_status == 'resolvido':
+            # Lógica para ajustar o gênero da mensagem
+            if feedback['tipo'].lower() == 'bug':
+                msg = f"Ei! O bug que você relatou foi corrigido. Obrigado por ajudar!"
+            else:
+                msg = f"Ei! A sugestão que você enviou foi implementada. Obrigado por ajudar!"
+            
+            criar_notificacao(feedback['usuario_id'], msg, link=url_for('faq'))
+            
     conn.close()
     return redirect(url_for('servico_admin'))
 
