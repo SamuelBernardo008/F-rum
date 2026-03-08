@@ -66,6 +66,18 @@ def init_db(db_name: str = DB_PATH):
         )
         """)
         
+        conn.execute("""
+        CREATE TABLE IF NOT EXISTS feedback (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            tipo TEXT NOT NULL,         -- 'Bug' ou 'Sugestão'
+            texto TEXT NOT NULL,
+            status TEXT DEFAULT 'aberto',
+            data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE
+        )
+        """)
+        
         conn.commit()
     
     # Roda migrações para bancos que já foram criados anteriormente

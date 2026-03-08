@@ -1,8 +1,8 @@
 import os
 from PIL import Image  
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from functools import wraps
-from models.database import init_db, conectar # Adicionei conectar aqui
+from models.database import init_db, conectar 
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
 from models.curtida import alternar_curtida, contar_curtidas, usuario_curtiu
 from models.comentario import (
@@ -14,7 +14,6 @@ from models.comentario import (
     listar_comentarios_por_usuario,
     atualizar_status_comentario 
 )
-# IMPORTANDO AS NOVAS FUNÇÕES DE NOTIFICAÇÃO
 from models.notificacao import criar_notificacao, listar_notificacoes_usuario, marcar_todas_como_lidas
 
 app = Flask(__name__)
@@ -31,10 +30,8 @@ init_db()
 # =========================
 @app.context_processor
 def inject_notifications():
-    """Faz as notificações aparecerem em qualquer página automaticamente"""
     if "usuario_id" in session:
         usuario_id = session["usuario_id"]
-        # Pega apenas as não lidas para o contador
         notificacoes = listar_notificacoes_usuario(usuario_id, apenas_nao_lidas=True)
         return dict(notificacoes_usuario=notificacoes, total_notificacoes=len(notificacoes))
     return dict(notificacoes_usuario=[], total_notificacoes=0)
@@ -139,8 +136,6 @@ def adicionar_comentario():
                 atualizar_comentario(id_comentario, texto, tag)
         else:
             novo_id = criar_comentario(texto, usuario_id, tag, destino, pai_id)
-            
-            # GATILHO DE NOTIFICAÇÃO: Se for uma resposta
             if pai_id:
                 post_pai = buscar_comentario_por_id(pai_id)
                 if post_pai and post_pai['usuario_id'] != usuario_id:
@@ -158,8 +153,6 @@ def mudar_status(id, novo_status):
     permitidos = ['aberto', 'andamento', 'resolvido', 'inviavel', 'discussao']
     if novo_status in permitidos:
         atualizar_status_comentario(id, novo_status)
-        
-        # GATILHO DE NOTIFICAÇÃO: Status alterado
         post = buscar_comentario_por_id(id)
         if post:
             msg = f"O status do seu post foi alterado para: {novo_status.upper()}"
@@ -177,7 +170,6 @@ def ver_thread(id_pai):
     
     todos = listar_comentarios()
     respostas = [c for c in todos if str(c.get('pai_id')) == str(id_pai)]
-    
     return render_template("thread.html", pai=pai, respostas=respostas)
 
 @app.route("/comentario/deletar/<int:id>")
@@ -193,12 +185,49 @@ def deletar_comentario(id):
 @login_required
 def curtir(id_comentario):
     usuario_id = session.get("usuario_id")
-    
-    # Chama a função do model que adiciona ou remove a curtida
     alternar_curtida(usuario_id, id_comentario)
-    
-    # request.referrer faz o usuário continuar na mesma página (Fórum ou Thread)
     return redirect(request.referrer or url_for("home"))
+
+# =========================
+# GESTÃO DE FEEDBACKS (BUGS E SUGESTÕES)
+# =========================
+
+@app.route('/enviar-feedback', methods=['POST'])
+@login_required
+def enviar_feedback():
+    tipo = request.form.get('tipo')
+    texto = request.form.get('texto')
+    usuario_id = session['usuario_id']
+
+    conn = conectar()
+    conn.execute("INSERT INTO feedback (usuario_id, tipo, texto) VALUES (?, ?, ?)",
+                 (usuario_id, tipo, texto))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('faq'))
+
+@app.route("/admin/feedback/status/<int:id>")
+@login_required
+@cargo_required("admin")
+def alterar_status_feedback(id):
+    conn = conectar()
+    atual = conn.execute("SELECT status FROM feedback WHERE id = ?", (id,)).fetchone()
+    if atual:
+        novo_status = 'resolvido' if atual['status'] == 'aberto' else 'aberto'
+        conn.execute("UPDATE feedback SET status = ? WHERE id = ?", (novo_status, id))
+        conn.commit()
+    conn.close()
+    return redirect(url_for('servico_admin'))
+
+@app.route("/admin/feedback/deletar/<int:id>")
+@login_required
+@cargo_required("admin")
+def deletar_feedback(id):
+    conn = conectar()
+    conn.execute("DELETE FROM feedback WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('servico_admin'))
 
 # =========================
 # FÓRUNS
@@ -212,7 +241,6 @@ def forum_aluno(id_editar=None):
     todos = listar_comentarios()
     usuario_id = session.get('usuario_id')
     usuario_cargo = session.get('cargo')
-    
     tag_filtro = request.args.get('tag')
     termo_busca = request.args.get('busca', '').lower()
     
@@ -223,16 +251,11 @@ def forum_aluno(id_editar=None):
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
-                
                 if passa_na_tag and passa_na_busca:
                     c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
-                    
-                    # --- ESTAS LINHAS SÃO AS QUE BUSCAM OS DADOS NO BANCO ---
                     c['total_curtidas'] = contar_curtidas(c['id'])
                     c['usuario_ja_curtiu'] = usuario_curtiu(usuario_id, c['id'])
-                    # -------------------------------------------------------
-                    
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
@@ -250,7 +273,6 @@ def forum_professor(id_editar=None):
     todos = listar_comentarios()
     usuario_id = session.get('usuario_id')
     usuario_cargo = session.get('cargo')
-    
     tag_filtro = request.args.get('tag')
     termo_busca = request.args.get('busca', '').lower()
     
@@ -261,16 +283,11 @@ def forum_professor(id_editar=None):
             if pode_ver:
                 passa_na_tag = not tag_filtro or c['tag'] == tag_filtro
                 passa_na_busca = not termo_busca or termo_busca in c['texto'].lower()
-                
                 if passa_na_tag and passa_na_busca:
                     c['status'] = c.get('status', 'aberto')
                     c['total_respostas'] = len([r for r in todos if str(r.get('pai_id')) == str(c['id'])])
-                    
-                    # === ADICIONE ESTAS LINHAS PARA AS CURTIDAS ===
                     c['total_curtidas'] = contar_curtidas(c['id'])
                     c['usuario_ja_curtiu'] = usuario_curtiu(usuario_id, c['id'])
-                    # =============================================
-                    
                     comentarios_visiveis.append(c)
 
     comentario_edit = buscar_comentario_por_id(id_editar) if id_editar else None
@@ -279,6 +296,7 @@ def forum_professor(id_editar=None):
                             comentario_selecionado=comentario_edit,
                             tag_ativa=tag_filtro,
                             busca_ativa=termo_busca)
+
 # =========================
 # PERFIL E ADMIN
 # =========================
@@ -289,7 +307,6 @@ def perfil():
     origem = request.referrer or url_for('home')
     usuario_id = session.get("usuario_id")
     meus_comentarios = listar_comentarios_por_usuario(usuario_id)
-    
     return render_template("perfil.html", 
                             nome=session.get("nome"), 
                             cargo=session.get("cargo"),
@@ -302,7 +319,6 @@ def perfil():
 def upload_foto():
     if 'foto' not in request.files:
         return redirect(url_for('perfil'))
-    
     arquivo = request.files['foto']
     if arquivo and arquivo.filename != '':
         novo_nome = f"user_{session['usuario_id']}.png"
@@ -311,16 +327,32 @@ def upload_foto():
         img.save(caminho, "PNG")
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
         session['foto'] = novo_nome
-
     return redirect(url_for('perfil'))
 
 @app.route("/servico_admin")
 @login_required
 @cargo_required("admin")
 def servico_admin():
+    # 1. Mensagens da Coordenação
     todos = listar_comentarios()
     mensagens_privadas = [c for c in todos if c['tag'] == 'admin']
-    return render_template("admin.html", comentarios=mensagens_privadas)
+
+    # 2. Feedbacks e Contador
+    conn = conectar()
+    feedbacks = conn.execute("""
+        SELECT f.*, u.nome 
+        FROM feedback f 
+        JOIN usuario u ON f.usuario_id = u.id 
+        ORDER BY f.status ASC, f.data_criacao DESC
+    """).fetchall()
+    
+    total_abertos = sum(1 for f in feedbacks if f['status'] == 'aberto')
+    conn.close()
+
+    return render_template("admin.html", 
+                           comentarios=mensagens_privadas, 
+                           feedbacks=feedbacks,
+                           total_abertos=total_abertos)
 
 @app.route("/faq")
 def faq():

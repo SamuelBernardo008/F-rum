@@ -9,6 +9,7 @@
         <a href="{{ url_for('forum_aluno') }}">Ir para Fórum Aluno</a> | 
         <a href="{{ url_for('forum_professor') }}">Ir para Fórum Professor</a> |
         <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a>
+        <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a><a href="{{ url_for('home') }}">Voltar a home</a>
     </nav>
 
     <hr>
@@ -39,5 +40,45 @@
         {% endfor %}
     </section>
 </div>
+
+<section id="bugs-sugestoes">
+    <div class="feedback-header">
+        <h2>🛠️ Relatórios de Bugs e Sugestões</h2>
+        <span class="badge-pendentes">
+            {{ total_abertos }} Pendentes
+        </span>
+    </div>
+
+    {% for fb in feedbacks %}
+        <article class="comentario-card {{ 'feedback-resolvido' if fb.status == 'resolvido' }} {{ 'tipo-bug' if fb.tipo == 'Bug' else 'tipo-sugestao' }}">
+            
+            <div class="feedback-meta">
+                <div class="user-info">
+                    <strong>De: {{ fb.nome }}</strong> | 
+                    <span class="tipo-label">{{ fb.tipo }}</span>
+                </div>
+                
+                <div class="actions">
+                    <a href="{{ url_for('alterar_status_feedback', id=fb.id) }}" class="btn-status">
+                       {{ 'Resolver' if fb.status == 'aberto' else 'Reabrir' }}
+                    </a>
+                    <a href="{{ url_for('deletar_feedback', id=fb.id) }}" 
+                       onclick="return confirm('Apagar este relato permanentemente?')"
+                       class="btn-deletar">Apagar</a>
+                </div>
+            </div>
+            
+            <p class="feedback-texto">
+                {{ fb.texto }}
+            </p>
+            
+            <small class="feedback-footer">
+                Status: <strong>{{ fb.status }}</strong> | {{ fb.data_criacao }}
+            </small>
+        </article>
+        <hr>
+        
+    {% endfor %}
+</section>
 
 {% endblock %}

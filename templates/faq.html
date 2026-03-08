@@ -10,22 +10,42 @@
     <div class="faq-item">
         <details>
             <summary><strong>Como funciona a tag #Thauany?</strong></summary>
-            <p>Comentários com essa tag são privados. Apenas você e a administradora Thauany podem visualizar o conteúdo.</p>
+            <p>Comentários com essa tag são privados. Apenas você e a administradora Thauany podem visualizar o
+                conteúdo.</p>
         </details>
     </div>
 
     <div class="faq-item">
         <details>
             <summary><strong>Posso editar meu comentário depois de enviado?</strong></summary>
-            <p>Sim! Basta clicar no botão "editar" ao lado do seu nome no mural. O formulário abrirá com seu texto original.</p>
+            <p>Sim! Basta clicar no botão "editar" ao lado do seu nome no mural. O formulário abrirá com seu texto
+                original.</p>
         </details>
     </div>
 
     <div class="faq-item">
         <details>
             <summary><strong>Quem pode apagar meus comentários?</strong></summary>
-            <p>Você pode apagar suas próprias postagens. Os administradores também têm permissão para moderar e excluir conteúdos se necessário.</p>
+            <p>Você pode apagar suas próprias postagens. Os administradores também têm permissão para moderar e excluir
+                conteúdos se necessário.</p>
         </details>
     </div>
+</div>
+
+<hr>
+<div class="feedback-container">
+    <h3>Relatar Bug ou Sugestão 🛠️</h3>
+    <form action="/enviar-feedback" method="POST">
+        <div class="form-group">
+            <select name="tipo" required>
+                <option value="Bug">Relatar Bug 🐛</option>
+                <option value="Sugestão">Enviar Sugestão 💡</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <textarea name="texto" placeholder="Descreva aqui o erro ou sua ideia..." required></textarea>
+        </div>
+        <button type="submit" class="btn-enviar">Enviar para os Administradores</button>
+    </form>
 </div>
 {% endblock %}
