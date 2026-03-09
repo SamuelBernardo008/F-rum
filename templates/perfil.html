@@ -2,43 +2,96 @@
 {% block content %}
 
 <style>
-        /* Estilo básico para o menu de notificações */
-        .header-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #333; color: white; }
-        .notif-container { position: relative; cursor: pointer; }
-        .badge { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -5px; right: -10px; }
-        .notif-dropdown { 
-            display: none; position: absolute; right: 0; background: white; color: black; 
-            border: 1px solid #ccc; width: 250px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); z-index: 1000;
-        }
-        .notif-dropdown.show { display: block; }
-        .notif-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; text-decoration: none; color: black; display: block; }
-        .notif-item:hover { background: #f4f4f4; }
-        .limpar-btn { display: block; text-align: center; padding: 10px; font-size: 12px; color: blue; text-decoration: none; border-top: 1px solid #eee; }
-    </style>
+    /* Estilo básico para o menu de notificações */
+    .header-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background: #333;
+        color: white;
+    }
+
+    .notif-container {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .badge {
+        background: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 12px;
+        position: absolute;
+        top: -5px;
+        right: -10px;
+    }
+
+    .notif-dropdown {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        color: black;
+        border: 1px solid #ccc;
+        width: 250px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .notif-dropdown.show {
+        display: block;
+    }
+
+    .notif-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+        text-decoration: none;
+        color: black;
+        display: block;
+    }
+
+    .notif-item:hover {
+        background: #f4f4f4;
+    }
+
+    .limpar-btn {
+        display: block;
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        color: blue;
+        text-decoration: none;
+        border-top: 1px solid #eee;
+    }
+</style>
+
 <body>
 
     {% if session.get('usuario_id') %}
     <header class="header-nav">
         <div><strong>Echo Forum</strong></div>
-        
+
         <div class="notif-container" onclick="toggleNotifs()">
             <span>🔔 Notificações</span>
             {% if total_notificacoes > 0 %}
-                <span class="badge">{{ total_notificacoes }}</span>
+            <span class="badge">{{ total_notificacoes }}</span>
             {% endif %}
-            
+
             <div id="notifDropdown" class="notif-dropdown">
                 {% for n in notificacoes_usuario %}
-                    <a href="{{ n.link if n.link else '#' }}" class="notif-item">
-                        {{ n.mensagem }}
-                        <br><small style="color: #888;">{{ n.data_criacao }}</small>
-                    </a>
+                <a href="{{ n.link if n.link else '#' }}" class="notif-item">
+                    {{ n.mensagem }}
+                    <br><small style="color: #888;">{{ n.data_criacao }}</small>
+                </a>
                 {% else %}
-                    <div class="notif-item">Nenhuma notificação nova</div>
+                <div class="notif-item">Nenhuma notificação nova</div>
                 {% endfor %}
-                
+
                 {% if total_notificacoes > 0 %}
-                    <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn">Marcar todas como lidas</a>
+                <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn">Marcar todas como lidas</a>
                 {% endif %}
             </div>
         </div>
@@ -52,7 +105,7 @@
         }
 
         // Fecha o dropdown se clicar fora dele
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (!event.target.closest('.notif-container')) {
                 const dropdown = document.getElementById('notifDropdown');
                 if (dropdown.classList.contains('show')) {
@@ -64,13 +117,14 @@
 
     <br>
 
-<div class="perfil-container">
+    <div class="perfil-container">
 
-    <div class="sidebar-perfil">
+        <div class="sidebar-perfil">
 
-        <div class="foto-container">
-            <img src="{{ url_for('static', filename='uploads/' + (foto if foto else 'default.png')) }}"
-                alt="Foto de Perfil">
+            <div class="foto-container">
+                <img src="{{ url_for('static', filename='uploads/' + (foto if foto else 'default.png')) }}"
+                    alt="Foto de Perfil" class="foto-perfil">
+            </div>
         </div>
 
         <h2>{{ nome }}</h2>
@@ -115,18 +169,18 @@
         {% else %}
         <div class="aviso-vazio">
             <p>Você ainda não realizou nenhuma postagem.</p>
-            <a href="{{ url_for('home') }}">Começar agora</a>
+            <a href="{{ url_for('login') }}">Começar agora</a>
         </div>
         {% endfor %}
     </div>
-</div>
+    </div>
 
-<script>
-    // Mantive apenas o script essencial para o upload automático
-    document.getElementById('file-upload').onchange = function () {
-        if (this.value) {
-            this.form.submit();
-        }
-    };
-</script>
-{% endblock %}
+    <script>
+        // Mantive apenas o script essencial para o upload automático
+        document.getElementById('file-upload').onchange = function () {
+            if (this.value) {
+                this.form.submit();
+            }
+        };
+    </script>
+    {% endblock %}

@@ -1,6 +1,6 @@
 import os 
 from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
-from PIL import Image
+from PIL import Image, ImageOps
 from functools import wraps
 from models.database import init_db, conectar 
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
@@ -334,17 +334,25 @@ def upload_foto():
     arquivo = request.files['foto']
     
     if arquivo and arquivo.filename != '':
-        novo_nome = f"user_{session['usuario_id']}.png"
+        # Definimos o nome do arquivo (mudei para .jpg para ser mais leve, mas .png funciona)
+        novo_nome = f"user_{session['usuario_id']}.jpg"
         caminho = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
         
-        # CORREÇÃO AQUI: Use arquivo.stream para garantir compatibilidade
+        # Abre a imagem original
         img = Image.open(arquivo.stream) 
         
-        # Opcional: Converter para RGB para garantir que funcione com JPEGs e PNGs
-        if img.mode in ("RGBA", "P"):
+        # Converte para RGB (necessário para salvar como JPEG ou remover transparências estranhas)
+        if img.mode != "RGB":
             img = img.convert("RGB")
             
-        img.save(caminho, "PNG")
+        # O PULO DO GATO: Redimensiona e corta centralizado em 300x300
+        # Isso garante que a imagem seja um QUADRADO perfeito para o círculo do CSS
+        tamanho_padrao = (300, 300)
+        img = ImageOps.fit(img, tamanho_padrao, Image.Resampling.LANCZOS)
+        
+        # Salva com compressão para não pesar no seu PC/Servidor
+        img.save(caminho, "JPEG", quality=85)
+        
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
         session['foto'] = novo_nome
         
