@@ -391,6 +391,10 @@ def servico_admin():
                            feedbacks=feedbacks,
                            total_abertos=total_abertos)
 
+@app.route("/sobreProjeto")
+def sobre_projeto():
+    return render_template("sobreprojeto.html")
+
 @app.route("/faq")
 def faq():
     return render_template("faq.html")

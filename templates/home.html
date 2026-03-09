@@ -1,8 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Bem-vindo ao Fórum!</h1>
-    <p>Aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
-    <a href="{{ url_for('login') }}" id="entrar">Entrar</a><br><br>
-    <a href="{{ url_for('faq') }}">Perguntas Frequentes</a>
+<div id="divHome">
+    <p id="sejaBemvindo">Seja bem-vindo ao:</p>
+    <p id="forumOnline">Fórum On-line</p>
+    <img src="static/logo.png" alt="Echo" id="logoHome">
+</div>
+
+<div id="botoesHome" class="wrapper-animado">
+    <a href="{{ url_for('login') }}" id="entrar">ENTRAR</a>
+    <a href="{{ url_for('faq') }}" id="perguntas">Perguntas Frequentes</a>
+</div>
+
+<div id="rodape">
+    <a href="{{ url_for('sobre_projeto') }}" id="sobreprojeto">Sobre o projeto  |  Ajuda</a> <p id="copy">&copy; 2026 ECHO Fórum. Todos os direitos reservados.</p>
+</div>
+
 {% endblock %}

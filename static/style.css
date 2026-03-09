@@ -1,0 +1,208 @@
+body {
+  background-image:
+    linear-gradient(to right, rgb(254, 245, 230, 0.05) 0.5px, transparent 1px),
+    linear-gradient(to bottom, rgba(254, 245, 230, 0.05) 0.5px, transparent 1px),
+    linear-gradient(to right, rgb(160, 85, 235), rgb(126, 44, 207), rgb(90, 42, 179), rgb(41, 30, 104));
+
+
+  background-size:
+    15px 15px,
+    15px 15px,
+    100% 100%;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  
+}
+
+#divHome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: "Sanchez";
+  font-size: 25px;
+  cursor: default;
+  
+}
+
+#sejaBemvindo {
+  margin-bottom: 0px;
+  animation: deslizarDeCima 1s ease-out forwards;
+}
+
+#forumOnline {
+  margin-top: 0px;
+  color: rgb(126, 44, 207);
+  background-color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  border-radius: 15px;
+  font-weight: bold;
+  animation: deslizarDeCima 1s ease-out forwards;
+}
+
+#logoHome {
+  width: 500px;
+  height: auto;
+  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
+  animation: fadeInSuave 1.5s ease-out forwards;
+}
+
+
+.wrapper-animado {
+  /* Igualando ao "deslizarDeCima": 1s de duração e ease-out */
+  animation: deslizarDeBaixo 1s ease-out forwards;
+  opacity: 0;
+}
+
+#botoesHome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#entrar {
+  background-color: rgb(255, 255, 255);
+  color: rgb(41, 30, 104);
+  padding: 10px 70px;
+  border-radius: 15px;
+  text-decoration: none;
+  font-family: "Questrial", sans-serif;
+  font-size: 35px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#entrar:hover {
+  transform: scale(1.1);
+  background-color: rgb(41, 30, 104);
+  color: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* EFEITO AO CLICAR */
+#entrar:active {
+  transform: scale(0.95);
+  /* Efeito de "apertar" o botão */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#perguntas {
+  background-color: rgb(255, 255, 255);
+  color: rgba(41, 30, 104, 0.667);
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-decoration: none;
+  font-family: "questrial";
+  font-size: 20px;
+  margin-bottom: 10px;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+}
+
+#perguntas:hover {
+  transform: scale(1.1);
+  background-color: rgb(41, 30, 104);
+  color: white;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* EFEITO AO CLICAR */
+#perguntas:active {
+  transform: scale(0.95);
+  /* Efeito de "apertar" o botão */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#rodape {
+  margin-top: auto;  
+  padding-top: 40px; 
+  display: flex;
+  justify-content: space-between;
+}
+
+#copy {
+  margin: 0px;
+  font-family: "Sanchez", sans-serif;
+  color: rgba(255, 255, 255, 0.607);
+  text-decoration: none;
+}
+
+
+#sobreprojeto {
+  font-family: "Sanchez", sans-serif;
+  color: rgba(255, 255, 255, 0.607);
+  text-decoration: none;
+}
+
+#sobreprojeto:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.sanchez-regular {
+  font-family: "Sanchez", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.sanchez-regular-italic {
+  font-family: "Sanchez", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.questrial-regular {
+  font-family: "Questrial", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@keyframes fadeInSuave {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes deslizarDeCima {
+  from {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes deslizarDeBaixo {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
