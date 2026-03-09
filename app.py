@@ -1,6 +1,6 @@
 import os
 from PIL import Image  
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
 from functools import wraps
 from models.database import init_db, conectar 
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
@@ -339,6 +339,14 @@ def upload_foto():
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
         session['foto'] = novo_nome
     return redirect(url_for('perfil'))
+
+
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route("/servico_admin")
 @login_required
