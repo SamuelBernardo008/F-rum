@@ -58,7 +58,7 @@ def cargo_required(cargo_permitido):
             if usuario_cargo != cargo_permitido:
                 try:
                     return redirect(url_for(f"forum_{usuario_cargo}"))
-                except:
+                except Exception: # Adicionando 'Exception' aqui o aviso some
                     return redirect(url_for("login"))
             return f(*args, **kwargs)
         return decorated_function
@@ -135,7 +135,7 @@ def adicionar_comentario():
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
                 atualizar_comentario(id_comentario, texto, tag)
         else:
-            novo_id = criar_comentario(texto, usuario_id, tag, destino, pai_id)
+            criar_comentario(texto, usuario_id, tag, destino, pai_id)
             if pai_id:
                 post_pai = buscar_comentario_por_id(pai_id)
                 if post_pai and post_pai['usuario_id'] != usuario_id:
@@ -221,9 +221,9 @@ def alterar_status_feedback(id):
         if novo_status == 'resolvido':
             # Lógica para ajustar o gênero da mensagem
             if feedback['tipo'].lower() == 'bug':
-                msg = f"Ei! O bug que você relatou foi corrigido. Obrigado por ajudar!"
+                msg = "Ei! O bug que você relatou foi corrigido. Obrigado por ajudar!"
             else:
-                msg = f"Ei! A sugestão que você enviou foi implementada. Obrigado por ajudar!"
+                msg = "Ei! A sugestão que você enviou foi implementada. Obrigado por ajudar!"
             
             criar_notificacao(feedback['usuario_id'], msg, link=url_for('faq'))
             
