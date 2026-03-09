@@ -1,6 +1,6 @@
-import os
-from PIL import Image  
+import os 
 from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
+from PIL import Image
 from functools import wraps
 from models.database import init_db, conectar 
 from models.usuario import buscar_usuario_por_email, verificar_senha, atualizar_foto_usuario
@@ -330,14 +330,24 @@ def perfil():
 def upload_foto():
     if 'foto' not in request.files:
         return redirect(url_for('perfil'))
+    
     arquivo = request.files['foto']
+    
     if arquivo and arquivo.filename != '':
         novo_nome = f"user_{session['usuario_id']}.png"
         caminho = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
-        img = Image.open(arquivo)
+        
+        # CORREÇÃO AQUI: Use arquivo.stream para garantir compatibilidade
+        img = Image.open(arquivo.stream) 
+        
+        # Opcional: Converter para RGB para garantir que funcione com JPEGs e PNGs
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+            
         img.save(caminho, "PNG")
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
         session['foto'] = novo_nome
+        
     return redirect(url_for('perfil'))
 
 
