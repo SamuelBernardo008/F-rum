@@ -47,10 +47,22 @@ body {
   animation: deslizarDeCima 1s ease-out forwards;
 }
 
+.logo-container {
+    width: 100%;
+    /* Ajuste este valor para a altura real da sua logo */
+    height: 245px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Impede que qualquer variação interna mova o que está fora */
+    overflow: hidden; 
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
+
+}
+
 #logoHome {
   width: 500px;
   height: auto;
-  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
   animation: fadeInSuave 1.5s ease-out forwards;
 }
 
