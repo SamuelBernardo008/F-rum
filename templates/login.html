@@ -1,21 +1,35 @@
 {% extends "base.html" %}
 
+{% block page_id %}login{% endblock %}
+
 {% block content %}
-<div class="login-container">
-    <h2>Login</h2>
+<div id="divdoselementoslogin">
+    <div id="divLogin">
+        <p id="sejaBemvindoLogin">Seja bem-vindo ao:</p>
+        <p id="forumOnlineLogin">Fórum On-line</p>
+        <div class="logo-container-login">
+            <img src="static/logo.png" alt="Echo" id="logoLogin">
+        </div>
+    </div>
 
-    {% if erro %}
-        <p class="erro">{{ erro }}</p>
-    {% endif %}
 
-    <form id="loginForm" method="POST">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-    </form>
+
+    <div class="login-container">
+        <h2>Login</h2>
+
+        {% if erro %}
+            <p class="erro">{{ erro }}</p>
+        {% endif %}
+
+        <form id="loginForm" method="POST">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit" class="link-ajax">Entrar</button>
+        </form>
+
+
+    <a href="{{ url_for('home') }}" id="voltarhome" class="link-ajax">Voltar para a página inicial</a>
+    </div>
 </div>
 
-<a href="{{ url_for('home') }}" id="voltarhome">Voltar para a página inicial</a>
-
-<script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}
