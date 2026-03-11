@@ -1,3 +1,12 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
 body {
   background-image:
     linear-gradient(to right, rgb(254, 245, 230, 0.05) 0.5px, transparent 1px),
@@ -15,7 +24,6 @@ body {
   -ms-user-select: none;
   user-select: none;
 
-
 }
 
 #divHome {
@@ -26,7 +34,8 @@ body {
   font-family: "Sanchez";
   font-size: 25px;
   cursor: default;
-
+  justify-content: center;
+  padding-top: 1%;
 }
 
 #sejaBemvindo {
@@ -50,7 +59,7 @@ body {
 .logo-container {
   width: 100%;
   /* Ajuste este valor para a altura real da sua logo */
-  height: 245px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,7 +70,7 @@ body {
 }
 
 #logoHome {
-  width: 500px;
+  width: 40%;
   height: auto;
   animation: fadeInSuave 1.5s ease-out forwards;
 }
@@ -139,10 +148,14 @@ body {
 }
 
 #rodape {
-  margin-top: auto;
-  padding-top: 40px;
+  margin-top: auto; /* Empurra o rodapé para o fim da página */
+  padding: 20px 40px; /* Espaçamento interno para não encostar nos cantos */
   display: flex;
   justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  animation: fadeInSuave 1.5s ease-out forwards;
+
 }
 
 #copy {
@@ -215,58 +228,102 @@ body {
 }
 
 #divLogin {
-  width: 50%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   align-items: center;
   color: white;
   font-family: "Sanchez";
-  font-size: 25px;
   cursor: default;
   height: 100vh;
   background-image: linear-gradient(to right, rgb(160, 85, 235), rgb(126, 44, 207), rgb(90, 42, 179), rgb(41, 30, 104));
+  border-radius: 0% 5% 5% 0% / 60% 20% 70% 40%;
+  float: left;
+  animation: entradaLateralBlob 3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 .logo-container-login {
   width: 100%;
-  height: 245px;
+  height: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
-
 }
 
 #logoLogin {
-  width: 400px;
+  width: 70%;
   height: auto;
   animation: fadeInSuave 1.5s ease-out forwards;
 }
 
 #sejaBemvindoLogin {
+  font-size: 40px;
+  margin-top:10% ;
   margin-bottom: 0px;
   animation: deslizarDeCima 1s ease-out forwards;
 }
 
 #forumOnlineLogin {
+  font-size: 35px;
   margin-top: 0px;
+  margin-bottom: 10px;
   color: rgb(126, 44, 207);
   background-color: white;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 5px;
-  padding-top: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 10px;
+  padding-top: 10px;
   border-radius: 15px;
   font-weight: bold;
   animation: deslizarDeCima 1s ease-out forwards;
 }
+
+#sobreprojetologin {
+  font-family: "Sanchez", sans-serif;
+  color: rgba(255, 255, 255, 0.607);
+  text-decoration: none;
+  align-self: flex-start; 
+  margin-top: auto; 
+  margin-left: 5%;   
+  margin-bottom: 3%; 
+  font-size: clamp(14px, 1.2vw, 18px);
+}
+
+#sobreprojetologin:hover {
+  color: white;
+  text-decoration: underline;
+}
+
 
 
 
 
 /* Animações */
 
+@keyframes entradaLateralBlob {
+  from {
+    opacity: 0;
+    transform: translateX(-100%); /* Começa totalmente escondida à esquerda */
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0); /* Termina na posição original dela */
+  }
+}
+
+/* Animação para o conteúdo interno - Um deslize mais sutil */
+@keyframes entradaConteudo {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Começa um pouco abaixo */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* Termina no lugar certo */
+  }
+}
 
 @keyframes fadeInSuave {
   from {
