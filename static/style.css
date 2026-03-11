@@ -228,7 +228,7 @@ body {
 }
 
 #divLogin {
-  width: 55%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -260,7 +260,7 @@ body {
 
 #sejaBemvindoLogin {
   font-size: 40px;
-  margin-top:10% ;
+  margin-top:15% ;
   margin-bottom: 0px;
   animation: deslizarDeCima 1s ease-out forwards;
 }
@@ -294,6 +294,130 @@ body {
 #sobreprojetologin:hover {
   color: white;
   text-decoration: underline;
+}
+
+.login-container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#logintitulo{
+  font-family: "Questrial", serif;
+  font-size: 150px;
+  margin-bottom: 1px;
+  margin-top: 0px;
+  color: rgb(41, 30, 104);
+  line-height: 0.8;
+  animation: entradaConteudo 2s ease-out forwards;
+}
+
+#loginDescricao {
+  font-family: "Sanchez", serif;
+  font-size: 30px;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  color: rgb(41, 30, 104);
+  text-align: center;
+  z-index: 1;
+  letter-spacing: -1px;
+  line-height: 1;
+  animation: entradaConteudo 2s ease-out forwards;
+
+}
+
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  height: auto;
+  size: 80%;
+  animation: entradaConteudo 2s ease-out forwards;
+
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 10px;
+  border: 2px solid rgba(41, 30, 104, 0.521);
+  border-radius: 20px;
+  background-color: rgb(255, 255, 255);
+  font-size: 18px;
+  font-family: "Sanchez", serif;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: rgb(41, 30, 104);
+  border: 3px solid rgb(41, 30, 104);
+}
+
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+  color: rgba(41, 30, 104, 0.336);
+  font-size: 25px;
+}
+
+#linkslogin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+  margin-bottom: 20px;
+  margin-top: 0px; 
+}
+
+#irperguntas, #voltarhome {
+  font-family: "Sanchez", serif;
+  color: rgba(41, 30, 104, 0.244);
+  text-decoration: none;
+  font-size: 18px;
+}
+
+#irperguntas:hover, #voltarhome:hover {
+  color: rgba(41, 30, 104, 0.573);
+  text-decoration: underline;
+}
+
+#botaoentrar {
+  background-color: rgb(41, 30, 104);
+  color: rgb(160, 85, 235);
+  padding: 15px 0;
+  border-radius: 40px;
+  text-decoration: none;
+  font-family: "Questrial", serif;
+  font-size: 40px;
+  width: 50%;
+  font-weight: bold;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+}
+
+#botaoentrar:hover {
+  background-color: rgb(126, 44, 207);
+  color: rgb(41, 30, 104);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+  border: none;
+}
+
+#botaoentrar:active {
+  transform: scale(0.95);
+  /* Efeito de "apertar" o botão */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#emailinput{
+  margin-top: 5%;
 }
 
 

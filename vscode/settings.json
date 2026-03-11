@@ -1,0 +1,11 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.wordWrap": "on",
+    "git.autofetch": true,
+    "editor.rulers": [
+        80,
+        100,
+        120
+    ]
+}

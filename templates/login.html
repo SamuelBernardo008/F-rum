@@ -16,20 +16,25 @@
 
 
     <div class="login-container">
-        <h2>Login</h2>
+        <h2 id="logintitulo">LOGIN</h2>
+        <p id="loginDescricao">Logue com seu email <br> educacional.</p>
 
         {% if erro %}
             <p class="erro">{{ erro }}</p>
         {% endif %}
 
         <form id="loginForm" method="POST">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <button type="submit" class="link-ajax">Entrar</button>
+            <input id="emailinput" type="email" name="email" placeholder="🗣 Email" required>
+            <input id="senhainput" type="password" name="senha" placeholder="🔒︎ Senha" required>
+            <div id="linkslogin">
+            <a href="{{ url_for('home') }}" id="voltarhome" class="link-ajax">Home | </a>
+            <a href="{{ url_for('home') }}" id="irperguntas" class="link-ajax"> Esqueci minha senha</a>
+            </div>
+            <button id="botaoentrar" type="submit" class="link-ajax">ENTRAR</button>
         </form>
 
 
-    <a href="{{ url_for('home') }}" id="voltarhome" class="link-ajax">Voltar para a página inicial</a>
+    
     </div>
 </div>
 
