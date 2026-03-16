@@ -1,7 +1,8 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  min-height: 100vh; 
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -148,8 +149,10 @@ body {
 }
 
 #rodape {
-  margin-top: auto; /* Empurra o rodapé para o fim da página */
-  padding: 20px 40px; /* Espaçamento interno para não encostar nos cantos */
+  margin-top: auto;
+  /* Empurra o rodapé para o fim da página */
+  padding: 20px 40px;
+  /* Espaçamento interno para não encostar nos cantos */
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -260,7 +263,7 @@ body {
 
 #sejaBemvindoLogin {
   font-size: 40px;
-  margin-top:15% ;
+  margin-top: 15%;
   margin-bottom: 0px;
   animation: deslizarDeCima 1s ease-out forwards;
 }
@@ -284,10 +287,10 @@ body {
   font-family: "Sanchez", sans-serif;
   color: rgba(255, 255, 255, 0.607);
   text-decoration: none;
-  align-self: flex-start; 
-  margin-top: auto; 
-  margin-left: 5%;   
-  margin-bottom: 3%; 
+  align-self: flex-start;
+  margin-top: auto;
+  margin-left: 5%;
+  margin-bottom: 3%;
   font-size: clamp(14px, 1.2vw, 18px);
 }
 
@@ -305,7 +308,7 @@ body {
   height: 100vh;
 }
 
-#logintitulo{
+#logintitulo {
   font-family: "Questrial", serif;
   font-size: 150px;
   margin-bottom: 1px;
@@ -371,17 +374,19 @@ input[type="password"]::placeholder {
   justify-content: center;
   width: 70%;
   margin-bottom: 20px;
-  margin-top: 0px; 
+  margin-top: 0px;
 }
 
-#irperguntas, #voltarhome {
+#irperguntas,
+#voltarhome {
   font-family: "Sanchez", serif;
   color: rgba(41, 30, 104, 0.244);
   text-decoration: none;
   font-size: 18px;
 }
 
-#irperguntas:hover, #voltarhome:hover {
+#irperguntas:hover,
+#voltarhome:hover {
   color: rgba(41, 30, 104, 0.573);
   text-decoration: underline;
 }
@@ -416,12 +421,122 @@ input[type="password"]::placeholder {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-#emailinput{
+#emailinput {
   margin-top: 5%;
 }
 
 
+/* pagina forum aluno------------------------------------------------- */
 
+
+#page-forumAluno {
+  background-color: rgb(255, 255, 255);
+  background-image:
+    linear-gradient(to right, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px),
+    linear-gradient(to bottom, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px);
+
+
+  background-size:
+    15px 15px,
+    15px 15px,
+    100% 100%;
+
+  margin: 0;
+
+}
+
+/* Layout da Header */
+.header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background-image: linear-gradient(to right,rgb(41, 30, 104),rgb(90, 42, 179),rgb(126, 44, 207),rgb(160, 85, 235));
+    color: white;
+}
+
+/* Container e Badge do Ícone */
+.notif-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+/* Menu Dropdown */
+.notif-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    z-index: 1000;
+    width: 250px;
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+.notif-dropdown.show {
+    display: block;
+}
+
+/* Itens de Notificação */
+.notif-item {
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+}
+
+.notif-item:hover {
+    background: #f4f4f4;
+}
+
+/* Botão de Rodapé */
+.limpar-btn {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    color: blue;
+    text-decoration: none;
+    border-top: 1px solid #eee;
+}
+
+#LogoForumAluno {
+    width: 15%;
+    height: auto;
+    margin: 0px;
+    justify-content: center;
+    align-self: center;
+}
+
+#divlogolink{
+    width: 50%;
+    height: 100%;
+}
+
+#divnot{
+  z-index: 1000;
+}
+
+#sairforum {
+    color: white;
+    text-decoration: none;
+    font-size: 54px;
+    margin-bottom: 20px;
+}
 
 
 /* Animações */
@@ -429,11 +544,14 @@ input[type="password"]::placeholder {
 @keyframes entradaLateralBlob {
   from {
     opacity: 0;
-    transform: translateX(-100%); /* Começa totalmente escondida à esquerda */
+    transform: translateX(-100%);
+    /* Começa totalmente escondida à esquerda */
   }
+
   to {
     opacity: 1;
-    transform: translateX(0); /* Termina na posição original dela */
+    transform: translateX(0);
+    /* Termina na posição original dela */
   }
 }
 
@@ -441,11 +559,14 @@ input[type="password"]::placeholder {
 @keyframes entradaConteudo {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Começa um pouco abaixo */
+    transform: translateY(20px);
+    /* Começa um pouco abaixo */
   }
+
   to {
     opacity: 1;
-    transform: translateY(0); /* Termina no lugar certo */
+    transform: translateY(0);
+    /* Termina no lugar certo */
   }
 }
 
