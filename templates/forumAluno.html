@@ -1,379 +1,275 @@
 {% extends "base.html" %}
 
-<<<<<<< HEAD
 {% block page_id %}Forum{% endblock %}
-=======
-{% block page_id %}forumAluno{% endblock %}
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
 
 {% block content %}
 
 {% if session.get('usuario_id') %}
 <header class="header-nav">
-    <a href="{{ url_for('home') }}" class="link-ajax" id="linkhomelogo" title="Voltar para Home">
-        <img src="static/logo.png" alt="Logo" class="logoforum">
-    </a>
-
-<<<<<<< HEAD
-    <a href="{{ url_for('logout') }}" id="sairconta"><span class="material-symbols-outlined">
-            logout
-        </span>Sair</a>
-
-    <div class="notif-container" onclick="toggleNotifs()">
-        <span class="material-symbols-outlined">notifications</span>
-=======
-{% if session.get('usuario_id') %}
-<header class="header-nav">
-    <div id="divlogolink">
-        <img src="static/logo.png" alt="LogoForumAluno" id="LogoForumAluno">
-        <a href="{{ url_for('logout') }}" id="sairforum">Sair</a>
-    </div>
-
-
-    <div class="notif-container" onclick="toggleNotifs()" id="divnoti">
-        <span>notifications</span>
-
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
-        {% if total_notificacoes > 0 %}
-        <span class="badge">{{ total_notificacoes }}</span>
-        {% endif %}
-
-<<<<<<< HEAD
-=======
-        <a href="{{ url_for('perfil') }}" class="perfil-link">
-            <i class="fas fa-user-circle"></i> Meu Perfil
+    <div class="header-left">
+        <a href="{{ url_for('home') }}" id="linkhomelogo" title="Voltar para Home">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logoforum">
         </a>
 
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
-        <div id="notifDropdown" class="notif-dropdown">
-            {% for n in notificacoes_usuario %}
-            <a href="{{ n.link if n.link else '#' }}" class="notif-item">
-                {{ n.mensagem }}
-                <br><small style="color: #888;">{{ n.data_criacao }}</small>
-            </a>
-            {% else %}
-            <div class="notif-item">Nenhuma notificação nova</div>
-            {% endfor %}
-
-            {% if total_notificacoes > 0 %}
-            <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn">Marcar todas como lidas</a>
-            {% endif %}
-<<<<<<< HEAD
-
-        </div>
+        <a href="{{ url_for('logout') }}" id="sairconta" class="header-link">
+            <span class="icon-logout" style="display: flex; align-items: center;">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </span>
+            Sair
+        </a>
     </div>
-    <a href="{{ url_for('perfil') }}">Meu Perfil</a>
-=======
+
+    <div class="header-right">
+        <div class="notif-container">
+            <div class="notif-button header-link" onclick="toggleNotifs()">
+                <span class="icon-notif" style="display: flex; align-items: center;">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path>
+                    </svg>
+                </span>
+                Notificações
+                {% if total_notificacoes > 0 %}
+                <span class="badge">{{ total_notificacoes }}</span>
+                {% endif %}
+            </div>
+
+            <div id="notifDropdown" class="notif-dropdown">
+                {% for n in notificacoes_usuario %}
+                <a href="{{ n.link if n.link else '#' }}" class="notif-item">
+                    {{ n.mensagem }}
+                    <br><small style="color: #888;">{{ n.data_criacao }}</small>
+                </a>
+                {% else %}
+                <div class="notif-item">Nenhuma notificação nova</div>
+                {% endfor %}
+
+                {% if total_notificacoes > 0 %}
+                <div style="padding: 10px; text-align: center; border-top: 1px solid #eee;">
+                    <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn" style="text-decoration: none; color: #6a1b9a; font-weight: bold; font-size: 12px;">Marcar todas como lidas</a>
+                </div>
+                {% endif %}
+            </div>
         </div>
+
+        <a href="{{ url_for('perfil') }}" class="header-link" id="perfil">
+            <span class="icon-profile" style="display: flex; align-items: center;">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                </svg>
+            </span>
+            Perfil
+        </a>
     </div>
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
 </header>
 {% endif %}
 
-<script>
-    function toggleNotifs() {
-        const dropdown = document.getElementById('notifDropdown');
-        dropdown.classList.toggle('show');
-    }
-
-    // Fecha o dropdown se clicar fora dele
-    window.onclick = function (event) {
-        if (!event.target.closest('.notif-container')) {
-            const dropdown = document.getElementById('notifDropdown');
-            if (dropdown.classList.contains('show')) {
-                dropdown.classList.remove('show');
-            }
-        }
-    }
-</script>
-
-<br>
-
-<div class="forum-container">
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
-
+<div id="conteudo-dinamico" class="forum-container">
     <h1 class="tituloForum">Bem-vindo, {{ session.get('nome') }}!</h1>
     <p class="paragrafoForum">Aqui você pode discutir diversos tópicos e compartilhar suas ideias.</p>
 
-<<<<<<< HEAD
-    <nav>
-
-    </nav>
-
-=======
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
-    <hr>
-
     <section class="pesquisa">
-        <form action="{{ url_for('forum_aluno') }}" method="GET">
-    <!-- 1. Campo de Texto -->
-    <input type="text" name="busca" placeholder="Pesquisar no fórum..." value="{{ busca_ativa }}">
-    
-    <!-- 2. Seleção de Tags -->
-    <select name="tag">
-        <option value="" {% if not tag_ativa %}selected{% endif %}>#Todas as Tags</option>
-        
-        {% set tags = ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar'] %}
-        {% for t in tags %}
-            <option value="{{ t }}" {% if tag_ativa == t %}selected{% endif %}>
-                #{{ t }}
-            </option>
-        {% endfor %}
+        <form action="{{ url_for('forum_aluno') }}" method="GET" class="search-container">
+            <div class="search-box">
+                <span class="icon-search">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" name="busca" placeholder="Pesquisar" value="{{ busca_ativa }}">
+            </div>
 
-<<<<<<< HEAD
-        {% if session.get('cargo') == 'admin' %}
-            <option value="admin" {% if tag_ativa == 'admin' %}selected{% endif %}>
-                #Apenas Coordenação
-            </option>
-        {% endif %}
-    </select>
-=======
-            {% if busca_ativa or tag_ativa %}
-            <a href="{{ url_for('forum_aluno') }}"><button type="button">Limpar Filtros</button></a>
-            {% endif %}
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
+            <div class="filter-box">
+                <label class="icon-filter">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                </label>
+                <select name="tag" onchange="this.form.submit()">
+                    <option value="">Todas</option>
+                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação'] %}
+                    <option value="{{ t }}" {% if tag_ativa==t %}selected{% endif %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
 
-    <!-- 3. Botão de Enviar (Agora depois das tags) -->
-    <button type="submit">Buscar</button>
-
-<<<<<<< HEAD
-    <!-- 4. Botão de Limpar (Opcional, aparece só se houver filtro) -->
-    {% if busca_ativa or tag_ativa %}
-        <a href="{{ url_for('forum_aluno') }}">
-            <button type="button">Limpar Filtros</button>
-        </a>
-    {% endif %}
-</form> <br>
-=======
-            {% set tags = ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar'] %}
-            {% for t in tags %}
-            | <a href="{{ url_for('forum_aluno', tag=t, busca=busca_ativa) }}">#{{ t }}</a>
-            {% endfor %}
-
-            {% if session.get('cargo') == 'admin' %}
-            | <a href="{{ url_for('forum_aluno', tag='admin', busca=busca_ativa) }}">#Apenas Coordenação</a>
-            {% endif %}
-        </form> <br>
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
-        <button type="button" onclick="abrirPopup()">+ Novo Post no Fórum</button>
+        <button type="button" onclick="abrirPopup()" class="botaoAdicionar">ADICIONAR +</button>
     </section>
 
-    <br>
-
     {% if session.get('cargo') == 'admin' %}
-    <div>
-        <a href="{{ url_for('servico_admin') }}">← Voltar para Painel Admin</a>
-    </div>
-    <br>
+    <a href="{{ url_for('servico_admin') }}" class="botaoAdmin">← Voltar para Painel Admin</a>
     {% endif %}
 
-    <form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
-        <input type="hidden" name="origem" value="aluno">
-        <input type="hidden" name="id_comentario"
-            value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
-
-        <div id="popup" {% if not comentario_selecionado %} hidden {% endif %}>
-            <h3>{{ 'Editando comentário:' if comentario_selecionado else 'O que você está pensando?' }}</h3>
-
-            <input type="text" name="texto" placeholder="Escreva aqui seu tópico principal..." required
-                value="{{ comentario_selecionado.texto if comentario_selecionado else '' }}">
-
-            <select name="tag" id="tagComentario" required>
-                {% if comentario_selecionado %}
-                <option value="{{ comentario_selecionado.tag }}" selected>
-                    {{ 'Apenas Coordenação' if comentario_selecionado.tag == 'admin' else comentario_selecionado.tag }}
-                </option>
-                {% else %}
-                <option value="">Tag</option>
-                {% endif %}
-
-                <option value="Estrutura">Estrutura</option>
-                <option value="Convivencia">Convivência</option>
-                <option value="Pedagógico">Pedagógico</option>
-                <option value="Elogio">Elogio</option>
-                <option value="Coordenação">Coordenação</option>
-                <option value="Equipe Escolar">Equipe Escolar</option>
-                <option value="admin">Apenas Coordenação</option>
-            </select>
-
-            <br><br>
-            <button type="submit">Postar</button>
-
-            {% if comentario_selecionado %}
-            <a href="{{ url_for('forum_aluno') }}"><button type="button">Cancelar</button></a>
-            {% else %}
-            <button type="button" onclick="fecharPopup()">Cancelar</button>
-            {% endif %}
-        </div>
-    </form>
-<<<<<<< HEAD
-=======
-
-    <div id="comentarios">
-        <h2>Mural do Fórum</h2>
-
+    <div class="comentarios">
         {% for c in comentarios %}
-        <article class="comentario-card"
-            style="margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+        <article class="comentario-card card-{{ c.status|lower if c.status else 'aberto' }}">
+            <div class="card-header-info">
                 <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" alt="Foto"
-                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;">
+                    style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
 
-                <div style="flex: 1;">
-                    <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
-
-                    <span
-                        style="margin-left: 10px; font-weight: bold; font-size: 0.75em; color: #444; border: 1px solid #ccc; padding: 2px 5px; border-radius: 4px;">
-                        {{ c.status|upper if c.status else 'ABERTO' }}
-                    </span>
-
-                    <span class="acoes" style="float: right;">
-                        <a href="{{ url_for('ver_thread', id_pai=c.id) }}"
-                            style="color: #007bff; font-weight: bold; margin-right: 15px;">
-                            Respostas ({{ c.total_respostas if c.total_respostas else 0 }})
-                        </a>
-
-                        {% if session['usuario_id'] == c.usuario_id %}
-                        <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
-                        {% endif %}
-
-                        {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
-                        <a href="{{ url_for('deletar_comentario', id=c.id) }}"
-                            style="color: red; margin-left: 10px;">delete</a>
-                        {% endif %}
-                    </span>
-                </div>
-            </div>
-
-            <p style="margin-left: 50px;">
-                <i style="color: #666;">#{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}</i>
-            </p>
-            <p style="margin-left: 50px; font-size: 1.1em;">{{ c.texto }}</p>
-
-            <div style="margin-left: 50px; margin-bottom: 10px;">
-                <a href="{{ url_for('curtir', id_comentario=c.id) }}" style="text-decoration: none;">
-                    {% if c.usuario_ja_curtiu %}
-                    <button type="button" style="cursor:pointer;">⭐ Apoiado ({{ c.total_curtidas }})</button>
-                    {% else %}
-                    <button type="button" style="cursor:pointer;">☆ Apoiar ({{ c.total_curtidas }})</button>
-                    {% endif %}
-                </a>
-            </div>
-
-            <div style="margin-left: 50px;">
-                <small style="color: #888;">Postado em: {{ c.data_criacao }}</small>
-
-                {% if session['cargo'] == 'admin' %}
-                <div
-                    style="margin-top: 15px; padding: 8px; background-color: #f9f9f9; border-radius: 5px; font-size: 0.8em;">
-                    <strong style="display: block; margin-bottom: 5px; color: #555;">⚙️ Gestão da Coordenação:</strong>
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}">Aberto</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}">Em Andamento</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}">Resolvido</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}">Inviável</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='discussao') }}">Discutir</a>
-                </div>
-                {% endif %}
-            </div>
-
-            <hr>
-        </article>
-        {% else %}
-        <p>Nenhum tópico encontrado para esses filtros.</p>
-        {% endfor %}
-    </div>
-
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
-</div>
-
-
-<div class="comentarios">
-    <h2>Mural do Fórum</h2>
-
-    {% for c in comentarios %}
-    <article class="comentario-card"
-        style="margin-bottom: 20px; border: 1px solid #eee; padding: 15px; border-radius: 8px;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
-            <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" alt="Foto"
-                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 1px solid #ccc;">
-
-            <div style="flex: 1;">
                 <strong>{{ c.autor }} {% if c.cargo_autor == 'admin' %}(Admin){% endif %}</strong>
 
-                <span
-                    style="margin-left: 10px; font-weight: bold; font-size: 0.75em; color: #444; border: 1px solid #ccc; padding: 2px 5px; border-radius: 4px;">
-                    {{ c.status|upper if c.status else 'ABERTO' }}
+                <span class="status-badge bg-{{ c.status|lower if c.status else 'aberto' }}">
+                    {{ c.status|title if c.status else 'Aberto' }}
                 </span>
 
-                <span class="acoes" style="float: right;">
-                    <a href="{{ url_for('ver_thread', id_pai=c.id) }}"
-                        style="color: #007bff; font-weight: bold; margin-right: 15px;">
-                        Respostas ({{ c.total_respostas if c.total_respostas else 0 }})
-                    </a>
+                <span style="color: #bbb; font-size: 13px;">
+                    #{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}
+                </span>
 
+                <div style="margin-left: auto; display: flex; gap: 10px;">
                     {% if session['usuario_id'] == c.usuario_id %}
-                    <a href="{{ url_for('forum_aluno', id_editar=c.id) }}">editar</a>
+                    <a href="{{ url_for('forum_aluno', id_editar=c.id) }}" style="color: #aaa; text-decoration: none; font-size: 12px;">editar</a>
                     {% endif %}
 
                     {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
-                    <a href="{{ url_for('deletar_comentario', id=c.id) }}"
-                        style="color: red; margin-left: 10px;">delete</a>
+                    <a href="{{ url_for('deletar_comentario', id=c.id) }}" style="color: #ff6b6b; text-decoration: none; font-size: 12px;">delete</a>
                     {% endif %}
-                </span>
+                </div>
             </div>
-        </div>
 
-        <p style="margin-left: 50px;">
-            <i style="color: #666;">#{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}</i>
-        </p>
-        <p style="margin-left: 50px; font-size: 1.1em;">{{ c.texto }}</p>
+            <p style="font-size: 16px; line-height: 1.5; margin: 0; flex-grow: 1; word-wrap: break-word;">
+                {{ c.texto }}
+            </p>
 
-        <div style="margin-left: 50px; margin-bottom: 10px;">
-            <a href="{{ url_for('curtir', id_comentario=c.id) }}" style="text-decoration: none;">
-                {% if c.usuario_ja_curtiu %}
-                <button type="button" style="cursor:pointer;">⭐ Apoiado ({{ c.total_curtidas }})</button>
-                {% else %}
-                <button type="button" style="cursor:pointer;">☆ Apoiar ({{ c.total_curtidas }})</button>
-                {% endif %}
-            </a>
-        </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <a href="{{ url_for('ver_thread', id_pai=c.id) }}" class="btn-respostas">
+                        RESPOSTAS ({{ c.total_respostas if c.total_respostas else 0 }})
+                    </a>
 
-        <div style="margin-left: 50px;">
-            <small style="color: #888;">Postado em: {{ c.data_criacao }}</small>
+                    <a href="{{ url_for('curtir', id_comentario=c.id) }}" style="text-decoration: none;">
+                        {% if c.usuario_ja_curtiu %}
+                        <span style="cursor:pointer; color: #ffc107; font-weight: bold; font-size: 13px;">⭐ Apoiado ({{ c.total_curtidas }})</span>
+                        {% else %}
+                        <span style="cursor:pointer; color: white; font-size: 13px;">☆ Apoiar ({{ c.total_curtidas }})</span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
 
             {% if session['cargo'] == 'admin' %}
-            <div
-                style="margin-top: 15px; padding: 8px; background-color: #f9f9f9; border-radius: 5px; font-size: 0.8em;">
-                <strong style="display: block; margin-bottom: 5px; color: #555;">⚙️ Gestão da Coordenação:</strong>
-                <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}">Aberto</a> |
-                <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}">Em Andamento</a> |
-                <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}">Resolvido</a> |
-                <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}">Inviável</a> |
-                <a href="{{ url_for('mudar_status', id=c.id, novo_status='discussao') }}">Discutir</a>
+            <div style="margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.8em;">
+                <strong style="display: block; margin-bottom: 5px; color: #eee;">Gestão da Coordenação:</strong>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}" style="color: #fff; text-decoration: none;">Aberto</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}" style="color: #fff; text-decoration: none;">Em Andamento</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}" style="color: #fff; text-decoration: none;">Resolvido</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}" style="color: #fff; text-decoration: none;">Inviável</a>
+                </div>
             </div>
             {% endif %}
-        </div>
-
-        <hr>
-    </article>
-    {% else %}
-    <p>Nenhum tópico encontrado para esses filtros.</p>
-    {% endfor %}
+        </article>
+        {% else %}
+        <p class="naoEncontrado">Nenhum comentário encontrado.</p>
+        {% endfor %}
+    </div>
 </div>
 
+<form id="formPopup" action="{{ url_for('adicionar_comentario') }}" method="POST">
+    <input type="hidden" name="origem" value="aluno">
+    <input type="hidden" name="id_comentario" value="{{ comentario_selecionado.id if comentario_selecionado else '' }}">
 
+    <div id="popup" class="modal-overlay" {% if not comentario_selecionado %} hidden {% endif %}>
+        <div class="modal-content">
+            <h3 class="modal-title">
+                {{ 'Edite seu comentário:' if comentario_selecionado else 'Adicione um comentário:' }}
+            </h3>
+
+            <textarea name="texto" id="inputComentario" required maxlength="250" 
+                      placeholder="Escreva aqui seu comentário..."
+                      class="comment-textarea">{{ comentario_selecionado.texto if comentario_selecionado else '' }}</textarea>
+            
+            <div class="modal-footer">
+                <small id="contador">250 caracteres restantes</small>
+                
+                <select name="tag" id="tagComentario" required class="modal-select">
+                    {% if comentario_selecionado %}
+                    <option value="{{ comentario_selecionado.tag }}" selected>
+                        {{ 'Apenas Coordenação' if comentario_selecionado.tag == 'admin' else comentario_selecionado.tag }}
+                    </option>
+                    {% else %}
+                    <option value="">Tag</option>
+                    {% endif %}
+                    <option value="Estrutura">Estrutura</option>
+                    <option value="Convivencia">Convivência</option>
+                    <option value="Pedagógico">Pedagógico</option>
+                    <option value="Elogio">Elogio</option>
+                    <option value="Coordenação">Coordenação</option>
+                    <option value="Equipe Escolar">Equipe Escolar</option>
+                    <option value="admin">Apenas Coordenação</option>
+                </select>
+            </div>
+
+            <div class="modal-buttons">
+                <button type="submit" class="btn-postar">POSTAR +</button>
+                {% if comentario_selecionado %}
+                <a href="{{ url_for('forum_aluno') }}" class="btn-cancelar-link" style="text-decoration: none;">
+                    <button type="button" class="btn-cancelar">CANCELAR</button>
+                </a>
+                {% else %}
+                <button type="button" class="btn-cancelar" onclick="fecharPopup()">CANCELAR</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
 
 <script>
-    function abrirPopup() {
-        document.getElementById("popup").hidden = false;
+// Aguarda o carregamento da página
+document.addEventListener("DOMContentLoaded", function() {
+
+    // 1. Contador de Caracteres
+    const inputTexto = document.getElementById('inputComentario');
+    const contador = document.getElementById('contador');
+
+    function atualizarContador() {
+        if (inputTexto && contador) {
+            const limite = 250;
+            const restantes = limite - inputTexto.value.length;
+            contador.textContent = restantes + " caracteres restantes";
+            contador.style.color = restantes <= 0 ? "red" : "gray";
+        }
     }
 
-    function fecharPopup() {
-        document.getElementById("popup").hidden = true;
+    if (inputTexto) {
+        inputTexto.addEventListener('input', atualizarContador);
+        atualizarContador(); // Inicia o contador
     }
+
+    // 2. Funções do Popup (Globais para funcionarem no onclick do HTML)
+    window.abrirPopup = function() {
+        const popup = document.getElementById("popup");
+        if(popup) popup.hidden = false;
+    };
+
+    window.fecharPopup = function() {
+        const popup = document.getElementById("popup");
+        if(popup) popup.hidden = true;
+    };
+
+    // 3. Sistema de Notificações
+    window.toggleNotifs = function() {
+        const dropdown = document.getElementById('notifDropdown');
+        if(dropdown) dropdown.classList.toggle('show');
+    };
+
+    // Fechar dropdown ao clicar fora dele
+    window.addEventListener('click', function(event) {
+        if (!event.target.closest('.notif-container')) {
+            const dropdown = document.getElementById('notifDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    });
+});
 </script>
+
 {% endblock %}

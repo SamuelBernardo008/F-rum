@@ -1,147 +1,162 @@
 {% extends "base.html" %}
+
+{% block page_id %}Admin{% endblock %}
+
 {% block content %}
 
-<style>
-        /* Estilo básico para o menu de notificações */
-        .header-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #333; color: white; }
-        .notif-container { position: relative; cursor: pointer; }
-        .badge { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -5px; right: -10px; }
-        .notif-dropdown { 
-            display: none; position: absolute; right: 0; background: white; color: black; 
-            border: 1px solid #ccc; width: 250px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); z-index: 1000;
-        }
-        .notif-dropdown.show { display: block; }
-        .notif-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; text-decoration: none; color: black; display: block; }
-        .notif-item:hover { background: #f4f4f4; }
-        .limpar-btn { display: block; text-align: center; padding: 10px; font-size: 12px; color: blue; text-decoration: none; border-top: 1px solid #eee; }
-    </style>
-<body>
+{% if session.get('usuario_id') %}
+<header class="header-nav">
+    <div class="header-left">
+        <a href="{{ url_for('home') }}" id="linkhomelogo" title="Voltar para Home">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logoforum">
+        </a>
 
-    {% if session.get('usuario_id') %}
-    <header class="header-nav">
-        <div><strong>Echo Forum</strong></div>
-        
-        <div class="notif-container" onclick="toggleNotifs()">
-            <span>🔔 Notificações</span>
-            {% if total_notificacoes > 0 %}
+        <a href="{{ url_for('logout') }}" id="sairconta" class="header-link">
+            <span class="icon-logout" style="display: flex; align-items: center;">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+            </span>
+            Sair
+        </a>
+    </div>
+
+    <div class="header-right">
+        <div class="notif-container">
+            <div class="notif-button header-link" onclick="toggleNotifs()">
+                <span class="icon-notif" style="display: flex; align-items: center;">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path>
+                    </svg>
+                </span>
+                Notificações
+                {% if total_notificacoes > 0 %}
                 <span class="badge">{{ total_notificacoes }}</span>
-            {% endif %}
-            
+                {% endif %}
+            </div>
+
             <div id="notifDropdown" class="notif-dropdown">
                 {% for n in notificacoes_usuario %}
-                    <a href="{{ n.link if n.link else '#' }}" class="notif-item">
-                        {{ n.mensagem }}
-                        <br><small style="color: #888;">{{ n.data_criacao }}</small>
-                    </a>
+                <a href="{{ n.link if n.link else '#' }}" class="notif-item">
+                    {{ n.mensagem }}
+                    <br><small style="color: #888;">{{ n.data_criacao }}</small>
+                </a>
                 {% else %}
-                    <div class="notif-item">Nenhuma notificação nova</div>
+                <div class="notif-item">Nenhuma notificação nova</div>
                 {% endfor %}
-                
+
                 {% if total_notificacoes > 0 %}
-                    <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn">Marcar todas como lidas</a>
+                <div style="padding: 10px; text-align: center; border-top: 1px solid #eee;">
+                    <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn" style="text-decoration: none; color: #6a1b9a; font-weight: bold; font-size: 12px;">Marcar todas como lidas</a>
+                </div>
                 {% endif %}
             </div>
         </div>
-    </header>
-    {% endif %}
 
-    <script>
-        function toggleNotifs() {
-            const dropdown = document.getElementById('notifDropdown');
-            dropdown.classList.toggle('show');
-        }
+        <a href="{{ url_for('perfil') }}" class="header-link" id="perfil">
+            <span class="icon-profile" style="display: flex; align-items: center;">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                </svg>
+            </span>
+            Perfil
+        </a>
+    </div>
+</header>
+{% endif %}
 
-        // Fecha o dropdown se clicar fora dele
-        window.onclick = function(event) {
-            if (!event.target.closest('.notif-container')) {
-                const dropdown = document.getElementById('notifDropdown');
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
-                }
-            }
-        }
-    </script>
-
-    <br>
-
-<div class="admin-container">
-    <h1>Painel da Coordenação</h1>
-    <p>Exibindo mensagens enviadas com a tag <strong>#Apenas Coordenação</strong>.</p>
-
-    <nav>
-        <a href="{{ url_for('forum_aluno') }}">Ir para Fórum Aluno</a> | 
-        <a href="{{ url_for('forum_professor') }}">Ir para Fórum Professor</a> |
-        <a href="{{ url_for('logout') }}" id="sair">Sair da conta</a> |
-        <a href="{{ url_for('home') }}">Voltar a home</a>
-    </nav>
-
-    <hr>
-
-    <section id="mensagens-coordenacao">
-        {% for c in comentarios %}
-            <article class="comentario-card">
-                <div>
-                    <strong>De: {{ c.autor }}</strong> <br>
-                    <strong>Local original:</strong> 
-                    {# Formata o destino para ficar com a primeira letra maiúscula #}
-                    {{ c.destino|capitalize }} 
-                </div>
-                
-                <p>{{ c.texto }}</p>
-                <small>Enviado em: {{ c.data_criacao }}</small>
-                
-                <br><br>
-                <a href="{{ url_for('deletar_comentario', id=c.id) }}" 
-                   onclick="return confirm('Tem certeza que deseja apagar esta mensagem privada?')" 
-                   style="color: red;">
-                   Apagar Mensagem
-                </a>
-                <hr>
-            </article>
-        {% else %}
-            <p>Nenhuma mensagem direcionada à coordenação no momento.</p>
-        {% endfor %}
-    </section>
-</div>
-
-<section id="bugs-sugestoes">
-    <div class="feedback-header">
-        <h2>🛠️ Relatórios de Bugs e Sugestões</h2>
-        <span class="badge-pendentes">
-            {{ total_abertos }} Pendentes
-        </span>
+<div class="forum-container">
+    <h1 class="tituloForum">PAINEL DA COORDENAÇÃO</h1>
+    <p class="paragrafoForum">Gestão de mensagens privadas e relatórios do sistema.</p>
+    
+    <div style="margin-top: 20px; display: flex; gap: 15px;">
+        <a href="{{ url_for('forum_aluno') }}" class="botaoAdicionar" style="font-size: 18px; padding: 10px 30px; text-decoration: none;">FÓRUM ALUNO</a>
+        <a href="{{ url_for('forum_professor') }}" class="botaoAdicionar" style="font-size: 18px; padding: 10px 30px; text-decoration: none;">FÓRUM PROFESSOR</a>
     </div>
 
-    {% for fb in feedbacks %}
-        <article class="comentario-card {{ 'feedback-resolvido' if fb.status == 'resolvido' }} {{ 'tipo-bug' if fb.tipo == 'Bug' else 'tipo-sugestao' }}">
-            
-            <div class="feedback-meta">
-                <div class="user-info">
-                    <strong>De: {{ fb.nome }}</strong> | 
-                    <span class="tipo-label">{{ fb.tipo }}</span>
+    <hr style="width: 80%; margin: 40px 0; opacity: 0.1;">
+
+    <h2 class="tituloForum" style="font-size: 32px;">MENSAGENS PARA A COORDENAÇÃO</h2>
+    <div class="comentarios">
+        {% for c in comentarios %}
+            <article class="comentario-card">
+                <div class="card-header-info">
+                    <div class="icon-profile" style="width: 24px; height: 24px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="#4A148C"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+                    </div>
+                    <strong>{{ c.autor }}</strong>
+                    <span class="status-badge bg-aberto">#{{ c.destino|capitalize }}</span>
+                    
+                    <div style="margin-left: auto;">
+                        <a href="{{ url_for('deletar_comentario', id=c.id) }}" 
+                           onclick="return confirm('Apagar esta mensagem?')" 
+                           style="color: #ff6b6b; text-decoration: none; font-size: 12px;">delete</a>
+                    </div>
                 </div>
-                
-                <div class="actions">
-                    <a href="{{ url_for('alterar_status_feedback', id=fb.id) }}" class="btn-status">
-                       {{ 'Resolver' if fb.status == 'aberto' else 'Reabrir' }}
-                    </a>
-                    <a href="{{ url_for('deletar_feedback', id=fb.id) }}" 
-                       onclick="return confirm('Apagar este relato permanentemente?')"
-                       class="btn-deletar">Apagar</a>
+
+                <p style="font-size: 16px; color: white;">{{ c.texto }}</p>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; font-size: 12px; color: #bbb;">
+                    Enviado em: {{ c.data_criacao }}
                 </div>
-            </div>
-            
-            <p class="feedback-texto">
-                {{ fb.texto }}
-            </p>
-            
-            <small class="feedback-footer">
-                Status: <strong>{{ fb.status }}</strong> | {{ fb.data_criacao }}
-            </small>
-        </article>
-        <hr>
-        
-    {% endfor %}
-</section>
+            </article>
+        {% else %}
+            <p class="naoEncontrado">Nenhuma mensagem direcionada à coordenação.</p>
+        {% endfor %}
+    </div>
+
+    <h2 class="tituloForum" style="font-size: 32px; margin-top: 60px;">BUGS E SUGESTÕES</h2>
+    <div class="comentarios">
+        {% for fb in feedbacks %}
+            <article class="comentario-card {{ 'card-resolvido' if fb.status == 'resolvido' else 'card-andamento' }}">
+                <div class="card-header-info">
+                    <strong>{{ fb.nome }}</strong>
+                    <span class="status-badge {{ 'bg-resolvido' if fb.status == 'resolvido' else 'bg-inviavel' }}">
+                        #{{ fb.tipo }}
+                    </span>
+                    
+                    <div style="margin-left: auto; display: flex; gap: 10px;">
+                        <a href="{{ url_for('alterar_status_feedback', id=fb.id) }}" style="color: #fff; text-decoration: none; font-size: 11px; border: 1px solid white; padding: 2px 8px; border-radius: 10px;">
+                           {{ 'Resolver' if fb.status == 'aberto' else 'Reabrir' }}
+                        </a>
+                        <a href="{{ url_for('deletar_feedback', id=fb.id) }}" 
+                           onclick="return confirm('Apagar este relato?')" 
+                           style="color: #ff6b6b; text-decoration: none; font-size: 12px;">delete</a>
+                    </div>
+                </div>
+
+                <p style="font-size: 16px; color: white;">{{ fb.texto }}</p>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <span class="status-badge {{ 'bg-resolvido' if fb.status == 'resolvido' else 'bg-aberto' }}" style="font-size: 10px;">
+                        {{ fb.status|upper }}
+                    </span>
+                    <small style="color: #bbb;">{{ fb.data_criacao }}</small>
+                </div>
+            </article>
+        {% else %}
+            <p class="naoEncontrado">Nenhum feedback pendente.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function toggleNotifs() {
+        const dropdown = document.getElementById('notifDropdown');
+        if (dropdown) dropdown.classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.closest('.notif-container')) {
+            const dropdown = document.getElementById('notifDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+</script>
 
 {% endblock %}

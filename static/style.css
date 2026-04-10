@@ -430,11 +430,8 @@ input[type="password"]::placeholder {
 }
 
 
-<<<<<<< HEAD
-/* fórum aluno------------------------------------------------- */
-=======
-/* pagina forum aluno------------------------------------------------- */
->>>>>>> 3abd4161172f8a8ba2b4586a4ad5c0ba329991c2
+/* Página do fórum ------------------------------------------------- */
+
 
 #page-Forum {
   background-color: rgb(255, 255, 255);
@@ -450,6 +447,11 @@ input[type="password"]::placeholder {
 
   margin: 0;
   align-items: center;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .forum-container {
@@ -465,40 +467,79 @@ input[type="password"]::placeholder {
   margin-bottom: 20px;
 }
 
+/* --- CONFIGURAÇÃO DO HEADER FIXO E FLEXBOX --- */
 .header-nav {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-image: linear-gradient(to right, rgb(41, 30, 104), rgb(90, 42, 179), rgb(126, 44, 207), rgb(160, 85, 235));
+  position: sticky; /* Mantém o header fixo no topo */
+  top: 0;
+  z-index: 1000;
+  
+  display: flex; /* Ativa o Flexbox */
+  justify-content: space-between; /* Joga a div esquerda para um lado e a direita para o outro */
+  align-items: center; /* Centraliza tudo verticalmente */
+  
+  /* Ajuste a cor de fundo conforme o seu projeto */
+  background: linear-gradient(90deg, #4A148C 0%, #7E57C2 100%); 
+  padding: 10px 30px;
   color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+
 }
 
-.logoforum {
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-}
-
-#linkhomelogo {
-  width: 5%;
-  height: auto;
-}
-
-.logo-nav {
+/* --- AGRUPAMENTOS ESQUERDA / DIREITA --- */
+.header-left, .header-right {
   display: flex;
   align-items: center;
-  justify-content: start;
-  width: 100%;
+  gap: 30px; /* Espaço entre os itens (ex: espaço entre a Logo e o Sair) */
 }
 
-
-/* Ícone/Container de notificações */
-.notif-container {
-  position: relative;
+/* --- PADRONIZAÇÃO DOS LINKS E BOTÕES --- */
+.header-link {
+  display: flex;
+  align-items: center;
+  gap: 2px; /* Espacinho entre o ícone e a palavra */
+  color: white;
+  text-decoration: none;
+  font-size: 25px;
+  font-family: "Sanchez", serif;
   cursor: pointer;
 }
 
-/* Bolinha vermelha de contador */
+#perfil {
+  margin-right: 20px; /* Pequeno espaço entre o perfil e o sair */
+}
+
+.icon-profile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: white; /* Fundo da bola */
+}
+
+/* Precisamos mudar a cor do SVG dentro desta bola branca */
+.icon-profile svg {
+  fill: rgb(160, 85, 235); /* Use uma cor roxa do seu gradiente aqui */
+}
+
+.header-link:hover {
+  opacity: 0.8; /* Efeito de hover simples */
+}
+
+/* --- CORREÇÃO DOS ÍCONES GIGANTES --- */
+.material-symbols-outlined {
+  font-size: 26px !important; /* Força o ícone a ter um tamanho normal */
+  line-height: 1;
+}
+
+/* --- ATUALIZAÇÃO DO CONTAINER DE NOTIFICAÇÃO --- */
+.notif-container {
+  position: relative;
+  /* O display flex foi movido para a classe .header-link que agora ele possui */
+}
+
 .badge {
   background: red;
   color: white;
@@ -506,72 +547,30 @@ input[type="password"]::placeholder {
   padding: 2px 6px;
   font-size: 12px;
   position: absolute;
-  top: -5px;
-  right: -10px;
+  top: -8px;
+  left: 15px; /* Ajustado para ficar em cima do ícone, já que agora tem texto do lado */
 }
 
-/* Menu suspenso (escondido por padrão) */
-.notif-dropdown {
-  display: none;
-  position: absolute;
-  right: 0;
-  background: white;
-  color: black;
-  border: 1px solid #ccc;
-  width: 250px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+.logoforum {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  overflow: hidden;
+
 }
 
-/* Classe para mostrar o menu (via JavaScript) */
-.notif-dropdown.show {
-  display: block;
+#linkhomelogo {
+  width: 7%;
+  height: auto;
+  overflow: hidden;
 }
-
-/* Cada item de notificação */
-.notif-item {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-  text-decoration: none;
-  color: black;
-  display: block;
-}
-
-.notif-item:hover {
-  background: #f4f4f4;
-}
-
-/* Botão de limpar notificações no rodapé do menu */
-.limpar-btn {
-  display: block;
-  text-align: center;
-  padding: 10px;
-  font-size: 12px;
-  color: blue;
-  text-decoration: none;
-  border-top: 1px solid #eee;
-}
-
-
-
-#sairconta {
-  color: white;
-  text-decoration: none;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-}
-
-
-
 
 
 .tituloForum {
   font-family: "Questrial", serif;
   letter-spacing: -3px;
   text-transform: uppercase;
-  font-size: 50px;
+  font-size: 70px;
   color: rgb(41, 30, 104);
   animation: entradaConteudo 2s ease-out forwards;
   margin-bottom: 0px;
@@ -595,16 +594,20 @@ input[type="password"]::placeholder {
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   padding: 10px;
 }
 
 form {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Cria um espaço uniforme entre o input, o select e o botão */
-    flex-wrap: wrap; /* Garante que em telas menores os itens quebrem linha e não sumam */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Cria um espaço uniforme entre o input, o select e o botão */
+  flex-wrap: wrap;
+  /* Garante que em telas menores os itens quebrem linha e não sumam */
 }
+
+
 
 #page-forumAluno {
   background-color: rgb(255, 255, 255);
@@ -624,96 +627,585 @@ form {
 
 /* Layout da Header */
 .header-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px;
-    background-image: linear-gradient(to right,rgb(41, 30, 104),rgb(90, 42, 179),rgb(126, 44, 207),rgb(160, 85, 235));
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background-image: linear-gradient(to right, rgb(41, 30, 104), rgb(90, 42, 179), rgb(126, 44, 207), rgb(160, 85, 235));
+  color: white;
 }
 
 /* Container e Badge do Ícone */
 .notif-container {
-    position: relative;
-    cursor: pointer;
+  position: relative;
+  cursor: pointer;
 }
 
 .badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background: red;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 12px;
+  position: absolute;
+  top: -5px;
+  left: 18px; /* Puxa a bolinha para a esquerda, cravando ela em cima do sino */
+  background: red;
+  color: white;
+  
+  /* Formato de pílula (perfeito para números) */
+  border-radius: 12px; 
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  min-width: 10px; 
+  
+  /* Borda na mesma cor do header para não embolar com o texto se encostar nele */
+  border: 2px solid #7E57C2; 
 }
 
 /* Menu Dropdown */
 .notif-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    z-index: 1000;
-    width: 250px;
-    background: white;
-    color: black;
-    border: 1px solid #ccc;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 12px;
+  z-index: 1000;
+  width: 280px;
+  background: white;
+  color: black;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+
+  /* --- ADICIONE ESTAS LINHAS --- */
+  max-height: 350px;    /* Define a altura máxima da caixinha */
+  overflow-y: auto;     /* Cria o scroll vertical se houver muitas notificações */
+  overflow-x: hidden;   /* Garante que não apareça scroll pros lados */
+}
+
+/* Deixa a barra de rolagem mais fina e moderna (Chrome/Edge) */
+.notif-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notif-dropdown::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+
+.notif-dropdown::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 8px;
+}
+
+.notif-dropdown::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 
 .notif-dropdown.show {
-    display: block;
+  display: block;
+  font-family: Sanchez, serif;
 }
 
 /* Itens de Notificação */
 .notif-item {
-    display: block;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-    color: black;
-    text-decoration: none;
+  display: block;
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  line-height: 1.4;
+  transition: background 0.2s; /* Suaviza o hover */
 }
 
 .notif-item:hover {
-    background: #f4f4f4;
+  background-color: #f9f9f9; /* Destaque ao passar o mouse */
 }
+
+
 
 /* Botão de Rodapé */
 .limpar-btn {
-    display: block;
-    text-align: center;
-    padding: 10px;
-    font-size: 12px;
-    color: blue;
-    text-decoration: none;
-    border-top: 1px solid #eee;
+  display: block;
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: bold;
+  color: rgb(41, 30, 104);
+  text-decoration: none;
+  background: #fdfdfd;
+}
+
+.limpar-btn:hover {
+  background: #f0f0f0;
 }
 
 #LogoForumAluno {
-    width: 15%;
-    height: auto;
-    margin: 0px;
-    justify-content: center;
-    align-self: center;
+  width: 15%;
+  height: auto;
+  margin: 0px;
+  justify-content: center;
+  align-self: center;
+  overflow: hidden;
+
 }
 
-#divlogolink{
-    width: 50%;
-    height: 100%;
+#divlogolink {
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+
 }
 
-#divnot{
+#divnot {
   z-index: 1000;
 }
 
 #sairforum {
-    color: white;
-    text-decoration: none;
-    font-size: 54px;
-    margin-bottom: 20px;
+  color: white;
+  text-decoration: none;
+  font-size: 54px;
+  margin-bottom: 20px;
 }
+
+
+/* Container principal alinhado */
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  max-width: 600px;
+  /* Ajuste conforme necessário */
+  margin-bottom: 20px;
+}
+
+/* A barra de pesquisa redonda */
+.search-box {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  border: 2px solid rgb(41, 30, 104);
+  border-radius: 50px;
+
+  /* ALTERAÇÃO AQUI: */
+  padding: 2px;
+  padding-right: 200px;
+
+  background: white;
+}
+
+.search-box input {
+  font-family: Sanchez, serif;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 5px 10px;
+  font-size: 20px;
+  color: rgb(41, 30, 104);
+
+  /* GARANTIA: */
+  text-align: left;
+  /* Garante que o texto comece da esquerda */
+}
+
+.search-box input::placeholder {
+  color: #9b94c5;
+  /* Mesma cor do texto */
+  opacity: 0.7;
+  /* Um pouco de transparência para diferenciar */
+}
+
+.icon-search {
+  display: flex;
+  /* Garante que o SVG fique centralizado no span */
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* IMPEDE o ícone de amassar */
+  margin-left: 10px;
+  /* Ajusta a distância da borda esquerda */
+  color: #9b94c5;
+}
+
+/* O botão de filtro redondo */
+.filter-box {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  border: 2px solid #3b307d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.filter-box:hover {
+  background-color: #f0f0f5;
+  transform: scale(0.95);
+}
+
+/* Esconde o select mas deixa ele clicável sobre o ícone */
+.filter-box select {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  /* Invisível */
+  cursor: pointer;
+}
+
+.icon-filter svg {
+  width: 20px;
+  height: 20px;
+  color: #9b94c5;
+}
+
+/* Estilo do link de limpar filtros */
+.clear-filter {
+  text-align: center;
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+
+.clear-filter a {
+  font-size: 12px;
+  color: #3b307d;
+  text-decoration: underline;
+}
+
+
+.botaoAdicionar {
+  background-image: linear-gradient(to right, rgb(90, 42, 179), rgb(126, 44, 207));
+  color: rgb(255, 255, 255);
+  padding: 10px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-family: "Questrial", sans-serif;
+  font-size: 30px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: none;
+}
+
+.botaoAdicionar:hover {
+  background-image: linear-gradient(to right, rgb(90, 42, 179), rgb(126, 44, 207));
+  color: rgb(255, 255, 255);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.botaoAdicionar:active {
+  transform: scale(0.95);
+  /* Efeito de "apertar" o botão */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.botaoAdmin {
+  color: rgb(175, 145, 205);
+  border-radius: 30px;
+  text-decoration: none;
+  font-family: "Questrial", sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.botaoAdmin:hover {
+  color: rgb(175, 145, 205);
+  text-decoration: underline;
+}
+
+.comentarios {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* Permite que os cards fiquem um ao lado do outro */
+  justify-content: center; /* Centraliza o par de colunas */
+  gap: 20px; /* Espaço entre as colunas e as linhas */
+  
+  width: 95%; /* Aumentamos de 80% para 95% para chegar perto das bordas */
+  max-width: 1400px; /* Limite opcional para não ficar estranho em telas UltraWide */
+  margin: 20px auto; /* Centraliza o container na página */
+}
+
+/* O CARD DE COMENTÁRIO */
+.comentario-card {
+  background-color: #211651;
+  color: white;
+  font-family: "Sanchez", serif;
+  
+  /* CÁLCULO MÁGICO: 50% da largura menos metade do gap (10px) */
+  width: calc(50% - 10px); 
+  
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 4px solid white;
+  
+  /* Organização interna */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  
+  /* Garante que o card estique se o texto for grande */
+  min-height: fit-content; 
+  
+  /* Suas animações e sombras permanecem aqui */
+  transition: transform 0.3s ease;
+  animation: fadeInSuave 0.8s ease-out both;
+}
+
+/* Ajuste para o texto dentro do card (Quebra de linha) */
+.comentario-card p, 
+.comentario-card .texto-comentario {
+  font-family: "Sanchez", serif;
+  font-size: 220px;
+  margin: 0;
+  
+  /* Quebra de linha automática */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.naoEncontrado {
+  font-family: "Sanchez", serif;
+  font-size: 20px;
+  color: rgba(41, 30, 104, 0.511);
+  text-align: center;
+  z-index: 1;
+  letter-spacing: -1px;
+  line-height: 1.2;
+  animation: entradaConteudo 2s ease-out forwards;
+  text-decoration: underline;
+}
+
+
+/* Fundo escuro atrás do modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeInOverlay 0.3s ease-out;
+}
+
+/* Caixa Branca do Modal */
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: left;
+    animation: slideUp 0.4s ease-out;
+    font-family: "Sanchez", serif;
+}
+
+.modal-title {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Área de Texto (Textarea) */
+.comment-textarea {
+    width: 100%;
+    height: 120px;
+    padding: 15px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    resize: none;
+    font-family: inherit;
+    font-size: 1rem;
+    background: #f9f9f9;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.comment-textarea:focus {
+    border-color: #ddd;
+}
+
+/* Linha com contador e tag */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0 20px 0;
+}
+
+#contador {
+    font-size: 0.85rem;
+}
+
+.modal-select {
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Botões */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-postar, .btn-cancelar {
+    border: none;
+    padding: 12px 35px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    font-size: 0.9rem;
+    background-color: #333;
+    color: white;
+    size: 100%;
+}
+
+
+
+/* Efeitos de Hover */
+.btn-postar:hover, .btn-cancelar:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+.btn-postar:active, .btn-cancelar:active {
+    transform: scale(0.95);
+}
+
+.btn-cancelar-link { text-decoration: none; }
+
+/* Esconder o modal */
+.modal-overlay[hidden] {
+    display: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Responsividade: Se a tela for pequena (celular), volta para 1 coluna */
+@media (max-width: 768px) {
+  .comentario-card {
+    width: 100%;
+  }
+}
+/* --- CLASSES PARA AS CORES DA BORDA EXTERNA --- */
+/* Adicione a classe correspondente no HTML de cada card dependendo do status */
+.card-aberto {
+  box-shadow: 0 0 0 2px #888888; /* Cinza */
+}
+
+.card-andamento {
+  box-shadow: 0 0 0 2px #ffc107; /* Amarelo */
+}
+
+.card-resolvido {
+  box-shadow: 0 0 0 2px #28a745; /* Verde */
+}
+
+.card-inviavel {
+  box-shadow: 0 0 0 2px #dc3545; /* Vermelho */
+}
+
+/* Linha do cabeçalho (Foto, Nome, Status, Tag) */
+.card-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+
+/* Estilo padrão das Pílulas de Status */
+.status-badge {
+  color: white;
+  padding: 2px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Cores dos Status */
+.bg-aberto { background-color: #888888; } /* Cinza */
+.bg-andamento { background-color: #ffc107; color: black; } /* Amarelo */
+.bg-resolvido { background-color: #28a745; } /* Verde */
+.bg-inviavel { background-color: #dc3545; } /* Vermelho */
+
+/* Botão de Respostas no rodapé do card */
+.btn-respostas {
+  align-self: flex-start; /* Faz o botão não esticar e ficar alinhado à esquerda */
+  background-color: white;
+  color: #211651;
+  border: 1px solid #211651;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* Correção da fonte interna do card */
+.comentario-card p {
+    font-size: 16px !important; /* Estava 220px no seu código enviado, o que quebraria tudo */
+    line-height: 1.5;
+    margin: 10px 0;
+    color: white;
+}
+
+/* Estilo para os títulos das seções dentro do admin */
+.titulo-secao-admin {
+    font-family: "Questrial", sans-serif;
+    color: rgb(41, 30, 104);
+    width: 80%;
+    text-align: left;
+    margin-top: 50px;
+    border-bottom: 2px solid rgba(41, 30, 104, 0.1);
+}
+
+/* Botões do topo no estilo que você gosta */
+.botaoAdmin {
+    background: #7E57C2;
+    color: white !important;
+    padding: 10px 25px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-family: "Questrial", sans-serif;
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.botaoAdmin:hover {
+    transform: scale(1.05);
+    background: #4A148C;
+}
+
 
 
 /* Animações */
@@ -781,4 +1273,21 @@ form {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Animações */
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

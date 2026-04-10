@@ -44,3 +44,29 @@ document.querySelectorAll('.link-ajax').forEach(link => {
             });
     });
 });
+
+// Arquivo: script.js
+
+// Usamos uma função para inicializar o contador
+function iniciarContador() {
+    const inputTexto = document.querySelector('input[name="texto"]');
+    const contador = document.getElementById('contador');
+
+    if (inputTexto && contador) {
+        inputTexto.addEventListener('input', function() {
+            const limite = 250;
+            const restantes = limite - this.value.length;
+
+            contador.textContent = restantes + " caracteres restantes";
+
+            if (restantes <= 0) {
+                contador.style.color = "red";
+            } else {
+                contador.style.color = "gray";
+            }
+        });
+    }
+}
+
+// Executa a função assim que a página carregar
+document.addEventListener("DOMContentLoaded", iniciarContador);

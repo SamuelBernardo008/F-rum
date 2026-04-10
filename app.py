@@ -126,10 +126,14 @@ def adicionar_comentario():
     pai_id = request.form.get("pai_id") 
     usuario_id = session.get("usuario_id")
 
+    # Garante que pai_id seja None se estiver vazio
     if not pai_id or not str(pai_id).strip():
         pai_id = None
 
+    # 1. Só processa se os dados básicos existirem
     if texto and tag and destino:
+        texto = texto[:250] # Seu novo limite de caracteres
+
         if id_comentario and id_comentario.strip():
             comentario = buscar_comentario_por_id(id_comentario)
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
@@ -141,10 +145,18 @@ def adicionar_comentario():
                 if post_pai and post_pai['usuario_id'] != usuario_id:
                     msg = f"{session['nome']} respondeu ao seu tópico: '{texto[:20]}...'"
                     criar_notificacao(post_pai['usuario_id'], msg, link=url_for('ver_thread', id_pai=pai_id))
-    
+
+    # 2. O RETORNO DEVE FICAR FORA DE TODOS OS "IFs" (Cuidado com a identação!)
+    # Se for uma resposta a outro comentário, volta para a thread
     if pai_id:
         return redirect(url_for('ver_thread', id_pai=pai_id))
-    return redirect(url_for(f"forum_{destino}"))
+    
+    # Se tiver um destino válido, volta para o fórum de origem
+    if destino:
+        return redirect(url_for(f"forum_{destino}"))
+    
+    # PLANO C: Se tudo der errado, volta para a página inicial do fórum
+    return redirect(url_for('index')) # ou o nome da sua rota principal
 
 @app.route("/comentario/status/<int:id>/<novo_status>")
 @login_required
