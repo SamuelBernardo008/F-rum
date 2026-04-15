@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block page_id %}Sobre{% endblock %}
+
+{% block content %}
+
+{% if session.get('usuario_id') %}
+
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logoforum" style="height: auto; width: 200px; align-self: center;">
+       
+{% endif %}
+
+<div id="conteudo-dinamico" class="forum-container">
+    
+    <h1 class="tituloForum" style="margin-top: 30px;">Sobre o Echo Forum</h1>
+    <p class="paragrafoForum">Conectando alunos, professores e coordenação para construir um ambiente escolar colaborativo e transparente.</p>
+
+    <article class="comentario-card" style="margin-top: 40px; padding: 30px; border-left: 5px solid #6a1b9a;">
+        <h2 style="margin-bottom: 15px; color: #ffffff; display: flex; align-items: center; gap: 10px;">
+            <span>🎯</span> Nosso Propósito
+        </h2>
+        <p style="font-size: 16px; line-height: 1.6; color: #ffffff;">
+            O <strong>Echo Forum</strong> nasceu da necessidade de dar voz ativa a todos os membros da comunidade escolar. Nosso objetivo principal é centralizar debates, sugestões e elogios em uma plataforma digital organizada, onde as demandas não apenas são ouvidas, mas também acompanhadas e resolvidas pela equipe gestora.
+        </p>
+    </article>
+
+    
+
+    <article class="comentario-card" style="margin-top: 30px; padding: 30px; background-color: rgb(41, 30, 104);">
+        <h2 style="margin-bottom: 15px; color: #ffffff;">🏷️ Organização Inteligente</h2>
+        <p style="font-size: 16px; line-height: 1.6; color: #ffffff; margin-bottom: 15px;">
+            Para garantir que as informações cheguem aos responsáveis corretos, o fórum utiliza um sistema de filtros e <strong>Tags</strong>:
+        </p>
+        <ul style="font-size: 15px; line-height: 1.8; color: #ffffff; margin-left: 20px;">
+            <li><strong>Estrutura:</strong> Para problemas físicos (salas, laboratórios, quadras).</li>
+            <li><strong>Pedagógico:</strong> Foco em metodologias, avaliações e ensino.</li>
+            <li><strong>Convivência:</strong> Discussões sobre bem-estar e ambiente social.</li>
+            <li><strong>Elogio:</strong> Um espaço para reconhecer boas atitudes e projetos de sucesso.</li>
+            <li><strong>Apenas Coordenação:</strong> Uma tag confidencial para tratar de assuntos que requerem privacidade.</li>
+        </ul>
+    </article>
+
+    <div style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
+        <a href="{{ url_for('home') }}" class="botaoAdicionar" style="text-decoration: none; padding: 10px 20px;">Ir para o Início</a>
+    </div>
+
+</div>
+
+{% endblock %}

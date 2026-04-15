@@ -79,7 +79,7 @@
 
     <hr style="width: 80%; margin: 40px 0; opacity: 0.1;">
 
-    <h2 class="tituloForum" style="font-size: 32px;">MENSAGENS PARA A COORDENAÇÃO</h2>
+    <h2 class="tituloForum" style="font-size: 32px; letter-spacing: -2px;">MENSAGENS PARA A COORDENAÇÃO</h2>
     <div class="comentarios">
         {% for c in comentarios %}
             <article class="comentario-card">
@@ -108,7 +108,7 @@
         {% endfor %}
     </div>
 
-    <h2 class="tituloForum" style="font-size: 32px; margin-top: 60px;">BUGS E SUGESTÕES</h2>
+    <h2 class="tituloForum" style="font-size: 32px; margin-top: 60px; letter-spacing: -2px;">BUGS E SUGESTÕES</h2>
     <div class="comentarios">
         {% for fb in feedbacks %}
             <article class="comentario-card {{ 'card-resolvido' if fb.status == 'resolvido' else 'card-andamento' }}">

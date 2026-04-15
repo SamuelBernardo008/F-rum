@@ -1,57 +1,139 @@
 {% extends "base.html" %}
 {% block content %}
 
-<style>
-        /* Estilo básico para o menu de notificações */
-        .header-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #333; color: white; }
-        .notif-container { position: relative; cursor: pointer; }
-        .badge { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; position: absolute; top: -5px; right: -10px; }
-        .notif-dropdown { 
-            display: none; position: absolute; right: 0; background: white; color: black; 
-            border: 1px solid #ccc; width: 250px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); z-index: 1000;
-        }
-        .notif-dropdown.show { display: block; }
-        .notif-item { padding: 10px; border-bottom: 1px solid #eee; font-size: 14px; text-decoration: none; color: black; display: block; }
-        .notif-item:hover { background: #f4f4f4; }
-        .limpar-btn { display: block; text-align: center; padding: 10px; font-size: 12px; color: blue; text-decoration: none; border-top: 1px solid #eee; }
-    </style>
 <body>
 
     {% if session.get('usuario_id') %}
     <header class="header-nav">
-        <div><strong>Echo Forum</strong></div>
-        
-        <div class="notif-container" onclick="toggleNotifs()">
-            <span>🔔 Notificações</span>
-            {% if total_notificacoes > 0 %}
-                <span class="badge">{{ total_notificacoes }}</span>
-            {% endif %}
-            
-            <div id="notifDropdown" class="notif-dropdown">
-                {% for n in notificacoes_usuario %}
+        <div class="header-left">
+            <a href="{{ url_for('home') }}" id="linkhomelogo" title="Voltar para Home">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logoforum">
+            </a>
+
+            <a href="{{ url_for('logout') }}" id="sairconta" class="header-link">
+                <span class="icon-logout" style="display: flex; align-items: center;">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </span>
+                Sair
+            </a>
+        </div>
+
+        <div class="header-right">
+            <div class="notif-container">
+                <div class="notif-button header-link" onclick="toggleNotifs()">
+                    <span class="icon-notif" style="display: flex; align-items: center;">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path>
+                        </svg>
+                    </span>
+                    Notificações
+                    {% if total_notificacoes > 0 %}
+                    <span class="badge">{{ total_notificacoes }}</span>
+                    {% endif %}
+                </div>
+
+                <div id="notifDropdown" class="notif-dropdown">
+                    {% for n in notificacoes_usuario %}
                     <a href="{{ n.link if n.link else '#' }}" class="notif-item">
                         {{ n.mensagem }}
                         <br><small style="color: #888;">{{ n.data_criacao }}</small>
                     </a>
-                {% else %}
+                    {% else %}
                     <div class="notif-item">Nenhuma notificação nova</div>
-                {% endfor %}
-                
-                {% if total_notificacoes > 0 %}
-                    <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn">Marcar todas como lidas</a>
-                {% endif %}
+                    {% endfor %}
+
+                    {% if total_notificacoes > 0 %}
+                    <div style="padding: 10px; text-align: center; border-top: 1px solid #eee;">
+                        <a href="{{ url_for('limpar_notificacoes') }}" class="limpar-btn" style="text-decoration: none; color: #6a1b9a; font-weight: bold; font-size: 12px;">Marcar todas como lidas</a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
+
+            <a href="{{ url_for('perfil') }}" class="header-link" id="perfil">
+                <span class="icon-profile" style="display: flex; align-items: center;">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                    </svg>
+                </span>
+                Perfil
+            </a>
         </div>
     </header>
     {% endif %}
 
+    <br>
+
+    <div class="forum-container">
+        
+        <a href="{{ url_for('forum_aluno') }}" class="voltar-btn">← Voltar para o Fórum</a>
+
+        <section class="post-principal-card">
+            <div class="post-header-info">
+                <img src="{{ url_for('static', filename='uploads/' + (pai.foto or 'default.png')) }}" class="foto-perfil">
+                <div class="post-autor-info">
+                    <strong>{{ pai.autor }}</strong>
+                    <span>#{{ pai.tag }} | {{ pai.data_criacao }}</span>
+                </div>
+            </div>
+            <p class="post-texto">{{ pai.texto }}</p>
+        </section>
+
+        <hr class="linha-divisoria">
+
+        <section class="formulario-resposta">
+            <h3 class="titulo-resposta">Deixe sua resposta:</h3>
+            <form action="{{ url_for('adicionar_comentario') }}" method="POST">
+                <input type="hidden" name="origem" value="{{ pai.destino }}">
+                <input type="hidden" name="pai_id" value="{{ pai.id }}">
+                <input type="hidden" name="tag" value="{{ pai.tag }}"> 
+                
+                <textarea name="texto" id="textoResposta" class="comment-textarea" placeholder="O que você acha disso?" maxlength="250" required></textarea>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <button type="submit" class="botaoAdicionar" style="font-size: 20px; padding: 10px 30px; margin: 0;">Responder</button>
+                    <span id="contador" style="color: rgba(41, 30, 104, 0.42); font-family: 'Sanchez', serif; font-weight: bold;margin-left: 10px;">0/250</span>
+                </div>
+            </form>
+        </section>
+
+        <h2 class="titulo-respostas-lista">Respostas ({{ respostas|length }})</h2>
+
+        <section class="comentarios">
+            {% for r in respostas %}
+            <article class="comentario-card">
+                <div class="card-header-info">
+                    <img src="{{ url_for('static', filename='uploads/' + (r.foto or 'default.png')) }}" class="foto-perfil-pequena">
+                    <strong>{{ r.autor }}</strong>
+                    <small style="margin-left: auto; color: rgba(255,255,255,0.7);">{{ r.data_criacao }}</small>
+                </div>
+                
+                <p>{{ r.texto }}</p>
+                
+                <div style="text-align: right; margin-top: auto;">
+                    {% if session['usuario_id'] == r.usuario_id or session['cargo'] == 'admin' %}
+                        <a href="{{ url_for('deletar_comentario', id=r.id) }}" class="btn-deletar">Excluir</a>
+                    {% endif %}
+                </div>
+            </article>
+            {% else %}
+                <p class="naoEncontrado" style="text-decoration: none;">Ainda não há respostas. Seja o primeiro a comentar!</p>
+            {% endfor %}
+        </section>
+
+    </div>
+
     <script>
+        // Lógica do Dropdown de Notificações
         function toggleNotifs() {
             const dropdown = document.getElementById('notifDropdown');
             dropdown.classList.toggle('show');
         }
 
-        // Fecha o dropdown se clicar fora dele
         window.onclick = function(event) {
             if (!event.target.closest('.notif-container')) {
                 const dropdown = document.getElementById('notifDropdown');
@@ -60,66 +142,23 @@
                 }
             }
         }
-    </script>
 
-<br>
+        // Lógica do Contador de Caracteres
+        const textareaResposta = document.getElementById('textoResposta');
+        const contadorResposta = document.getElementById('contador');
 
-
-<div class="forum-container">
-    
-    <nav style="margin-bottom: 20px;">
-        <a href="{{ url_for('forum_aluno') }}">← Voltar para o Fórum</a>
-    </nav>
-
-    <section class="post-principal" style="background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-            <img src="{{ url_for('static', filename='uploads/' + (pai.foto or 'default.png')) }}" 
-                 style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
-            <div>
-                <strong>{{ pai.autor }}</strong> <br>
-                <small style="color: #888;">#{{ pai.tag }} | {{ pai.data_criacao }}</small>
-            </div>
-        </div>
-        <p style="font-size: 1.2em; margin-left: 60px;">{{ pai.texto }}</p>
-    </section>
-
-    <hr style="margin: 30px 0;">
-
-    <section class="formulario-resposta" style="margin-left: 60px; margin-bottom: 40px;">
-        <h3>Deixe sua resposta:</h3>
-        <form action="{{ url_for('adicionar_comentario') }}" method="POST">
-            <input type="hidden" name="origem" value="{{ pai.destino }}">
-            <input type="hidden" name="pai_id" value="{{ pai.id }}">
-            <input type="hidden" name="tag" value="{{ pai.tag }}"> <textarea name="texto" placeholder="O que você acha disso?" required 
-                      style="width: 90%; height: 60px; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-            <br>
-            <button type="submit" style="margin-top: 10px; padding: 10px 20px; cursor: pointer;">Responder</button>
-        </form>
-    </section>
-
-    <section class="respostas" style="margin-left: 60px;">
-        <h2>Respostas ({{ respostas|length }})</h2>
-        
-        {% for r in respostas %}
-        <article class="comentario-card" style="margin-bottom: 15px; padding: 15px; border-left: 3px solid #007bff; background: #fff;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="{{ url_for('static', filename='uploads/' + (r.foto or 'default.png')) }}" 
-                     style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
-                <strong>{{ r.autor }}</strong>
-                <small style="color: #888; margin-left: auto;">{{ r.data_criacao }}</small>
-            </div>
-            <p style="margin-top: 10px; margin-left: 40px;">{{ r.texto }}</p>
+        textareaResposta.addEventListener('input', function() {
+            const qtdCaracteres = this.value.length;
             
-            <div style="text-align: right;">
-                {% if session['usuario_id'] == r.usuario_id or session['cargo'] == 'admin' %}
-                    <a href="{{ url_for('deletar_comentario', id=r.id) }}" style="color: red; font-size: 0.8em;">excluir</a>
-                {% endif %}
-            </div>
-        </article>
-        {% else %}
-            <p style="color: #888;">Ainda não há respostas. Seja o primeiro a comentar!</p>
-        {% endfor %}
-    </section>
+            contadorResposta.textContent = `${qtdCaracteres}/250`;
 
-</div>
+            // Fica vermelho quando estiver no limite (faltando 10 pra acabar)
+            if (qtdCaracteres >= 240) {
+                contadorResposta.style.color = '#dc3545';
+            } else {
+                contadorResposta.style.color = 'rgb(41, 30, 104)';
+            }
+        });
+    </script>
+</body>
 {% endblock %}

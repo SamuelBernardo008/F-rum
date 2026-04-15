@@ -52,7 +52,8 @@ body {
   align-items: center;
   color: white;
   font-family: "Sanchez";
-  font-size: 25px;
+  /* Fonte responsiva para o container home */
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
   cursor: default;
   justify-content: center;
   padding-top: 1%;
@@ -248,6 +249,14 @@ body {
   border-radius: 0% 5% 5% 0% / 60% 20% 70% 40%;
   float: left;
   animation: entradaLateralBlob 3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.erro{
+  font-family: "Sanchez", serif;
+  color: rgba(41, 30, 104, 0.37);
+  text-decoration: none;
+  margin-top: 10px;
+  animation: fadeInSuave 1.5s ease-out forwards;
 }
 
 .logo-container-login {
@@ -1206,6 +1215,621 @@ form {
     background: #4A148C;
 }
 
+.tituloMensagensCoordenacao {
+    font-family: "Questrial", sans-serif;
+    color: rgb(41, 30, 104);
+    width: 80%;
+    text-align: left;
+    margin-top: 50px;
+    border-bottom: 2px solid rgba(41, 30, 104, 0.1);
+    font-size: 32px;
+    text-align: center;
+}
+
+
+/*-------------------------------tread
+
+/* =========================================================
+   ESTILOS ESPECÍFICOS PARA A PÁGINA DE RESPOSTAS 
+   ========================================================= */
+
+/* Botão de Voltar */
+.voltar-btn {
+    font-family: "Questrial", sans-serif;
+    color: rgb(41, 30, 104);
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    align-self: flex-start;
+    margin-left: 2.5%;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    animation: fadeInSuave 1s ease-out forwards;
+}
+
+.voltar-btn:hover {
+    color: rgb(160, 85, 235);
+    transform: translateX(-5px); /* Move levemente para a esquerda ao passar o mouse */
+}
+
+/* Card do Post Principal (Destaque claro para diferenciar dos comentários escuros) */
+.post-principal-card {
+    width: 95%;
+    max-width: 1400px;
+    background-color: white;
+    border: 3px solid rgb(41, 30, 104);
+    border-radius: 15px;
+    padding: 30px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    animation: entradaConteudo 1s ease-out forwards;
+}
+
+.post-header-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(41, 30, 104, 0.1);
+    padding-bottom: 15px;
+}
+
+.foto-perfil {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgb(126, 44, 207);
+}
+
+.foto-perfil-pequena {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid white;
+}
+
+.post-autor-info {
+    display: flex;
+    flex-direction: column;
+    font-family: "Questrial", sans-serif;
+    color: rgb(41, 30, 104);
+}
+
+.post-autor-info strong {
+    font-size: 22px;
+}
+
+.post-autor-info span {
+    font-size: 14px;
+    color: rgba(41, 30, 104, 0.6);
+}
+
+.post-texto {
+    font-family: "Sanchez", serif;
+    font-size: 22px;
+    color: rgb(41, 30, 104);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Linha Divisória Customizada */
+.linha-divisoria {
+    width: 95%;
+    max-width: 1400px;
+    height: 3px;
+    border: none;
+    background-image: linear-gradient(to right, transparent, rgba(160, 85, 235, 0.5), transparent);
+    margin: 40px 0;
+}
+
+/* Formulário de Resposta */
+.formulario-resposta {
+    width: 95%;
+    max-width: 1400px;
+    background-color: #f9f9f9;
+    border: 2px dashed rgba(41, 30, 104, 0.3);
+    border-radius: 15px;
+    padding: 25px;
+    box-sizing: border-box;
+    animation: entradaConteudo 1.2s ease-out forwards;
+    font-family: "Sanchez", serif;
+}
+
+.titulo-resposta {
+    font-family: "Questrial", sans-serif;
+    color: rgb(41, 30, 104);
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.titulo-respostas-lista {
+    font-family: "Questrial", sans-serif;
+    color: rgb(41, 30, 104);
+    font-size: 30px;
+    align-self: flex-start;
+    margin-left: 2.5%;
+    margin-top: 20px;
+    margin-bottom: 0;
+    animation: fadeInSuave 1.5s ease-out forwards;
+}
+
+/* Botão de excluir comentário no Card Escuro */
+.btn-deletar {
+    color: #ff6b6b;
+    font-family: "Questrial", sans-serif;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.btn-deletar:hover {
+    color: #ff4d4d;
+    text-decoration: underline;
+}
+
+
+
+
+/* =========================================================
+   ESTILOS NOVOS APENAS PARA O CONTEÚDO DO PERFIL 
+   ========================================================= */
+
+
+
+
+.perfil-layout {
+    display: flex;
+    gap: 30px;
+    width: 95%;
+    max-width: 1400px;
+    margin: 30px auto;
+    align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+    .perfil-layout {
+        flex-direction: column;
+    }
+}
+
+/* Card Lateral */
+.perfil-card-lateral {
+    background-color: white;
+    border: 3px solid rgb(41, 30, 104);
+    border-radius: 15px;
+    padding: 30px;
+    width: 300px;
+    flex-shrink: 0;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .perfil-card-lateral {
+        width: 100%;
+    }
+}
+
+.foto-perfil-grande {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgb(126, 44, 207);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.perfil-nome {
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+    font-size: 24px;
+    margin: 15px 0 5px 0;
+}
+
+.perfil-cargo {
+    font-family: 'Sanchez', serif;
+    color: #555;
+    margin: 0;
+    font-size: 16px;
+}
+
+.linha-perfil {
+    border: none;
+    height: 2px;
+    background: rgba(41, 30, 104, 0.1);
+    margin: 20px 0;
+}
+
+.perfil-estatistica {
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+    font-size: 16px;
+}
+
+.perfil-estatistica .destaque {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(126, 44, 207);
+}
+
+/* Botões do Perfil */
+.form-upload {
+    margin-top: 25px;
+}
+
+.botao-upload-foto {
+    display: inline-block;
+    background-color: rgb(41, 30, 104);
+    color: white;
+    align-self: center;
+    font-family: 'Questrial', sans-serif;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.botao-upload-foto:hover {
+    background-color: rgb(160, 85, 235);
+}
+
+.btn-voltar-simples {
+    display: block;
+    margin-top: 20px;
+    color: rgb(41, 30, 104);
+    text-decoration: none;
+    font-family: 'Questrial', sans-serif;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.btn-voltar-simples:hover {
+    color: rgb(160, 85, 235);
+}
+
+/* Histórico de Atividades */
+.historico-atividades {
+    flex-grow: 1;
+    background-color: white;
+    border: 3px solid rgb(41, 30, 104);
+    border-radius: 15px;
+    padding: 30px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.titulo-historico {
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.lista-atividades {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comentario-card-historico {
+    border: 2px dashed rgba(41, 30, 104, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.data-tag {
+    color: #666;
+    font-family: 'Sanchez', serif;
+    font-size: 13px;
+}
+
+.tag-badge {
+    background-color: rgba(160, 85, 235, 0.1);
+    color: rgb(126, 44, 207);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.btn-editar {
+    color: rgb(41, 30, 104);
+    text-decoration: none;
+    font-family: 'Questrial', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.btn-editar:hover {
+    color: rgb(160, 85, 235);
+    text-decoration: underline;
+}
+
+.texto-atividade {
+    font-family: 'Sanchez', serif;
+    color: rgb(41, 30, 104);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 15px 0;
+}
+
+.comentario-footer {
+    text-align: right;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.destino-info {
+    color: #888;
+    font-family: 'Questrial', sans-serif;
+}
+
+.destino-info strong {
+    color: rgb(126, 44, 207);
+}
+
+.aviso-vazio {
+    text-align: center;
+    padding: 40px;
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+}
+
+.btn-comecar {
+    display: inline-block;
+    margin-top: 15px;
+    background-color: rgb(126, 44, 207);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    
+    /* O segredo está aqui: */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-comecar:hover {
+    background-color: rgb(160, 85, 235);
+    transform: scale(1.05);
+}
+
+.btn-comecar:active {
+    /* Transição mais rápida no clique para dar sensação de feedback real */
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* Botão e container de Apagar nas Atividades */
+.acoes-comentario {
+    display: flex;
+    align-items: center;
+}
+
+.btn-deletar {
+    color: #ff6b6b; /* Cor vermelha para dar a ideia de exclusão/cuidado */
+    text-decoration: none;
+    font-family: 'Questrial', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.btn-deletar:hover {
+    color: #ff4d4d;
+    text-decoration: underline;
+}
+
+
+/* Botões do Perfil */
+.form-upload {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center; /* Isso garante que o botão fique perfeitamente centralizado */
+}
+
+.botao-upload-foto {
+    display: inline-block;
+    background-color: rgb(41, 30, 104);
+    color: white;
+    font-family: 'Questrial', sans-serif;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.botao-upload-foto:hover {
+    background-color: rgb(160, 85, 235);
+}
+
+
+/* =========================================================
+   PÁGINA DE FAQ (Perguntas Frequentes)
+   ========================================================= */
+.faq-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border: 3px solid rgb(41, 30, 104);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.faq-container h1 {
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+    text-align: center;
+    margin-top: 0;
+}
+
+.faq-container > p {
+    font-family: 'Sanchez', serif;
+    color: #555;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.faq-container a {
+    display: inline-block;
+    color: rgb(126, 44, 207);
+    font-family: 'Questrial', sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+}
+
+.faq-container a:hover {
+    color: rgb(41, 30, 104);
+}
+
+.faq-container hr {
+    border: none;
+    height: 1px;
+    background: rgba(41, 30, 104, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Estilo do Dropdown (Details/Summary) */
+.faq-item {
+    margin-bottom: 15px;
+}
+
+.faq-item details {
+    background-color: #fafafa;
+    border: 1px solid rgba(41, 30, 104, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item details[open] {
+    border-color: rgb(126, 44, 207);
+    box-shadow: 0 4px 8px rgba(126, 44, 207, 0.1);
+}
+
+.faq-item summary {
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+    font-size: 16px;
+    padding: 15px 20px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s;
+    /* Para remover a setinha padrão no Safari/Chrome e colocar uma customizada */
+    list-style: none; 
+    position: relative;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary:hover {
+    background-color: rgba(160, 85, 235, 0.1);
+}
+
+.faq-item details p {
+    font-family: 'Sanchez', serif;
+    color: #444;
+    padding: 15px 20px;
+    margin: 0;
+    line-height: 1.6;
+    border-top: 1px solid rgba(41, 30, 104, 0.1);
+    background-color: white;
+}
+
+/* =========================================================
+   SESSÃO DE FEEDBACK / RELATAR BUG
+   ========================================================= */
+.feedback-container {
+    max-width: 800px;
+    margin: 0 auto 40px auto; /* Centraliza e dá margem embaixo */
+    padding: 30px;
+    background-color: white;
+    border: 3px solid rgb(126, 44, 207); /* Borda roxa para destacar */
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.feedback-container h3 {
+    font-family: 'Questrial', sans-serif;
+    color: rgb(41, 30, 104);
+    text-align: center;
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    font-family: 'Sanchez', serif;
+    font-size: 14px;
+    color: #333;
+    border: 2px solid rgba(41, 30, 104, 0.2);
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: rgb(126, 44, 207);
+}
+
+.form-group textarea {
+    min-height: 120px;
+    resize: vertical; /* Permite que o usuário aumente a caixa só para baixo */
+}
+
+.btn-enviar {
+    display: block;
+    width: 100%;
+    background-color: rgb(41, 30, 104);
+    color: white;
+    font-family: 'Questrial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-enviar:hover {
+    background-color: rgb(160, 85, 235);
+}
+
+.btn-enviar:active {
+    transform: scale(0.98); /* Efeitinho de "clique" afundando o botão */
+}
 
 
 /* Animações */
