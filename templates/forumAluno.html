@@ -4,6 +4,7 @@
 
 {% block content %}
 
+
 {% if session.get('usuario_id') %}
 <header class="header-nav">
     <div class="header-left">
@@ -42,7 +43,7 @@
                 {% for n in notificacoes_usuario %}
                 <a href="{{ n.link if n.link else '#' }}" class="notif-item">
                     {{ n.mensagem }}
-                    <br><small style="color: #888;">{{ n.data_criacao }}</small>
+                    <br><small style="color: #888;">{{ n.data_criacao[8:10] }}/{{ n.data_criacao[5:7] }} às {{ n.data_criacao[11:16] }}</small>
                 </a>
                 {% else %}
                 <div class="notif-item">Nenhuma notificação nova</div>
@@ -108,7 +109,7 @@
 
     <div class="comentarios">
         {% for c in comentarios %}
-        <article class="comentario-card card-{{ c.status|lower if c.status else 'aberto' }}">
+        <article class="comentario-card card-{{ c.status|lower if c.status else 'aberto' }} {{ 'estilo-admin' if c.cargo_autor == 'admin' }}">
             <div class="card-header-info">
                 <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" alt="Foto"
                     style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
@@ -119,13 +120,13 @@
                     {{ c.status|title if c.status else 'Aberto' }}
                 </span>
 
-                <span style="color: #bbb; font-size: 13px;">
+                <span style="font-size: 13px; opacity: 0.8;">
                     #{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}
                 </span>
 
                 <div style="margin-left: auto; display: flex; gap: 10px;">
                     {% if session['usuario_id'] == c.usuario_id %}
-                    <a href="{{ url_for('forum_aluno', id_editar=c.id) }}" style="color: #aaa; text-decoration: none; font-size: 12px;">editar</a>
+                    <a href="{{ url_for('forum_aluno', id_editar=c.id) }}" style="color: white; text-decoration: none; font-size: 12px;">editar</a>
                     {% endif %}
 
                     {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
@@ -134,7 +135,7 @@
                 </div>
             </div>
 
-            <p style="font-size: 16px; line-height: 1.5; margin: 0; flex-grow: 1; word-wrap: break-word;">
+            <p style="font-size: 16px; line-height: 1.5; margin: 0; flex-grow: 1; word-wrap: break-word; margin-top: 10px;">
                 {{ c.texto }}
             </p>
 
@@ -148,20 +149,23 @@
                         {% if c.usuario_ja_curtiu %}
                         <span style="cursor:pointer; color: #ffc107; font-weight: bold; font-size: 13px;">⭐ Apoiado ({{ c.total_curtidas }})</span>
                         {% else %}
-                        <span style="cursor:pointer; color: white; font-size: 13px;">☆ Apoiar ({{ c.total_curtidas }})</span>
+                        <span style="cursor:pointer; font-size: 13px;">☆ Apoiar ({{ c.total_curtidas }})</span>
                         {% endif %}
                     </a>
                 </div>
+                <small class="data-tag" style="font-size: 11px; opacity: 0.7; color: rgba(255, 255, 255, 0.646);">
+                    {{ c.data_criacao[8:10] }}/{{ c.data_criacao[5:7] }}/{{ c.data_criacao[0:4] }} às {{ c.data_criacao[11:16] }}
+                </small>
             </div>
 
             {% if session['cargo'] == 'admin' %}
-            <div style="margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.8em;">
-                <strong style="display: block; margin-bottom: 5px; color: #eee;">Gestão da Coordenação:</strong>
+            <div style="margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.8em; border: 1px dashed rgba(255, 255, 255, 0.578);">
+                <strong style="display: block; margin-bottom: 5px;">Gestão da Coordenação:</strong>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}" style="color: #fff; text-decoration: none;">Aberto</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}" style="color: #fff; text-decoration: none;">Em Andamento</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}" style="color: #fff; text-decoration: none;">Resolvido</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}" style="color: #fff; text-decoration: none;">Inviável</a>
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}" style=" color: white; text-decoration: none;">Aberto</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}" style="color: white; text-decoration: none;">Em Andamento</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}" style="color: white; text-decoration: none;">Resolvido</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}" style="color: white; text-decoration: none;">Inviável</a>
                 </div>
             </div>
             {% endif %}
@@ -190,20 +194,16 @@
                 <small id="contador">250 caracteres restantes</small>
                 
                 <select name="tag" id="tagComentario" required class="modal-select">
-                    {% if comentario_selecionado %}
-                    <option value="{{ comentario_selecionado.tag }}" selected>
-                        {{ 'Apenas Coordenação' if comentario_selecionado.tag == 'admin' else comentario_selecionado.tag }}
-                    </option>
-                    {% else %}
-                    <option value="">Tag</option>
+                    {% if not comentario_selecionado %}
+                        <option value="" disabled selected>Escolha uma Tag</option>
                     {% endif %}
-                    <option value="Estrutura">Estrutura</option>
-                    <option value="Convivencia">Convivência</option>
-                    <option value="Pedagógico">Pedagógico</option>
-                    <option value="Elogio">Elogio</option>
-                    <option value="Coordenação">Coordenação</option>
-                    <option value="Equipe Escolar">Equipe Escolar</option>
-                    <option value="admin">Apenas Coordenação</option>
+
+                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'admin'] %}
+                        <option value="{{ t }}" 
+                            {% if comentario_selecionado and comentario_selecionado.tag == t %} selected {% endif %}>
+                            {{ 'Apenas Coordenação' if t == 'admin' else t }}
+                        </option>
+                    {% endfor %}
                 </select>
             </div>
 
@@ -222,9 +222,7 @@
 </form>
 
 <script>
-// Aguarda o carregamento da página
 document.addEventListener("DOMContentLoaded", function() {
-
     // 1. Contador de Caracteres
     const inputTexto = document.getElementById('inputComentario');
     const contador = document.getElementById('contador');
@@ -240,10 +238,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (inputTexto) {
         inputTexto.addEventListener('input', atualizarContador);
-        atualizarContador(); // Inicia o contador
+        atualizarContador();
     }
 
-    // 2. Funções do Popup (Globais para funcionarem no onclick do HTML)
+    // 2. Funções do Popup
     window.abrirPopup = function() {
         const popup = document.getElementById("popup");
         if(popup) popup.hidden = false;
@@ -254,13 +252,12 @@ document.addEventListener("DOMContentLoaded", function() {
         if(popup) popup.hidden = true;
     };
 
-    // 3. Sistema de Notificações
+    // 3. Notificações
     window.toggleNotifs = function() {
         const dropdown = document.getElementById('notifDropdown');
         if(dropdown) dropdown.classList.toggle('show');
     };
 
-    // Fechar dropdown ao clicar fora dele
     window.addEventListener('click', function(event) {
         if (!event.target.closest('.notif-container')) {
             const dropdown = document.getElementById('notifDropdown');

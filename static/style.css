@@ -943,7 +943,7 @@ form {
 
 /* O CARD DE COMENTÁRIO */
 .comentario-card {
-  background-color: #211651;
+  background-color: rgb(41, 30, 104);
   color: white;
   font-family: "Sanchez", serif;
   
@@ -980,6 +980,35 @@ form {
   overflow-wrap: break-word;
   white-space: normal;
 }
+
+/* Estilo para destacar o comentário do Admin */
+    .estilo-admin {
+        background-color: white !important;
+        border: 2px solid rgb(126, 44, 207) !important;
+        color: rgb(126, 44, 207) !important;
+    }
+
+    /* Garante que o texto, o nome e a data fiquem roxos no card admin */
+    .estilo-admin p, 
+    .estilo-admin strong, 
+    .estilo-admin .data-tag,
+    .estilo-admin span,
+    .estilo-admin .status-badge {
+        color: rgb(126, 44, 207) !important;
+    }
+
+    /* Ajuste para que o botão de respostas não suma no fundo branco */
+    .estilo-admin .btn-respostas {
+        background-color: rgb(126, 44, 207) !important;
+        color: white !important;
+    }
+
+    /* Estilo para os links de editar/deletar dentro do card branco */
+    .estilo-admin a {
+        color: rgb(126, 44, 207) !important;
+        opacity: 0.8;
+    }
+
 
 .naoEncontrado {
   font-family: "Sanchez", serif;
