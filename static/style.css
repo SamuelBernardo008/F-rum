@@ -13,15 +13,11 @@ body {
   background-image:
     linear-gradient(to right, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px),
     linear-gradient(to bottom, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px);
-
-
   background-size:
     15px 15px,
     15px 15px,
     100% 100%;
-
   margin: 0;
-
 }
 
 #page-home {
@@ -29,22 +25,15 @@ body {
     linear-gradient(to right, rgb(254, 245, 230, 0.05) 0.5px, transparent 1px),
     linear-gradient(to bottom, rgba(254, 245, 230, 0.05) 0.5px, transparent 1px),
     linear-gradient(to right, rgb(160, 85, 235), rgb(126, 44, 207), rgb(90, 42, 179), rgb(41, 30, 104));
-
   background-size:
     15px 15px,
     15px 15px,
     100% 100%;
-
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
 }
-
-
-
-
 
 #divHome {
   display: flex;
@@ -84,7 +73,6 @@ body {
   justify-content: center;
   overflow: hidden;
   filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
-
 }
 
 #logoHome {
@@ -92,7 +80,6 @@ body {
   height: auto;
   animation: fadeInSuave 1.5s ease-out forwards;
 }
-
 
 .wrapper-animado {
   animation: deslizarDeBaixo 1s ease-out forwards;
@@ -114,7 +101,7 @@ body {
   border-radius: 15px;
   text-decoration: none;
   font-family: "Questrial", sans-serif;
-  font-size: 35px;
+  font-size: clamp(20px, 4vw, 35px);
   margin-bottom: 10px;
   font-weight: bold;
   display: inline-block;
@@ -168,7 +155,6 @@ body {
   width: 100%;
   box-sizing: border-box;
   animation: fadeInSuave 1.5s ease-out forwards;
-
 }
 
 #copy {
@@ -177,7 +163,6 @@ body {
   color: rgba(255, 255, 255, 0.607);
   text-decoration: none;
 }
-
 
 #sobreprojeto {
   font-family: "Sanchez", sans-serif;
@@ -208,16 +193,13 @@ body {
   font-style: normal;
 }
 
-
-
-
 #divdoselementoslogin {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -231,7 +213,7 @@ body {
   color: white;
   font-family: "Sanchez";
   cursor: default;
-  height: 100vh;
+  min-height: 100vh;
   background-image: linear-gradient(to right, rgb(160, 85, 235), rgb(126, 44, 207), rgb(90, 42, 179), rgb(41, 30, 104));
   border-radius: 0% 5% 5% 0% / 60% 20% 70% 40%;
   float: left;
@@ -263,14 +245,14 @@ body {
 }
 
 #sejaBemvindoLogin {
-  font-size: 40px;
+  font-size: clamp(25px, 3vw, 40px);
   margin-top: 15%;
   margin-bottom: 0px;
   animation: deslizarDeCima 1s ease-out forwards;
 }
 
 #forumOnlineLogin {
-  font-size: 35px;
+  font-size: clamp(20px, 2.5vw, 35px);
   margin-top: 0px;
   margin-bottom: 10px;
   color: rgb(126, 44, 207);
@@ -306,12 +288,12 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 #logintitulo {
   font-family: "Questrial", serif;
-  font-size: 150px;
+  font-size: clamp(3rem, 10vw, 150px);
   margin-bottom: 1px;
   margin-top: 0px;
   color: rgb(41, 30, 104);
@@ -321,8 +303,8 @@ body {
 
 #loginDescricao {
   font-family: "Sanchez", serif;
-  font-size: 30px;
-  margin-top: 0px;
+  font-size: clamp(1.2rem, 3vw, 30px);
+  margin-top: 10px;
   margin-bottom: 20px;
   color: rgb(41, 30, 104);
   text-align: center;
@@ -330,7 +312,6 @@ body {
   letter-spacing: -1px;
   line-height: 1;
   animation: entradaConteudo 2s ease-out forwards;
-
 }
 
 #loginForm {
@@ -339,21 +320,20 @@ body {
   align-items: center;
   width: 80%;
   height: auto;
-  size: 80%;
   animation: entradaConteudo 2s ease-out forwards;
-
 }
 
 input[type="email"],
 input[type="password"] {
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   margin-bottom: 10px;
   border: 2px solid rgba(41, 30, 104, 0.521);
   border-radius: 20px;
   background-color: rgb(255, 255, 255);
   font-size: 18px;
   font-family: "Sanchez", serif;
+  box-sizing: border-box;
 }
 
 input[type="email"]:focus,
@@ -366,14 +346,16 @@ input[type="password"]:focus {
 input[type="email"]::placeholder,
 input[type="password"]::placeholder {
   color: rgba(41, 30, 104, 0.336);
-  font-size: 25px;
+  font-size: 20px;
 }
 
 #linkslogin {
   display: flex;
+  flex-wrap: wrap; 
   align-items: center;
   justify-content: center;
-  width: 70%;
+  gap: 15px;
+  width: 100%;
   margin-bottom: 20px;
   margin-top: 0px;
 }
@@ -383,7 +365,7 @@ input[type="password"]::placeholder {
   font-family: "Sanchez", serif;
   color: rgba(41, 30, 104, 0.244);
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 #irperguntas:hover,
@@ -399,11 +381,13 @@ input[type="password"]::placeholder {
   border-radius: 40px;
   text-decoration: none;
   font-family: "Questrial", serif;
-  font-size: 40px;
-  width: 50%;
+  font-size: clamp(24px, 4vw, 40px);
+  width: 100%;
+  max-width: 300px;
   font-weight: bold;
   display: inline-block;
   cursor: pointer;
+  text-align: center;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -411,7 +395,7 @@ input[type="password"]::placeholder {
   background-color: rgb(126, 44, 207);
   color: rgb(41, 30, 104);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  transform: scale(1.1);
+  transform: scale(1.05);
   border: none;
 }
 
@@ -424,24 +408,17 @@ input[type="password"]::placeholder {
   margin-top: 5%;
 }
 
-
-
-
 #page-Forum {
   background-color: rgb(255, 255, 255);
   background-image:
     linear-gradient(to right, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px),
     linear-gradient(to bottom, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px);
-
-
   background-size:
     15px 15px,
     15px 15px,
     100% 100%;
-
   margin: 0;
   align-items: center;
-
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -456,7 +433,8 @@ input[type="password"]::placeholder {
 }
 
 .comentarios {
-  width: 80%;
+  width: 95%;
+  max-width: 1400px;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -465,16 +443,13 @@ input[type="password"]::placeholder {
   position: sticky; 
   top: 0;
   z-index: 1000;
-  
   display: flex; 
   justify-content: space-between; 
   align-items: center; 
-  
-  background: linear-gradient(90deg, #4A148C 0%, #7E57C2 100%); 
+  background-image: linear-gradient(to right, rgb(41, 30, 104), rgb(90, 42, 179),rgb(126, 44, 207), rgb(160, 85, 235)); 
   padding: 10px 30px;
   color: white;
   box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-
 }
 
 .header-left, .header-right {
@@ -502,13 +477,11 @@ input[type="password"]::placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background-color: white; 
 }
-
 
 .icon-profile svg {
   fill: rgb(160, 85, 235); 
@@ -518,7 +491,6 @@ input[type="password"]::placeholder {
   opacity: 0.8; 
 }
 
-
 .material-symbols-outlined {
   font-size: 26px !important; 
   line-height: 1;
@@ -526,17 +498,23 @@ input[type="password"]::placeholder {
 
 .notif-container {
   position: relative;
-  }
+  cursor: pointer;
+}
 
 .badge {
   background: red;
   color: white;
-  border-radius: 50%;
+  border-radius: 12px;
   padding: 2px 6px;
   font-size: 12px;
   position: absolute;
-  top: -8px;
-  left: 15px; 
+  top: -5px;
+  left: 18px; 
+  font-weight: bold;
+  line-height: 1;
+  text-align: center;
+  min-width: 10px; 
+  border: 2px solid rgb(126, 44, 207); 
 }
 
 .logoforum {
@@ -544,7 +522,6 @@ input[type="password"]::placeholder {
   height: 100%;
   margin: 0px;
   overflow: hidden;
-
 }
 
 #linkhomelogo {
@@ -553,21 +530,21 @@ input[type="password"]::placeholder {
   overflow: hidden;
 }
 
-
 .tituloForum {
   font-family: "Questrial", serif;
   letter-spacing: -3px;
   text-transform: uppercase;
-  font-size: 70px;
+  font-size: clamp(2.5rem, 6vw, 70px);
   color: rgb(41, 30, 104);
   animation: entradaConteudo 2s ease-out forwards;
   margin-bottom: 0px;
   font-weight: bold;
+  text-align: center;
 }
 
 .paragrafoForum {
   font-family: "Sanchez", serif;
-  font-size: 20px;
+  font-size: clamp(1rem, 2vw, 20px);
   margin-top: 1px;
   color: rgb(41, 30, 104);
   text-align: center;
@@ -584,6 +561,7 @@ input[type="password"]::placeholder {
   margin-top: 20px;
   margin-bottom: 0px;
   padding: 10px;
+  width: 90%;
 }
 
 form {
@@ -591,60 +569,21 @@ form {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
 }
-
-
 
 #page-forumAluno {
   background-color: rgb(255, 255, 255);
   background-image:
     linear-gradient(to right, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px),
     linear-gradient(to bottom, rgba(42, 22, 0, 0.03) 0.5px, transparent 1px);
-
-
   background-size:
     15px 15px,
     15px 15px,
     100% 100%;
-
   margin: 0;
-
 }
-
-.header-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 10px;
-  background-image: linear-gradient(to right, rgb(41, 30, 104), rgb(90, 42, 179), rgb(126, 44, 207), rgb(160, 85, 235));
-  color: white;
-}
-
-.notif-container {
-  position: relative;
-  cursor: pointer;
-}
-
-.badge {
-  position: absolute;
-  top: -5px;
-  left: 18px; 
-  background: red;
-  color: white;
-  
-  
-  border-radius: 12px; 
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 1;
-  text-align: center;
-  min-width: 10px; 
-  
-  
-  border: 2px solid #7E57C2; 
-}
-
 
 .notif-dropdown {
   display: none;
@@ -659,13 +598,10 @@ form {
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
-
-  
   max-height: 350px;    
   overflow-y: auto;     
   overflow-x: hidden;   
 }
-
 
 .notif-dropdown::-webkit-scrollbar {
   width: 6px;
@@ -705,8 +641,6 @@ form {
   background-color: #f9f9f9; 
 }
 
-
-
 .limpar-btn {
   display: block;
   text-align: center;
@@ -729,14 +663,12 @@ form {
   justify-content: center;
   align-self: center;
   overflow: hidden;
-
 }
 
 #divlogolink {
   width: 50%;
   height: 100%;
   overflow: hidden;
-
 }
 
 #divnot {
@@ -750,11 +682,11 @@ form {
   margin-bottom: 20px;
 }
 
-
 .search-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  width: 100%;
   max-width: 600px;
   margin-bottom: 20px;
 }
@@ -765,10 +697,7 @@ form {
   flex: 1;
   border: 2px solid rgb(41, 30, 104);
   border-radius: 50px;
-
-  padding: 2px;
-  padding-right: 200px;
-
+  padding: 5px 15px;
   background: white;
 }
 
@@ -777,8 +706,7 @@ form {
   border: none;
   outline: none;
   width: 100%;
-  padding: 5px 10px;
-  font-size: 20px;
+  font-size: 16px;
   color: rgb(41, 30, 104);
   text-align: left;
 }
@@ -841,7 +769,6 @@ form {
   text-decoration: underline;
 }
 
-
 .botaoAdicionar {
   background-image: linear-gradient(to right, rgb(90, 42, 179), rgb(126, 44, 207));
   color: rgb(255, 255, 255);
@@ -849,7 +776,7 @@ form {
   border-radius: 30px;
   text-decoration: none;
   font-family: "Questrial", sans-serif;
-  font-size: 30px;
+  font-size: clamp(20px, 3vw, 30px);
   margin-bottom: 10px;
   font-weight: bold;
   cursor: pointer;
@@ -858,31 +785,31 @@ form {
 }
 
 .botaoAdicionar:hover {
-  background-image: linear-gradient(to right, rgb(90, 42, 179), rgb(126, 44, 207));
-  color: rgb(255, 255, 255);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .botaoAdicionar:active {
   transform: scale(0.95);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .botaoAdmin {
-  color: rgb(175, 145, 205);
-  border-radius: 30px;
+  background-color: rgb(126, 44, 207);
+  color: white !important;
+  padding: 10px 25px;
+  border-radius: 20px;
   text-decoration: none;
   font-family: "Questrial", sans-serif;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: inline-block;
 }
 
 .botaoAdmin:hover {
-  color: rgb(175, 145, 205);
-  text-decoration: underline;
+  transform: scale(1.05);
+  background-color: rgb(90, 42, 179);
 }
 
 .comentarios {
@@ -891,31 +818,24 @@ form {
   flex-wrap: wrap; 
   justify-content: center;  
   gap: 20px; 
-  
   width: 95%; 
   max-width: 1400px; 
   margin: 20px auto; 
 }
 
-
 .comentario-card {
   background-color: rgb(41, 30, 104);
   color: white;
   font-family: "Sanchez", serif;
-  
   width: calc(50% - 10px); 
-  
   padding: 20px;
   box-sizing: border-box;
   border-radius: 12px;
   border: 4px solid white;
-  
   display: flex;
   flex-direction: column;
   gap: 15px;
-  
   min-height: fit-content; 
-  
   transition: transform 0.3s ease;
   animation: fadeInSuave 0.8s ease-out both;
 }
@@ -923,38 +843,37 @@ form {
 .comentario-card p, 
 .comentario-card .texto-comentario {
   font-family: "Sanchez", serif;
-  font-size: 220px;
+  font-size: 1.1rem !important;
   margin: 0;
-  
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
+  line-height: 1.5;
 }
 
-    .estilo-admin {
-        background-color: white !important;
-        border: 2px solid rgb(126, 44, 207) !important;
-        color: rgb(126, 44, 207) !important;
-    }
+.estilo-admin {
+  background-color: white !important;
+  border: 2px solid rgb(126, 44, 207) !important;
+  color: rgb(126, 44, 207) !important;
+}
 
-    .estilo-admin p, 
-    .estilo-admin strong, 
-    .estilo-admin .data-tag,
-    .estilo-admin span,
-    .estilo-admin .status-badge {
-        color: rgb(126, 44, 207) !important;
-    }
+.estilo-admin p, 
+.estilo-admin strong, 
+.estilo-admin .data-tag,
+.estilo-admin span,
+.estilo-admin .status-badge {
+  color: rgb(126, 44, 207) !important;
+}
 
-    .estilo-admin .btn-respostas {
-        background-color: rgb(126, 44, 207) !important;
-        color: white !important;
-    }
+.estilo-admin .btn-respostas {
+  background-color: rgb(126, 44, 207) !important;
+  color: white !important;
+}
 
-    .estilo-admin a {
-        color: rgb(126, 44, 207) !important;
-        opacity: 0.8;
-    }
-
+.estilo-admin a {
+  color: rgb(126, 44, 207) !important;
+  opacity: 0.8;
+}
 
 .naoEncontrado {
   font-family: "Sanchez", serif;
@@ -968,145 +887,116 @@ form {
   text-decoration: underline;
 }
 
-
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    animation: fadeInOverlay 0.3s ease-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeInOverlay 0.3s ease-out;
 }
 
 .modal-content {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    text-align: left;
-    animation: slideUp 0.4s ease-out;
-    font-family: "Sanchez", serif;
+  background: white;
+  width: 90%;
+  max-width: 500px;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: left;
+  animation: slideUp 0.4s ease-out;
+  font-family: "Sanchez", serif;
 }
 
 .modal-title {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #333;
-    font-weight: 600;
+  margin-top: 0;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
 }
 
 .comment-textarea {
-    width: 100%;
-    height: 120px;
-    padding: 15px;
-    border: 2px solid #eee;
-    border-radius: 12px;
-    resize: none;
-    font-family: inherit;
-    font-size: 1rem;
-    background: #f9f9f9;
-    box-sizing: border-box;
-    outline: none;
-    transition: border-color 0.2s;
+  width: 100%;
+  height: 120px;
+  padding: 15px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  resize: none;
+  font-family: inherit;
+  font-size: 1rem;
+  background: #f9f9f9;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
 .comment-textarea:focus {
-    border-color: #ddd;
+  border-color: #ddd;
 }
 
 .modal-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 20px 0;
 }
 
 #contador {
-    font-size: 0.85rem;
+  font-size: 0.85rem;
 }
 
 .modal-select {
-    padding: 5px 10px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    outline: none;
-    cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  cursor: pointer;
 }
 
 .modal-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .btn-postar, .btn-cancelar {
-    border: none;
-    padding: 12px 35px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: transform 0.2s, filter 0.2s;
-    font-size: 0.9rem;
-    background-color: #333;
-    color: white;
-    size: 100%;
+  border: none;
+  padding: 12px 35px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.2s, filter 0.2s;
+  font-size: 0.9rem;
+  background-color: #333;
+  color: white;
+  flex: 1;
+  text-align: center;
 }
 
-
-
 .btn-postar:hover, .btn-cancelar:hover {
-    transform: scale(1.05);
-    filter: brightness(1.2);
+  transform: scale(1.05);
+  filter: brightness(1.2);
 }
 
 .btn-postar:active, .btn-cancelar:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }
 
 .btn-cancelar-link { text-decoration: none; }
 
 .modal-overlay[hidden] {
-    display: none !important;
+  display: none !important;
 }
 
-
-
-
-
-
-
-
-
-
-
-@media (max-width: 768px) {
-  .comentario-card {
-    width: 100%;
-  }
-}
-
-.card-aberto {
-  box-shadow: 0 0 0 2px #888888; 
-}
-
-.card-andamento {
-  box-shadow: 0 0 0 2px #ffc107; 
-}
-
-.card-resolvido {
-  box-shadow: 0 0 0 2px #28a745; 
-}
-
-.card-inviavel {
-  box-shadow: 0 0 0 2px #dc3545; 
-}
-
+.card-aberto { box-shadow: 0 0 0 2px #888888; }
+.card-andamento { box-shadow: 0 0 0 2px #ffc107; }
+.card-resolvido { box-shadow: 0 0 0 2px #28a745; }
+.card-inviavel { box-shadow: 0 0 0 2px #dc3545; }
 
 .card-header-info {
   display: flex;
@@ -1115,7 +1005,6 @@ form {
   flex-wrap: wrap;
   font-size: 14px;
 }
-
 
 .status-badge {
   color: white;
@@ -1142,703 +1031,650 @@ form {
   text-decoration: none;
 }
 
-
-.comentario-card p {
-    font-size: 16px !important; 
-    line-height: 1.5;
-    margin: 10px 0;
-    color: white;
-}
-
-
 .titulo-secao-admin {
-    font-family: "Questrial", sans-serif;
-    color: rgb(41, 30, 104);
-    width: 80%;
-    text-align: left;
-    margin-top: 50px;
-    border-bottom: 2px solid rgba(41, 30, 104, 0.1);
-}
-
-
-.botaoAdmin {
-    background: #7E57C2;
-    color: white !important;
-    padding: 10px 25px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-family: "Questrial", sans-serif;
-    font-weight: bold;
-    display: inline-block;
-    transition: 0.3s;
-}
-
-.botaoAdmin:hover {
-    transform: scale(1.05);
-    background: #4A148C;
+  font-family: "Questrial", sans-serif;
+  color: rgb(41, 30, 104);
+  width: 80%;
+  text-align: left;
+  margin-top: 50px;
+  border-bottom: 2px solid rgba(41, 30, 104, 0.1);
 }
 
 .tituloMensagensCoordenacao {
-    font-family: "Questrial", sans-serif;
-    color: rgb(41, 30, 104);
-    width: 80%;
-    text-align: left;
-    margin-top: 50px;
-    border-bottom: 2px solid rgba(41, 30, 104, 0.1);
-    font-size: 32px;
-    text-align: center;
+  font-family: "Questrial", sans-serif;
+  color: rgb(41, 30, 104);
+  width: 80%;
+  margin-top: 50px;
+  border-bottom: 2px solid rgba(41, 30, 104, 0.1);
+  font-size: 32px;
+  text-align: center;
 }
 
-
-
 .voltar-btn {
-    font-family: "Questrial", sans-serif;
-    color: rgb(41, 30, 104);
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: bold;
-    align-self: flex-start;
-    margin-left: 2.5%;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-    animation: fadeInSuave 1s ease-out forwards;
+  font-family: "Questrial", sans-serif;
+  color: rgb(41, 30, 104);
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: bold;
+  align-self: flex-start;
+  margin-left: 2.5%;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  animation: fadeInSuave 1s ease-out forwards;
 }
 
 .voltar-btn:hover {
-    color: rgb(160, 85, 235);
-    transform: translateX(-5px); 
+  color: rgb(160, 85, 235);
+  transform: translateX(-5px); 
 }
 
-
 .post-principal-card {
-    width: 95%;
-    max-width: 1400px;
-    background-color: white;
-    border: 3px solid rgb(41, 30, 104);
-    border-radius: 15px;
-    padding: 30px;
-    box-sizing: border-box;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    animation: entradaConteudo 1s ease-out forwards;
+  width: 95%;
+  max-width: 1400px;
+  background-color: white;
+  border: 3px solid rgb(41, 30, 104);
+  border-radius: 15px;
+  padding: 30px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  animation: entradaConteudo 1s ease-out forwards;
 }
 
 .post-header-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
-    border-bottom: 2px solid rgba(41, 30, 104, 0.1);
-    padding-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid rgba(41, 30, 104, 0.1);
+  padding-bottom: 15px;
 }
 
 .foto-perfil {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgb(126, 44, 207);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgb(126, 44, 207);
 }
 
 .foto-perfil-pequena {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid white;
 }
 
 .post-autor-info {
-    display: flex;
-    flex-direction: column;
-    font-family: "Questrial", sans-serif;
-    color: rgb(41, 30, 104);
+  display: flex;
+  flex-direction: column;
+  font-family: "Questrial", sans-serif;
+  color: rgb(41, 30, 104);
 }
 
 .post-autor-info strong {
-    font-size: 22px;
+  font-size: 22px;
 }
 
 .post-autor-info span {
-    font-size: 14px;
-    color: rgba(41, 30, 104, 0.6);
+  font-size: 14px;
+  color: rgba(41, 30, 104, 0.6);
 }
 
 .post-texto {
-    font-family: "Sanchez", serif;
-    font-size: 22px;
-    color: rgb(41, 30, 104);
-    line-height: 1.5;
-    margin: 0;
+  font-family: "Sanchez", serif;
+  font-size: 22px;
+  color: rgb(41, 30, 104);
+  line-height: 1.5;
+  margin: 0;
 }
 
-
 .linha-divisoria {
-    width: 95%;
-    max-width: 1400px;
-    height: 3px;
-    border: none;
-    background-image: linear-gradient(to right, transparent, rgba(160, 85, 235, 0.5), transparent);
-    margin: 40px 0;
+  width: 95%;
+  max-width: 1400px;
+  height: 3px;
+  border: none;
+  background-image: linear-gradient(to right, transparent, rgba(160, 85, 235, 0.5), transparent);
+  margin: 40px 0;
 }
 
 .formulario-resposta {
-    width: 95%;
-    max-width: 1400px;
-    background-color: #f9f9f9;
-    border: 2px dashed rgba(41, 30, 104, 0.3);
-    border-radius: 15px;
-    padding: 25px;
-    box-sizing: border-box;
-    animation: entradaConteudo 1.2s ease-out forwards;
-    font-family: "Sanchez", serif;
+  width: 95%;
+  max-width: 1400px;
+  background-color: #f9f9f9;
+  border: 2px dashed rgba(41, 30, 104, 0.3);
+  border-radius: 15px;
+  padding: 25px;
+  box-sizing: border-box;
+  animation: entradaConteudo 1.2s ease-out forwards;
+  font-family: "Sanchez", serif;
 }
 
 .titulo-resposta {
-    font-family: "Questrial", sans-serif;
-    color: rgb(41, 30, 104);
-    margin-top: 0;
-    font-size: 24px;
+  font-family: "Questrial", sans-serif;
+  color: rgb(41, 30, 104);
+  margin-top: 0;
+  font-size: 24px;
 }
 
 .titulo-respostas-lista {
-    font-family: "Questrial", sans-serif;
-    color: rgb(41, 30, 104);
-    font-size: 30px;
-    align-self: flex-start;
-    margin-left: 2.5%;
-    margin-top: 20px;
-    margin-bottom: 0;
-    animation: fadeInSuave 1.5s ease-out forwards;
+  font-family: "Questrial", sans-serif;
+  color: rgb(41, 30, 104);
+  font-size: 30px;
+  align-self: flex-start;
+  margin-left: 2.5%;
+  margin-top: 20px;
+  margin-bottom: 0;
+  animation: fadeInSuave 1.5s ease-out forwards;
 }
 
 .btn-deletar {
-    color: #ff6b6b;
-    font-family: "Questrial", sans-serif;
-    font-size: 14px;
-    text-decoration: none;
-    transition: 0.2s;
+  color: #ff6b6b;
+  font-family: "Questrial", sans-serif;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.2s;
+  font-weight: bold;
 }
 
 .btn-deletar:hover {
-    color: #ff4d4d;
-    text-decoration: underline;
+  color: #ff4d4d;
+  text-decoration: underline;
 }
-
 
 .perfil-layout {
-    display: flex;
-    gap: 30px;
-    width: 95%;
-    max-width: 1400px;
-    margin: 30px auto;
-    align-items: flex-start;
-}
-
-@media (max-width: 768px) {
-    .perfil-layout {
-        flex-direction: column;
-    }
+  display: flex;
+  gap: 30px;
+  width: 95%;
+  max-width: 1400px;
+  margin: 30px auto;
+  align-items: flex-start;
 }
 
 .perfil-card-lateral {
-    background-color: white;
-    border: 3px solid rgb(41, 30, 104);
-    border-radius: 15px;
-    padding: 30px;
-    width: 300px;
-    flex-shrink: 0;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    box-sizing: border-box;
-}
-
-@media (max-width: 768px) {
-    .perfil-card-lateral {
-        width: 100%;
-    }
+  background-color: white;
+  border: 3px solid rgb(41, 30, 104);
+  border-radius: 15px;
+  padding: 30px;
+  width: 300px;
+  flex-shrink: 0;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 .foto-perfil-grande {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid rgb(126, 44, 207);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgb(126, 44, 207);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .perfil-nome {
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
-    font-size: 24px;
-    margin: 15px 0 5px 0;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
+  font-size: 24px;
+  margin: 15px 0 5px 0;
 }
 
 .perfil-cargo {
-    font-family: 'Sanchez', serif;
-    color: #555;
-    margin: 0;
-    font-size: 16px;
+  font-family: 'Sanchez', serif;
+  color: #555;
+  margin: 0;
+  font-size: 16px;
 }
 
 .linha-perfil {
-    border: none;
-    height: 2px;
-    background: rgba(41, 30, 104, 0.1);
-    margin: 20px 0;
+  border: none;
+  height: 2px;
+  background: rgba(41, 30, 104, 0.1);
+  margin: 20px 0;
 }
 
 .perfil-estatistica {
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
-    font-size: 16px;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
+  font-size: 16px;
 }
 
 .perfil-estatistica .destaque {
-    font-size: 20px;
-    font-weight: bold;
-    color: rgb(126, 44, 207);
-}
-
-.form-upload {
-    margin-top: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(126, 44, 207);
 }
 
 .botao-upload-foto {
-    display: inline-block;
-    background-color: rgb(41, 30, 104);
-    color: white;
-    align-self: center;
-    font-family: 'Questrial', sans-serif;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    font-size: 14px;
+  display: inline-block;
+  background-color: rgb(41, 30, 104);
+  color: white;
+  align-self: center;
+  font-family: 'Questrial', sans-serif;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .botao-upload-foto:hover {
-    background-color: rgb(160, 85, 235);
+  background-color: rgb(160, 85, 235);
 }
 
 .btn-voltar-simples {
-    display: block;
-    margin-top: 20px;
-    color: rgb(41, 30, 104);
-    text-decoration: none;
-    font-family: 'Questrial', sans-serif;
-    font-weight: bold;
-    transition: color 0.2s;
+  display: block;
+  margin-top: 20px;
+  color: rgb(41, 30, 104);
+  text-decoration: none;
+  font-family: 'Questrial', sans-serif;
+  font-weight: bold;
+  transition: color 0.2s;
 }
 
 .btn-voltar-simples:hover {
-    color: rgb(160, 85, 235);
+  color: rgb(160, 85, 235);
 }
 
 .historico-atividades {
-    flex-grow: 1;
-    background-color: white;
-    border: 3px solid rgb(41, 30, 104);
-    border-radius: 15px;
-    padding: 30px;
-    box-sizing: border-box;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  flex-grow: 1;
+  background-color: white;
+  border: 3px solid rgb(41, 30, 104);
+  border-radius: 15px;
+  padding: 30px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .titulo-historico {
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
-    font-size: 28px;
-    margin-top: 0;
-    margin-bottom: 10px;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
+  font-size: 28px;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 .lista-atividades {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .comentario-card-historico {
-    border: 2px dashed rgba(41, 30, 104, 0.3);
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #fafafa;
+  border: 2px dashed rgba(41, 30, 104, 0.3);
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fafafa;
 }
 
 .comentario-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .data-tag {
-    color: #666;
-    font-family: 'Sanchez', serif;
-    font-size: 13px;
+  color: #666;
+  font-family: 'Sanchez', serif;
+  font-size: 13px;
 }
 
 .tag-badge {
-    background-color: rgba(160, 85, 235, 0.1);
-    color: rgb(126, 44, 207);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-weight: bold;
+  background-color: rgba(160, 85, 235, 0.1);
+  color: rgb(126, 44, 207);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
 }
 
 .btn-editar {
-    color: rgb(41, 30, 104);
-    text-decoration: none;
-    font-family: 'Questrial', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
+  color: rgb(41, 30, 104);
+  text-decoration: none;
+  font-family: 'Questrial', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .btn-editar:hover {
-    color: rgb(160, 85, 235);
-    text-decoration: underline;
+  color: rgb(160, 85, 235);
+  text-decoration: underline;
 }
 
 .texto-atividade {
-    font-family: 'Sanchez', serif;
-    color: rgb(41, 30, 104);
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0 0 15px 0;
+  font-family: 'Sanchez', serif;
+  color: rgb(41, 30, 104);
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 0 15px 0;
 }
 
 .comentario-footer {
-    text-align: right;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
+  text-align: right;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
 }
 
 .destino-info {
-    color: #888;
-    font-family: 'Questrial', sans-serif;
+  color: #888;
+  font-family: 'Questrial', sans-serif;
 }
 
 .destino-info strong {
-    color: rgb(126, 44, 207);
+  color: rgb(126, 44, 207);
 }
 
 .aviso-vazio {
-    text-align: center;
-    padding: 40px;
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
+  text-align: center;
+  padding: 40px;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
 }
 
 .btn-comecar {
-    display: inline-block;
-    margin-top: 15px;
-    background-color: rgb(126, 44, 207);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-block;
+  margin-top: 15px;
+  background-color: rgb(126, 44, 207);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .btn-comecar:hover {
-    background-color: rgb(160, 85, 235);
-    transform: scale(1.05);
+  background-color: rgb(160, 85, 235);
+  transform: scale(1.05);
 }
 
 .btn-comecar:active {
-    transform: scale(0.95);
-    transition: transform 0.1s ease;
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 
 .acoes-comentario {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
-
-.btn-deletar {
-    color: #ff6b6b; 
-    text-decoration: none;
-    font-family: 'Questrial', sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    transition: color 0.2s;
-}
-
-.btn-deletar:hover {
-    color: #ff4d4d;
-    text-decoration: underline;
-}
-
-
-.form-upload {
-    margin-top: 25px;
-    display: flex;
-    justify-content: center; 
-}
-
-.botao-upload-foto {
-    display: inline-block;
-    background-color: rgb(41, 30, 104);
-    color: white;
-    font-family: 'Questrial', sans-serif;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.botao-upload-foto:hover {
-    background-color: rgb(160, 85, 235);
-}
-
-
 
 .faq-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background-color: white;
-    border: 3px solid rgb(41, 30, 104);
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: white;
+  border: 3px solid rgb(41, 30, 104);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .faq-container h1 {
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
-    text-align: center;
-    margin-top: 0;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
+  text-align: center;
+  margin-top: 0;
 }
 
 .faq-container > p {
-    font-family: 'Sanchez', serif;
-    color: #555;
-    text-align: center;
-    margin-bottom: 20px;
+  font-family: 'Sanchez', serif;
+  color: #555;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .faq-container a {
-    display: inline-block;
-    color: rgb(126, 44, 207);
-    font-family: 'Questrial', sans-serif;
-    font-weight: bold;
-    text-decoration: none;
-    margin-bottom: 20px;
-    transition: color 0.2s;
+  display: inline-block;
+  color: rgb(126, 44, 207);
+  font-family: 'Questrial', sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: color 0.2s;
 }
 
 .faq-container a:hover {
-    color: rgb(41, 30, 104);
+  color: rgb(41, 30, 104);
 }
 
 .faq-container hr {
-    border: none;
-    height: 1px;
-    background: rgba(41, 30, 104, 0.1);
-    margin-bottom: 30px;
+  border: none;
+  height: 1px;
+  background: rgba(41, 30, 104, 0.1);
+  margin-bottom: 30px;
 }
 
-
 .faq-item {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .faq-item details {
-    background-color: #fafafa;
-    border: 1px solid rgba(41, 30, 104, 0.2);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: all 0.3s ease;
+  background-color: #fafafa;
+  border: 1px solid rgba(41, 30, 104, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .faq-item details[open] {
-    border-color: rgb(126, 44, 207);
-    box-shadow: 0 4px 8px rgba(126, 44, 207, 0.1);
+  border-color: rgb(126, 44, 207);
+  box-shadow: 0 4px 8px rgba(126, 44, 207, 0.1);
 }
 
 .faq-item summary {
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
-    font-size: 16px;
-    padding: 15px 20px;
-    cursor: pointer;
-    background-color: #f0f0f0;
-    transition: background-color 0.2s;
-    list-style: none; 
-    position: relative;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
+  font-size: 16px;
+  padding: 15px 20px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  transition: background-color 0.2s;
+  list-style: none; 
+  position: relative;
 }
 
 .faq-item summary::-webkit-details-marker {
-    display: none;
+  display: none;
 }
 
 .faq-item summary:hover {
-    background-color: rgba(160, 85, 235, 0.1);
+  background-color: rgba(160, 85, 235, 0.1);
 }
 
 .faq-item details p {
-    font-family: 'Sanchez', serif;
-    color: #444;
-    padding: 15px 20px;
-    margin: 0;
-    line-height: 1.6;
-    border-top: 1px solid rgba(41, 30, 104, 0.1);
-    background-color: white;
+  font-family: 'Sanchez', serif;
+  color: #444;
+  padding: 15px 20px;
+  margin: 0;
+  line-height: 1.6;
+  border-top: 1px solid rgba(41, 30, 104, 0.1);
+  background-color: white;
 }
 
-
 .feedback-container {
-    max-width: 800px;
-    margin: 0 auto 40px auto; 
-    padding: 30px;
-    background-color: white;
-    border: 3px solid rgb(126, 44, 207); 
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+  margin: 0 auto 40px auto; 
+  padding: 30px;
+  background-color: white;
+  border: 3px solid rgb(126, 44, 207); 
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .feedback-container h3 {
-    font-family: 'Questrial', sans-serif;
-    color: rgb(41, 30, 104);
-    text-align: center;
-    margin-top: 0;
-    font-size: 22px;
+  font-family: 'Questrial', sans-serif;
+  color: rgb(41, 30, 104);
+  text-align: center;
+  margin-top: 0;
+  font-size: 22px;
 }
 
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .form-group select,
 .form-group textarea {
-    width: 100%;
-    padding: 12px 15px;
-    font-family: 'Sanchez', serif;
-    font-size: 14px;
-    color: #333;
-    border: 2px solid rgba(41, 30, 104, 0.2);
-    border-radius: 8px;
-    box-sizing: border-box;
-    transition: border-color 0.3s;
+  width: 100%;
+  padding: 12px 15px;
+  font-family: 'Sanchez', serif;
+  font-size: 14px;
+  color: #333;
+  border: 2px solid rgba(41, 30, 104, 0.2);
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
 }
 
 .form-group select:focus,
 .form-group textarea:focus {
-    outline: none;
-    border-color: rgb(126, 44, 207);
+  outline: none;
+  border-color: rgb(126, 44, 207);
 }
 
 .form-group textarea {
-    min-height: 120px;
-    resize: vertical; 
+  min-height: 120px;
+  resize: vertical; 
 }
 
 .btn-enviar {
-    display: block;
-    width: 100%;
-    background-color: rgb(41, 30, 104);
-    color: white;
-    font-family: 'Questrial', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
+  display: block;
+  width: 100%;
+  background-color: rgb(41, 30, 104);
+  color: white;
+  font-family: 'Questrial', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
 .btn-enviar:hover {
-    background-color: rgb(160, 85, 235);
+  background-color: rgb(160, 85, 235);
 }
 
 .btn-enviar:active {
-    transform: scale(0.98); 
+  transform: scale(0.98); 
 }
 
-
-
 @keyframes entradaLateralBlob {
-  from {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-100%); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes entradaConteudo {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInSuave {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes deslizarDeCima {
-  from {
-    opacity: 0;
-    transform: translateY(-60px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-60px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes deslizarDeBaixo {
-  from {
-    opacity: 0;
-    transform: translateY(60px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInOverlay {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================== */
+/* MEDIA QUERIES - A MÁGICA DA RESPONSIVIDADE ACONTECE AQUI PARA BAIXO */
+/* ============================================================== */
+
+@media (max-width: 768px) {
+  
+  /* Ajusta o layout do Fórum e Cards */
+  .comentario-card {
+    width: 100%; 
+  }
+
+  /* Ajusta a página de login para não ficar 50/50 apertado */
+  #divdoselementoslogin {
+    flex-direction: column;
+    height: auto;
+    overflow-y: visible; 
+  }
+
+  #divLogin {
+    width: 100%;
+    min-height: auto;
+    padding-bottom: 40px;
+    border-radius: 0 0 30% 30% / 0 0 10% 10%; 
+    float: none;
+  }
+
+  .login-container {
+    width: 100%;
+    height: auto;
+    padding: 30px 10px;
+    box-sizing: border-box;
+  }
+  
+  #botaoentrar {
+    font-size: 20px;
+    padding: 15px 40px;
+  }
+
+  /* Ajusta o Cabeçalho (Nav) para caber na tela do telemóvel */
+  .header-nav {
+    padding: 10px;
+  }
+  
+  .header-link {
+    font-size: 18px; 
+  }
+
+  #linkhomelogo, #LogoForumAluno {
+    width: 30%; 
+  }
+
+  .header-left, .header-right {
+    gap: 15px; 
+  }
+
+  /* Ajusta a página de Perfil para empilhar em vez de ficar lado a lado */
+  .perfil-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .perfil-card-lateral {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .historico-atividades {
+    width: 100%;
+  }
+
+  /* Títulos muito grandes para telemóvel */
+  .tituloForum {
+    font-size: 40px;
+  }
+  
+  .paragrafoForum {
+    font-size: 16px;
+    padding: 0 15px;
+  }
 }
