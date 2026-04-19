@@ -5,21 +5,15 @@ import os
 load_dotenv()
 DB_PATH = os.getenv("DATABASE", "./data/forum.sqlite3")
 
-# =========================
-# CONEXÃO COM O BANCO
-# =========================
 def get_db_connection():
     conn = connect(DB_PATH)
-    conn.row_factory = Row  # permite acessar por nome
+    conn.row_factory = Row  
     return conn
 
-# =========================
-# CRIAR COMENTÁRIO
-# =========================
+
 def criar_comentario(texto, usuario_id, tag, destino, pai_id=None): 
     with get_db_connection() as conn:
         cursor = conn.cursor()
-        # Adicionado o campo 'status' com valor padrão 'aberto'
         cursor.execute(
             """
             INSERT INTO comentario (texto, usuario_id, tag, destino, pai_id, status)
@@ -29,9 +23,7 @@ def criar_comentario(texto, usuario_id, tag, destino, pai_id=None):
         )
         conn.commit()
 
-# =========================
-# LISTAR COMENTÁRIOS
-# =========================
+
 def listar_comentarios():
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -58,9 +50,7 @@ def listar_comentarios():
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
 
-# =========================
-# ATUALIZAR STATUS (EXCLUSIVO ADMIN)
-# =========================
+
 def atualizar_status_comentario(id_comentario, novo_status):
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -71,9 +61,7 @@ def atualizar_status_comentario(id_comentario, novo_status):
         """, (novo_status, id_comentario))
         conn.commit()
 
-# =========================
-# BUSCAR COMENTÁRIO POR ID
-# =========================
+
 def buscar_comentario_por_id(id):
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -81,9 +69,7 @@ def buscar_comentario_por_id(id):
         row = cursor.fetchone()
         return dict(row) if row else None
 
-# =========================
-# LISTAR COMENTÁRIOS DE UM USUÁRIO (PERFIL)
-# =========================
+
 def listar_comentarios_por_usuario(usuario_id):
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -99,9 +85,7 @@ def listar_comentarios_por_usuario(usuario_id):
         rows = cursor.fetchall()
         return [dict(row) for row in rows]
 
-# =========================
-# ATUALIZAR COMENTÁRIO (EDITAR)
-# =========================
+
 def atualizar_comentario(id_comentario, novo_texto, nova_tag):
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -112,9 +96,7 @@ def atualizar_comentario(id_comentario, novo_texto, nova_tag):
         """, (novo_texto, nova_tag, id_comentario))
         conn.commit()
 
-# =========================
-# EXCLUIR COMENTÁRIO
-# =========================
+
 def excluir_comentario(id):
     with get_db_connection() as conn:
         cursor = conn.cursor()

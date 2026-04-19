@@ -20,7 +20,6 @@ function toggleNotifs() {
             dropdown.classList.toggle('show');
         }
 
-        // Fecha o dropdown se clicar fora dele
         window.onclick = function(event) {
             if (!event.target.closest('.notif-container')) {
                 const dropdown = document.getElementById('notifDropdown');
@@ -32,22 +31,19 @@ function toggleNotifs() {
 
 document.querySelectorAll('.link-ajax').forEach(link => {
     link.addEventListener('click', function(e) {
-        e.preventDefault(); // Impede o recarregamento da página
+        e.preventDefault(); 
         const url = this.getAttribute('href');
 
         fetch(url)
             .then(response => response.text())
             .then(html => {
                 document.getElementById('conteudo-dinamico').innerHTML = html;
-                // Atualiza a URL no navegador sem recarregar
                 window.history.pushState({}, '', url); 
             });
     });
 });
 
-// Arquivo: script.js
 
-// Usamos uma função para inicializar o contador
 function iniciarContador() {
     const inputTexto = document.querySelector('input[name="texto"]');
     const contador = document.getElementById('contador');
@@ -68,5 +64,4 @@ function iniciarContador() {
     }
 }
 
-// Executa a função assim que a página carregar
 document.addEventListener("DOMContentLoaded", iniciarContador);

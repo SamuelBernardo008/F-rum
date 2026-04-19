@@ -1,4 +1,5 @@
 import os 
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, session, url_for, send_from_directory
 from PIL import Image, ImageOps
 from functools import wraps
@@ -16,8 +17,10 @@ from models.comentario import (
 )
 from models.notificacao import criar_notificacao, listar_notificacoes_usuario, marcar_todas_como_lidas
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "123"
+app.secret_key = os.getenv("SECRET_KEY", "chave_padrao_para_testes")
 
 UPLOAD_FOLDER = 'static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -25,9 +28,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 init_db()
 
-# =========================
-# CONTEXT PROCESSOR (O "SININHO")
-# =========================
+
 @app.context_processor
 def inject_notifications():
     if "usuario_id" in session:
@@ -36,9 +37,7 @@ def inject_notifications():
         return dict(notificacoes_usuario=notificacoes, total_notificacoes=len(notificacoes))
     return dict(notificacoes_usuario=[], total_notificacoes=0)
 
-# =========================
-# DECORATORS
-# =========================
+
 
 def login_required(f):
     @wraps(f)
@@ -58,15 +57,13 @@ def cargo_required(cargo_permitido):
             if usuario_cargo != cargo_permitido:
                 try:
                     return redirect(url_for(f"forum_{usuario_cargo}"))
-                except Exception: # Adicionando 'Exception' aqui o aviso some
+                except Exception:  
                     return redirect(url_for("login"))
             return f(*args, **kwargs)
         return decorated_function
     return decorator
 
-# =========================
-# ROTAS DE NOTIFICAÇÃO
-# =========================
+
 
 @app.route("/notificacoes/limpar")
 @login_required
@@ -74,9 +71,7 @@ def limpar_notificacoes():
     marcar_todas_como_lidas(session["usuario_id"])
     return redirect(request.referrer or url_for("home"))
 
-# =========================
-# AUTENTICAÇÃO E HOME
-# =========================
+
 
 @app.route("/")
 def home():
@@ -112,9 +107,7 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# =========================
-# GESTÃO DE COMENTÁRIOS E STATUS
-# =========================
+
 
 @app.route("/comentario", methods=["POST"])
 @login_required
@@ -126,14 +119,12 @@ def adicionar_comentario():
     pai_id = request.form.get("pai_id") 
     usuario_id = session.get("usuario_id")
 
-    # Garante que pai_id seja None se estiver vazio
     if not pai_id or not str(pai_id).strip():
         pai_id = None
 
-    # 1. Só processa se os dados básicos existirem
     if texto and tag and destino:
-        texto = texto[:250] # Seu novo limite de caracteres
-
+        texto = texto[:250] 
+        
         if id_comentario and id_comentario.strip():
             comentario = buscar_comentario_por_id(id_comentario)
             if comentario and (comentario['usuario_id'] == usuario_id or session.get('cargo') == 'admin'):
@@ -146,17 +137,14 @@ def adicionar_comentario():
                     msg = f"{session['nome']} respondeu ao seu tópico: '{texto[:20]}...'"
                     criar_notificacao(post_pai['usuario_id'], msg, link=url_for('ver_thread', id_pai=pai_id))
 
-    # 2. O RETORNO DEVE FICAR FORA DE TODOS OS "IFs" (Cuidado com a identação!)
-    # Se for uma resposta a outro comentário, volta para a thread
+    
     if pai_id:
         return redirect(url_for('ver_thread', id_pai=pai_id))
     
-    # Se tiver um destino válido, volta para o fórum de origem
     if destino:
         return redirect(url_for(f"forum_{destino}"))
     
-    # PLANO C: Se tudo der errado, volta para a página inicial do fórum
-    return redirect(url_for('index')) # ou o nome da sua rota principal
+    return redirect(url_for('index')) 
 
 @app.route("/comentario/status/<int:id>/<novo_status>")
 @login_required
@@ -200,9 +188,7 @@ def curtir(id_comentario):
     alternar_curtida(usuario_id, id_comentario)
     return redirect(request.referrer or url_for("home"))
 
-# =========================
-# GESTÃO DE FEEDBACKS (BUGS E SUGESTÕES)
-# =========================
+
 
 @app.route('/enviar-feedback', methods=['POST'])
 @login_required
@@ -231,7 +217,6 @@ def alterar_status_feedback(id):
         conn.commit()
         
         if novo_status == 'resolvido':
-            # Lógica para ajustar o gênero da mensagem
             if feedback['tipo'].lower() == 'bug':
                 msg = "Ei! O bug que você relatou foi corrigido. Obrigado por ajudar!"
             else:
@@ -252,9 +237,7 @@ def deletar_feedback(id):
     conn.close()
     return redirect(url_for('servico_admin'))
 
-# =========================
-# FÓRUNS
-# =========================
+
 
 @app.route("/forum_aluno")
 @app.route("/forum_aluno/<int:id_editar>")
@@ -320,9 +303,7 @@ def forum_professor(id_editar=None):
                             tag_ativa=tag_filtro,
                             busca_ativa=termo_busca)
 
-# =========================
-# PERFIL E ADMIN
-# =========================
+
 
 @app.route("/perfil")
 @login_required
@@ -346,23 +327,18 @@ def upload_foto():
     arquivo = request.files['foto']
     
     if arquivo and arquivo.filename != '':
-        # Definimos o nome do arquivo (mudei para .jpg para ser mais leve, mas .png funciona)
         novo_nome = f"user_{session['usuario_id']}.jpg"
         caminho = os.path.join(app.config['UPLOAD_FOLDER'], novo_nome)
         
-        # Abre a imagem original
         img = Image.open(arquivo.stream) 
         
-        # Converte para RGB (necessário para salvar como JPEG ou remover transparências estranhas)
         if img.mode != "RGB":
             img = img.convert("RGB")
             
-        # O PULO DO GATO: Redimensiona e corta centralizado em 300x300
-        # Isso garante que a imagem seja um QUADRADO perfeito para o círculo do CSS
+        
         tamanho_padrao = (300, 300)
         img = ImageOps.fit(img, tamanho_padrao, Image.Resampling.LANCZOS)
         
-        # Salva com compressão para não pesar no seu PC/Servidor
         img.save(caminho, "JPEG", quality=85)
         
         atualizar_foto_usuario(session['usuario_id'], novo_nome)
@@ -382,11 +358,9 @@ def favicon():
 @login_required
 @cargo_required("admin")
 def servico_admin():
-    # 1. Mensagens da Coordenação
     todos = listar_comentarios()
     mensagens_privadas = [c for c in todos if c['tag'] == 'admin']
 
-    # 2. Feedbacks e Contador
     conn = conectar()
     feedbacks = conn.execute("""
         SELECT f.*, u.nome 

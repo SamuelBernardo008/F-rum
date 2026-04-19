@@ -52,7 +52,6 @@ body {
   align-items: center;
   color: white;
   font-family: "Sanchez";
-  /* Fonte responsiva para o container home */
   font-size: clamp(1.2rem, 2vw, 1.6rem);
   cursor: default;
   justify-content: center;
@@ -79,12 +78,10 @@ body {
 
 .logo-container {
   width: 100%;
-  /* Ajuste este valor para a altura real da sua logo */
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Impede que qualquer variação interna mova o que está fora */
   overflow: hidden;
   filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.3));
 
@@ -98,7 +95,6 @@ body {
 
 
 .wrapper-animado {
-  /* Igualando ao "deslizarDeCima": 1s de duração e ease-out */
   animation: deslizarDeBaixo 1s ease-out forwards;
   opacity: 0;
 }
@@ -133,10 +129,8 @@ body {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* EFEITO AO CLICAR */
 #entrar:active {
   transform: scale(0.95);
-  /* Efeito de "apertar" o botão */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -161,18 +155,14 @@ body {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* EFEITO AO CLICAR */
 #perguntas:active {
   transform: scale(0.95);
-  /* Efeito de "apertar" o botão */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 #rodape {
   margin-top: auto;
-  /* Empurra o rodapé para o fim da página */
   padding: 20px 40px;
-  /* Espaçamento interno para não encostar nos cantos */
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -218,7 +208,6 @@ body {
   font-style: normal;
 }
 
-/* página de login------------------------------------------------- */
 
 
 
@@ -228,9 +217,7 @@ body {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  /* Largura total */
   height: 100vh;
-  /* Altura total da tela (Vê a tela toda) */
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -430,7 +417,6 @@ input[type="password"]::placeholder {
 
 #botaoentrar:active {
   transform: scale(0.95);
-  /* Efeito de "apertar" o botão */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -439,7 +425,6 @@ input[type="password"]::placeholder {
 }
 
 
-/* Página do fórum ------------------------------------------------- */
 
 
 #page-Forum {
@@ -476,17 +461,15 @@ input[type="password"]::placeholder {
   margin-bottom: 20px;
 }
 
-/* --- CONFIGURAÇÃO DO HEADER FIXO E FLEXBOX --- */
 .header-nav {
-  position: sticky; /* Mantém o header fixo no topo */
+  position: sticky; 
   top: 0;
   z-index: 1000;
   
-  display: flex; /* Ativa o Flexbox */
-  justify-content: space-between; /* Joga a div esquerda para um lado e a direita para o outro */
-  align-items: center; /* Centraliza tudo verticalmente */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
   
-  /* Ajuste a cor de fundo conforme o seu projeto */
   background: linear-gradient(90deg, #4A148C 0%, #7E57C2 100%); 
   padding: 10px 30px;
   color: white;
@@ -494,18 +477,16 @@ input[type="password"]::placeholder {
 
 }
 
-/* --- AGRUPAMENTOS ESQUERDA / DIREITA --- */
 .header-left, .header-right {
   display: flex;
   align-items: center;
-  gap: 30px; /* Espaço entre os itens (ex: espaço entre a Logo e o Sair) */
+  gap: 30px; 
 }
 
-/* --- PADRONIZAÇÃO DOS LINKS E BOTÕES --- */
 .header-link {
   display: flex;
   align-items: center;
-  gap: 2px; /* Espacinho entre o ícone e a palavra */
+  gap: 2px; 
   color: white;
   text-decoration: none;
   font-size: 25px;
@@ -514,7 +495,7 @@ input[type="password"]::placeholder {
 }
 
 #perfil {
-  margin-right: 20px; /* Pequeno espaço entre o perfil e o sair */
+  margin-right: 20px; 
 }
 
 .icon-profile {
@@ -525,29 +506,27 @@ input[type="password"]::placeholder {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: white; /* Fundo da bola */
+  background-color: white; 
 }
 
-/* Precisamos mudar a cor do SVG dentro desta bola branca */
+
 .icon-profile svg {
-  fill: rgb(160, 85, 235); /* Use uma cor roxa do seu gradiente aqui */
+  fill: rgb(160, 85, 235); 
 }
 
 .header-link:hover {
-  opacity: 0.8; /* Efeito de hover simples */
+  opacity: 0.8; 
 }
 
-/* --- CORREÇÃO DOS ÍCONES GIGANTES --- */
+
 .material-symbols-outlined {
-  font-size: 26px !important; /* Força o ícone a ter um tamanho normal */
+  font-size: 26px !important; 
   line-height: 1;
 }
 
-/* --- ATUALIZAÇÃO DO CONTAINER DE NOTIFICAÇÃO --- */
 .notif-container {
   position: relative;
-  /* O display flex foi movido para a classe .header-link que agora ele possui */
-}
+  }
 
 .badge {
   background: red;
@@ -557,7 +536,7 @@ input[type="password"]::placeholder {
   font-size: 12px;
   position: absolute;
   top: -8px;
-  left: 15px; /* Ajustado para ficar em cima do ícone, já que agora tem texto do lado */
+  left: 15px; 
 }
 
 .logoforum {
@@ -611,9 +590,7 @@ form {
   display: flex;
   align-items: center;
   gap: 10px;
-  /* Cria um espaço uniforme entre o input, o select e o botão */
   flex-wrap: wrap;
-  /* Garante que em telas menores os itens quebrem linha e não sumam */
 }
 
 
@@ -634,7 +611,6 @@ form {
 
 }
 
-/* Layout da Header */
 .header-nav {
   display: flex;
   justify-content: space-between;
@@ -644,7 +620,6 @@ form {
   color: white;
 }
 
-/* Container e Badge do Ícone */
 .notif-container {
   position: relative;
   cursor: pointer;
@@ -653,11 +628,11 @@ form {
 .badge {
   position: absolute;
   top: -5px;
-  left: 18px; /* Puxa a bolinha para a esquerda, cravando ela em cima do sino */
+  left: 18px; 
   background: red;
   color: white;
   
-  /* Formato de pílula (perfeito para números) */
+  
   border-radius: 12px; 
   padding: 2px 6px;
   font-size: 12px;
@@ -666,11 +641,11 @@ form {
   text-align: center;
   min-width: 10px; 
   
-  /* Borda na mesma cor do header para não embolar com o texto se encostar nele */
+  
   border: 2px solid #7E57C2; 
 }
 
-/* Menu Dropdown */
+
 .notif-dropdown {
   display: none;
   position: absolute;
@@ -685,13 +660,13 @@ form {
   border-radius: 8px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
 
-  /* --- ADICIONE ESTAS LINHAS --- */
-  max-height: 350px;    /* Define a altura máxima da caixinha */
-  overflow-y: auto;     /* Cria o scroll vertical se houver muitas notificações */
-  overflow-x: hidden;   /* Garante que não apareça scroll pros lados */
+  
+  max-height: 350px;    
+  overflow-y: auto;     
+  overflow-x: hidden;   
 }
 
-/* Deixa a barra de rolagem mais fina e moderna (Chrome/Edge) */
+
 .notif-dropdown::-webkit-scrollbar {
   width: 6px;
 }
@@ -715,7 +690,6 @@ form {
   font-family: Sanchez, serif;
 }
 
-/* Itens de Notificação */
 .notif-item {
   display: block;
   padding: 12px 15px;
@@ -724,16 +698,15 @@ form {
   color: #333;
   text-decoration: none;
   line-height: 1.4;
-  transition: background 0.2s; /* Suaviza o hover */
+  transition: background 0.2s; 
 }
 
 .notif-item:hover {
-  background-color: #f9f9f9; /* Destaque ao passar o mouse */
+  background-color: #f9f9f9; 
 }
 
 
 
-/* Botão de Rodapé */
 .limpar-btn {
   display: block;
   text-align: center;
@@ -778,17 +751,14 @@ form {
 }
 
 
-/* Container principal alinhado */
 .search-container {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   max-width: 600px;
-  /* Ajuste conforme necessário */
   margin-bottom: 20px;
 }
 
-/* A barra de pesquisa redonda */
 .search-box {
   display: flex;
   align-items: center;
@@ -796,7 +766,6 @@ form {
   border: 2px solid rgb(41, 30, 104);
   border-radius: 50px;
 
-  /* ALTERAÇÃO AQUI: */
   padding: 2px;
   padding-right: 200px;
 
@@ -811,32 +780,23 @@ form {
   padding: 5px 10px;
   font-size: 20px;
   color: rgb(41, 30, 104);
-
-  /* GARANTIA: */
   text-align: left;
-  /* Garante que o texto comece da esquerda */
 }
 
 .search-box input::placeholder {
   color: #9b94c5;
-  /* Mesma cor do texto */
   opacity: 0.7;
-  /* Um pouco de transparência para diferenciar */
 }
 
 .icon-search {
   display: flex;
-  /* Garante que o SVG fique centralizado no span */
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  /* IMPEDE o ícone de amassar */
   margin-left: 10px;
-  /* Ajusta a distância da borda esquerda */
   color: #9b94c5;
 }
 
-/* O botão de filtro redondo */
 .filter-box {
   position: relative;
   width: 45px;
@@ -855,13 +815,11 @@ form {
   transform: scale(0.95);
 }
 
-/* Esconde o select mas deixa ele clicável sobre o ícone */
 .filter-box select {
   position: absolute;
   width: 100%;
   height: 100%;
   opacity: 0;
-  /* Invisível */
   cursor: pointer;
 }
 
@@ -871,7 +829,6 @@ form {
   color: #9b94c5;
 }
 
-/* Estilo do link de limpar filtros */
 .clear-filter {
   text-align: center;
   margin-top: -10px;
@@ -909,7 +866,6 @@ form {
 
 .botaoAdicionar:active {
   transform: scale(0.95);
-  /* Efeito de "apertar" o botão */
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -932,22 +888,21 @@ form {
 .comentarios {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap; /* Permite que os cards fiquem um ao lado do outro */
-  justify-content: center; /* Centraliza o par de colunas */
-  gap: 20px; /* Espaço entre as colunas e as linhas */
+  flex-wrap: wrap; 
+  justify-content: center;  
+  gap: 20px; 
   
-  width: 95%; /* Aumentamos de 80% para 95% para chegar perto das bordas */
-  max-width: 1400px; /* Limite opcional para não ficar estranho em telas UltraWide */
-  margin: 20px auto; /* Centraliza o container na página */
+  width: 95%; 
+  max-width: 1400px; 
+  margin: 20px auto; 
 }
 
-/* O CARD DE COMENTÁRIO */
+
 .comentario-card {
   background-color: rgb(41, 30, 104);
   color: white;
   font-family: "Sanchez", serif;
   
-  /* CÁLCULO MÁGICO: 50% da largura menos metade do gap (10px) */
   width: calc(50% - 10px); 
   
   padding: 20px;
@@ -955,40 +910,33 @@ form {
   border-radius: 12px;
   border: 4px solid white;
   
-  /* Organização interna */
   display: flex;
   flex-direction: column;
   gap: 15px;
   
-  /* Garante que o card estique se o texto for grande */
   min-height: fit-content; 
   
-  /* Suas animações e sombras permanecem aqui */
   transition: transform 0.3s ease;
   animation: fadeInSuave 0.8s ease-out both;
 }
 
-/* Ajuste para o texto dentro do card (Quebra de linha) */
 .comentario-card p, 
 .comentario-card .texto-comentario {
   font-family: "Sanchez", serif;
   font-size: 220px;
   margin: 0;
   
-  /* Quebra de linha automática */
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: normal;
 }
 
-/* Estilo para destacar o comentário do Admin */
     .estilo-admin {
         background-color: white !important;
         border: 2px solid rgb(126, 44, 207) !important;
         color: rgb(126, 44, 207) !important;
     }
 
-    /* Garante que o texto, o nome e a data fiquem roxos no card admin */
     .estilo-admin p, 
     .estilo-admin strong, 
     .estilo-admin .data-tag,
@@ -997,13 +945,11 @@ form {
         color: rgb(126, 44, 207) !important;
     }
 
-    /* Ajuste para que o botão de respostas não suma no fundo branco */
     .estilo-admin .btn-respostas {
         background-color: rgb(126, 44, 207) !important;
         color: white !important;
     }
 
-    /* Estilo para os links de editar/deletar dentro do card branco */
     .estilo-admin a {
         color: rgb(126, 44, 207) !important;
         opacity: 0.8;
@@ -1023,7 +969,6 @@ form {
 }
 
 
-/* Fundo escuro atrás do modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1038,7 +983,6 @@ form {
     animation: fadeInOverlay 0.3s ease-out;
 }
 
-/* Caixa Branca do Modal */
 .modal-content {
     background: white;
     width: 90%;
@@ -1058,7 +1002,6 @@ form {
     font-weight: 600;
 }
 
-/* Área de Texto (Textarea) */
 .comment-textarea {
     width: 100%;
     height: 120px;
@@ -1078,7 +1021,6 @@ form {
     border-color: #ddd;
 }
 
-/* Linha com contador e tag */
 .modal-footer {
     display: flex;
     justify-content: space-between;
@@ -1098,7 +1040,6 @@ form {
     cursor: pointer;
 }
 
-/* Botões */
 .modal-buttons {
     display: flex;
     justify-content: center;
@@ -1119,7 +1060,6 @@ form {
 
 
 
-/* Efeitos de Hover */
 .btn-postar:hover, .btn-cancelar:hover {
     transform: scale(1.05);
     filter: brightness(1.2);
@@ -1131,7 +1071,6 @@ form {
 
 .btn-cancelar-link { text-decoration: none; }
 
-/* Esconder o modal */
 .modal-overlay[hidden] {
     display: none !important;
 }
@@ -1146,31 +1085,29 @@ form {
 
 
 
-/* Responsividade: Se a tela for pequena (celular), volta para 1 coluna */
 @media (max-width: 768px) {
   .comentario-card {
     width: 100%;
   }
 }
-/* --- CLASSES PARA AS CORES DA BORDA EXTERNA --- */
-/* Adicione a classe correspondente no HTML de cada card dependendo do status */
+
 .card-aberto {
-  box-shadow: 0 0 0 2px #888888; /* Cinza */
+  box-shadow: 0 0 0 2px #888888; 
 }
 
 .card-andamento {
-  box-shadow: 0 0 0 2px #ffc107; /* Amarelo */
+  box-shadow: 0 0 0 2px #ffc107; 
 }
 
 .card-resolvido {
-  box-shadow: 0 0 0 2px #28a745; /* Verde */
+  box-shadow: 0 0 0 2px #28a745; 
 }
 
 .card-inviavel {
-  box-shadow: 0 0 0 2px #dc3545; /* Vermelho */
+  box-shadow: 0 0 0 2px #dc3545; 
 }
 
-/* Linha do cabeçalho (Foto, Nome, Status, Tag) */
+
 .card-header-info {
   display: flex;
   align-items: center;
@@ -1180,7 +1117,6 @@ form {
 }
 
 
-/* Estilo padrão das Pílulas de Status */
 .status-badge {
   color: white;
   padding: 2px 10px;
@@ -1189,15 +1125,13 @@ form {
   font-weight: bold;
 }
 
-/* Cores dos Status */
-.bg-aberto { background-color: #888888; } /* Cinza */
-.bg-andamento { background-color: #ffc107; color: black; } /* Amarelo */
-.bg-resolvido { background-color: #28a745; } /* Verde */
-.bg-inviavel { background-color: #dc3545; } /* Vermelho */
+.bg-aberto { background-color: #888888; } 
+.bg-andamento { background-color: #ffc107; color: black; } 
+.bg-resolvido { background-color: #28a745; } 
+.bg-inviavel { background-color: #dc3545; } 
 
-/* Botão de Respostas no rodapé do card */
 .btn-respostas {
-  align-self: flex-start; /* Faz o botão não esticar e ficar alinhado à esquerda */
+  align-self: flex-start; 
   background-color: white;
   color: #211651;
   border: 1px solid #211651;
@@ -1208,15 +1142,15 @@ form {
   text-decoration: none;
 }
 
-/* Correção da fonte interna do card */
+
 .comentario-card p {
-    font-size: 16px !important; /* Estava 220px no seu código enviado, o que quebraria tudo */
+    font-size: 16px !important; 
     line-height: 1.5;
     margin: 10px 0;
     color: white;
 }
 
-/* Estilo para os títulos das seções dentro do admin */
+
 .titulo-secao-admin {
     font-family: "Questrial", sans-serif;
     color: rgb(41, 30, 104);
@@ -1226,7 +1160,7 @@ form {
     border-bottom: 2px solid rgba(41, 30, 104, 0.1);
 }
 
-/* Botões do topo no estilo que você gosta */
+
 .botaoAdmin {
     background: #7E57C2;
     color: white !important;
@@ -1256,13 +1190,7 @@ form {
 }
 
 
-/*-------------------------------tread
 
-/* =========================================================
-   ESTILOS ESPECÍFICOS PARA A PÁGINA DE RESPOSTAS 
-   ========================================================= */
-
-/* Botão de Voltar */
 .voltar-btn {
     font-family: "Questrial", sans-serif;
     color: rgb(41, 30, 104);
@@ -1278,10 +1206,10 @@ form {
 
 .voltar-btn:hover {
     color: rgb(160, 85, 235);
-    transform: translateX(-5px); /* Move levemente para a esquerda ao passar o mouse */
+    transform: translateX(-5px); 
 }
 
-/* Card do Post Principal (Destaque claro para diferenciar dos comentários escuros) */
+
 .post-principal-card {
     width: 95%;
     max-width: 1400px;
@@ -1343,7 +1271,7 @@ form {
     margin: 0;
 }
 
-/* Linha Divisória Customizada */
+
 .linha-divisoria {
     width: 95%;
     max-width: 1400px;
@@ -1353,7 +1281,6 @@ form {
     margin: 40px 0;
 }
 
-/* Formulário de Resposta */
 .formulario-resposta {
     width: 95%;
     max-width: 1400px;
@@ -1384,7 +1311,6 @@ form {
     animation: fadeInSuave 1.5s ease-out forwards;
 }
 
-/* Botão de excluir comentário no Card Escuro */
 .btn-deletar {
     color: #ff6b6b;
     font-family: "Questrial", sans-serif;
@@ -1397,15 +1323,6 @@ form {
     color: #ff4d4d;
     text-decoration: underline;
 }
-
-
-
-
-/* =========================================================
-   ESTILOS NOVOS APENAS PARA O CONTEÚDO DO PERFIL 
-   ========================================================= */
-
-
 
 
 .perfil-layout {
@@ -1423,7 +1340,6 @@ form {
     }
 }
 
-/* Card Lateral */
 .perfil-card-lateral {
     background-color: white;
     border: 3px solid rgb(41, 30, 104);
@@ -1485,7 +1401,6 @@ form {
     color: rgb(126, 44, 207);
 }
 
-/* Botões do Perfil */
 .form-upload {
     margin-top: 25px;
 }
@@ -1522,7 +1437,6 @@ form {
     color: rgb(160, 85, 235);
 }
 
-/* Histórico de Atividades */
 .historico-atividades {
     flex-grow: 1;
     background-color: white;
@@ -1630,7 +1544,6 @@ form {
     text-decoration: none;
     font-weight: bold;
     
-    /* O segredo está aqui: */
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -1640,19 +1553,17 @@ form {
 }
 
 .btn-comecar:active {
-    /* Transição mais rápida no clique para dar sensação de feedback real */
     transform: scale(0.95);
     transition: transform 0.1s ease;
 }
 
-/* Botão e container de Apagar nas Atividades */
 .acoes-comentario {
     display: flex;
     align-items: center;
 }
 
 .btn-deletar {
-    color: #ff6b6b; /* Cor vermelha para dar a ideia de exclusão/cuidado */
+    color: #ff6b6b; 
     text-decoration: none;
     font-family: 'Questrial', sans-serif;
     font-size: 14px;
@@ -1666,11 +1577,10 @@ form {
 }
 
 
-/* Botões do Perfil */
 .form-upload {
     margin-top: 25px;
     display: flex;
-    justify-content: center; /* Isso garante que o botão fique perfeitamente centralizado */
+    justify-content: center; 
 }
 
 .botao-upload-foto {
@@ -1691,9 +1601,7 @@ form {
 }
 
 
-/* =========================================================
-   PÁGINA DE FAQ (Perguntas Frequentes)
-   ========================================================= */
+
 .faq-container {
     max-width: 800px;
     margin: 40px auto;
@@ -1739,7 +1647,7 @@ form {
     margin-bottom: 30px;
 }
 
-/* Estilo do Dropdown (Details/Summary) */
+
 .faq-item {
     margin-bottom: 15px;
 }
@@ -1765,7 +1673,6 @@ form {
     cursor: pointer;
     background-color: #f0f0f0;
     transition: background-color 0.2s;
-    /* Para remover a setinha padrão no Safari/Chrome e colocar uma customizada */
     list-style: none; 
     position: relative;
 }
@@ -1788,15 +1695,13 @@ form {
     background-color: white;
 }
 
-/* =========================================================
-   SESSÃO DE FEEDBACK / RELATAR BUG
-   ========================================================= */
+
 .feedback-container {
     max-width: 800px;
-    margin: 0 auto 40px auto; /* Centraliza e dá margem embaixo */
+    margin: 0 auto 40px auto; 
     padding: 30px;
     background-color: white;
-    border: 3px solid rgb(126, 44, 207); /* Borda roxa para destacar */
+    border: 3px solid rgb(126, 44, 207); 
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
@@ -1834,7 +1739,7 @@ form {
 
 .form-group textarea {
     min-height: 120px;
-    resize: vertical; /* Permite que o usuário aumente a caixa só para baixo */
+    resize: vertical; 
 }
 
 .btn-enviar {
@@ -1857,38 +1762,32 @@ form {
 }
 
 .btn-enviar:active {
-    transform: scale(0.98); /* Efeitinho de "clique" afundando o botão */
+    transform: scale(0.98); 
 }
 
 
-/* Animações */
 
 @keyframes entradaLateralBlob {
   from {
     opacity: 0;
     transform: translateX(-100%);
-    /* Começa totalmente escondida à esquerda */
   }
 
   to {
     opacity: 1;
     transform: translateX(0);
-    /* Termina na posição original dela */
   }
 }
 
-/* Animação para o conteúdo interno - Um deslize mais sutil */
 @keyframes entradaConteudo {
   from {
     opacity: 0;
     transform: translateY(20px);
-    /* Começa um pouco abaixo */
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
-    /* Termina no lugar certo */
   }
 }
 
@@ -1928,7 +1827,6 @@ form {
   }
 }
 
-/* Animações */
 @keyframes fadeInOverlay {
     from { opacity: 0; }
     to { opacity: 1; }

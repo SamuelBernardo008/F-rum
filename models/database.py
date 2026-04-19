@@ -6,14 +6,12 @@ load_dotenv()
 DB_PATH = os.getenv("DATABASE", "./data/forum.sqlite3")
 
 def init_db(db_name: str = DB_PATH):
-    """Cria o banco de dados e as tabelas se não existirem."""
     data_dir = os.path.dirname(db_name)
 
     if not os.path.exists(data_dir):
         os.makedirs(data_dir, exist_ok=True)
 
     with connect(db_name) as conn:
-        # 1. TABELA DE USUÁRIOS
         conn.execute("""
         CREATE TABLE IF NOT EXISTS usuario (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +23,6 @@ def init_db(db_name: str = DB_PATH):
         )
         """)
         
-        # 2. TABELA DE COMENTÁRIOS (POSTS)
         conn.execute("""
         CREATE TABLE IF NOT EXISTS comentario (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -41,7 +38,6 @@ def init_db(db_name: str = DB_PATH):
         )
         """)
 
-        # 3. TABELA DE NOTIFICAÇÕES (NOVA)
         conn.execute("""
         CREATE TABLE IF NOT EXISTS notificacao (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +50,6 @@ def init_db(db_name: str = DB_PATH):
         )
         """)
         
-        # Tabela de Curtidas (Apoios)
         conn.execute("""
         CREATE TABLE IF NOT EXISTS curtida (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,19 +75,16 @@ def init_db(db_name: str = DB_PATH):
         
         conn.commit()
     
-    # Roda migrações para bancos que já foram criados anteriormente
     migrar_banco_existente(db_name)
 
 def migrar_banco_existente(db_name):
-    """Garante que colunas novas sejam adicionadas a tabelas antigas."""
     with connect(db_name) as conn:
-        # Adiciona coluna 'status' caso o usuário já tivesse a tabela 'comentario' sem ela
         try:
             conn.execute("ALTER TABLE comentario ADD COLUMN status TEXT DEFAULT 'aberto'")
             conn.commit()
             print("Coluna 'status' injetada com sucesso.")
         except:
-            pass # Coluna já existe
+            pass 
 
 def conectar():
     """Retorna uma conexão configurada para retornar dicionários (Row)."""

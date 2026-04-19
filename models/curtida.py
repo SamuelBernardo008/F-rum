@@ -4,7 +4,6 @@ def alternar_curtida(usuario_id, comentario_id):
     """Se já curtiu, remove. Se não curtiu, adiciona."""
     with conectar() as conn:
         cursor = conn.cursor()
-        # Verifica se já existe
         cursor.execute("SELECT id FROM curtida WHERE usuario_id = ? AND comentario_id = ?", 
                        (usuario_id, comentario_id))
         curtida = cursor.fetchone()
