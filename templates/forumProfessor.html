@@ -98,7 +98,7 @@
                 </label>
                 <select name="tag" onchange="this.form.submit()">
                     <option value="">Todas as Tags</option>
-                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar'] %}
+                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'Projetos'] %}
                     <option value="{{ t }}" {% if tag_ativa==t %}selected{% endif %}>{{ t }}</option>
                     {% endfor %}
                     {% if session.get('cargo') == 'admin' %}
@@ -117,7 +117,7 @@
 
     <div class="comentarios">
         {% for c in comentarios %}
-        <article class="comentario-card card-{{ c.status|lower if c.status else 'aberto' }}">
+        <article class="comentario-card card-{{ c.status|lower if c.status else 'aberto' }} {{ 'estilo-admin' if c.cargo_autor == 'admin' }}">
             <div class="card-header-info">
                 <img src="{{ url_for('static', filename='uploads/' + (c.foto or 'default.png')) }}" alt="Foto"
                     style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
@@ -128,14 +128,14 @@
                     {{ c.status|title if c.status else 'Aberto' }}
                 </span>
 
-                <span style="color: #bbb; font-size: 13px;">
+                <span style="font-size: 13px; opacity: 0.8;">
                     #{{ c.tag if c.tag != 'admin' else 'Apenas Coordenação' }}
                 </span>
 
                 <div style="margin-left: auto; display: flex; gap: 10px;">
                     {% if session['usuario_id'] == c.usuario_id %}
                     <a href="{{ url_for('forum_professor', id_editar=c.id) }}"
-                        style="color: #aaa; text-decoration: none; font-size: 12px;">editar</a>
+                        style="text-decoration: none; font-size: 12px;">editar</a>
                     {% endif %}
 
                     {% if session['usuario_id'] == c.usuario_id or session['cargo'] == 'admin' %}
@@ -145,7 +145,7 @@
                 </div>
             </div>
 
-            <p style="font-size: 16px; line-height: 1.5; margin: 0; flex-grow: 1; word-wrap: break-word;">
+            <p style="font-size: 16px; line-height: 1.5; margin: 0; flex-grow: 1; word-wrap: break-word; margin-top: 10px;">
                 {{ c.texto }}
             </p>
 
@@ -160,26 +160,24 @@
                         <span style="cursor:pointer; color: #ffc107; font-weight: bold; font-size: 13px;">⭐ Apoiado ({{
                             c.total_curtidas }})</span>
                         {% else %}
-                        <span style="cursor:pointer; color: white; font-size: 13px;">☆ Apoiar ({{ c.total_curtidas
+                        <span style="cursor:pointer; font-size: 13px;">☆ Apoiar ({{ c.total_curtidas
                             }})</span>
                         {% endif %}
                     </a>
                 </div>
+                <small class="data-tag" style="font-size: 11px; opacity: 0.7;">
+                    {{ c.data_criacao }}
+                </small>
             </div>
 
             {% if session['cargo'] == 'admin' %}
-            <div
-                style="margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.8em;">
-                <strong style="display: block; margin-bottom: 5px; color: #eee;">Gestão da Coordenação:</strong>
+            <div style="margin-top: 10px; padding: 10px; background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; font-size: 0.8em; border: 1px dashed rgba(255, 255, 255, 0.3);">
+                <strong style="display: block; margin-bottom: 5px;">Gestão da Coordenação:</strong>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}"
-                        style="color: #fff; text-decoration: none;">Aberto</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}"
-                        style="color: #fff; text-decoration: none;">Em Andamento</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}"
-                        style="color: #fff; text-decoration: none;">Resolvido</a> |
-                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}"
-                        style="color: #fff; text-decoration: none;">Inviável</a>
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='aberto') }}" style="text-decoration: none;">Aberto</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='andamento') }}" style="text-decoration: none;">Em Andamento</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='resolvido') }}" style="text-decoration: none;">Resolvido</a> |
+                    <a href="{{ url_for('mudar_status', id=c.id, novo_status='inviavel') }}" style="text-decoration: none;">Inviável</a>
                 </div>
             </div>
             {% endif %}
@@ -212,8 +210,7 @@
                     <option value="" disabled selected>Escolha uma Tag</option>
                     {% endif %}
 
-                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar',
-                    'admin'] %}
+                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'Projetos', 'admin'] %}
                     <option value="{{ t }}" {% if comentario_selecionado and comentario_selecionado.tag==t %} selected
                         {% endif %}>
                         {{ 'Apenas Coordenação' if t == 'admin' else t }}
@@ -238,7 +235,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 1. Contador de Caracteres
         const inputTexto = document.getElementById('inputComentario');
         const contador = document.getElementById('contador');
 
@@ -256,7 +252,6 @@
             atualizarContador();
         }
 
-        // 2. Funções do Popup
         window.abrirPopup = function () {
             const popup = document.getElementById("popup");
             if (popup) popup.hidden = false;
@@ -267,7 +262,6 @@
             if (popup) popup.hidden = true;
         };
 
-        // 3. Sistema de Notificações
         window.toggleNotifs = function () {
             const dropdown = document.getElementById('notifDropdown');
             if (dropdown) dropdown.classList.toggle('show');

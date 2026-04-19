@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
 {% if session.get('usuario_id') %}
 <header class="header-nav">
     <div class="header-left">
@@ -93,7 +92,7 @@
                 </label>
                 <select name="tag" onchange="this.form.submit()">
                     <option value="">Todas</option>
-                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação'] %}
+                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Projetos'] %}
                     <option value="{{ t }}" {% if tag_ativa==t %}selected{% endif %}>{{ t }}</option>
                     {% endfor %}
                 </select>
@@ -198,7 +197,7 @@
                         <option value="" disabled selected>Escolha uma Tag</option>
                     {% endif %}
 
-                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'admin'] %}
+                    {% for t in ['Estrutura', 'Convivencia', 'Pedagógico', 'Elogio', 'Coordenação', 'Equipe Escolar', 'Projetos', 'admin'] %}
                         <option value="{{ t }}" 
                             {% if comentario_selecionado and comentario_selecionado.tag == t %} selected {% endif %}>
                             {{ 'Apenas Coordenação' if t == 'admin' else t }}
